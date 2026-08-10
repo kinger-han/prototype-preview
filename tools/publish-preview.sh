@@ -56,19 +56,61 @@ git pull --quiet origin main 2>/dev/null || echo "⚠️ pull 失败(可能本�
 mkdir -p "$SLUG"
 cp "$SRC" "$SLUG/index.html"
 
-# assets 处理：复制资源目录 + 替换 HTML 内 ../assets/ -> assets/
+# assets 处理：复制资源目录 + 自动压缩图片(>300KB转WebP缩到1080px) + HTML路径替换
 if [ -n "$ASSETS_DIR" ] && [ -d "$ASSETS_DIR" ]; then
   echo "📦 复制资源目录 -> $SLUG/assets ($(du -sh "$ASSETS_DIR" | cut -f1))"
   rm -rf "$SLUG/assets"
   cp -r "$ASSETS_DIR" "$SLUG/assets"
-  python - "$SLUG/index.html" <<'PYEOF'
-import sys
-p = sys.argv[1]
-s = open(p, encoding='utf-8').read()
+  python - "$SLUG/index.html" "$SLUG/assets" <<'PYEOF'
+import sys, os
+from PIL import Image
+html_path, assets_root = sys.argv[1], sys.argv[2]
+
+# 1) 压缩大图：>300KB 的 png/jpg 缩放(最长边1080)转 WebP(q82)，删原文件
+mapping = {}
+for dirpath, dirnames, filenames in os.walk(assets_root):
+    for fn in filenames:
+        if fn.lower().endswith(('.png', '.jpg', '.jpeg')):
+            src = os.path.join(dirpath, fn)
+            size = os.path.getsize(src)
+            if size < 300 * 1024:
+                continue
+            try:
+                im = Image.open(src)
+                im.load()
+                w, h = im.size
+                maxside = 1080
+                if max(w, h) > maxside:
+                    if w >= h:
+                        im = im.resize((maxside, int(h * maxside / w)), Image.LANCZOS)
+                    else:
+                        im = im.resize((int(w * maxside / h), maxside), Image.LANCZOS)
+                newfn = os.path.splitext(fn)[0] + '.webp'
+                newpath = os.path.join(dirpath, newfn)
+                im.save(newpath, 'WEBP', quality=82, method=6)
+                os.remove(src)
+                mapping[fn] = newfn
+                print(f"🖼️ {fn} -> {newfn} ({size//1024}KB -> {os.path.getsize(newpath)//1024}KB)")
+            except Exception as e:
+                print(f"⚠️ {fn} 压缩失败: {e}")
+
+# 2) HTML 替换压缩后的文件名
+if mapping:
+    s = open(html_path, encoding='utf-8').read()
+    for old, new in mapping.items():
+        n = s.count(old)
+        if n:
+            s = s.replace(old, new)
+            print(f"🔗 HTML 替换 {n} 处: {old} -> {new}")
+    open(html_path, 'w', encoding='utf-8', newline='').write(s)
+
+# 3) 路径前缀替换 ../assets/ -> assets/
+s = open(html_path, encoding='utf-8').read()
 n = s.count('../assets/')
-s = s.replace('../assets/', 'assets/')
-open(p, 'w', encoding='utf-8', newline='').write(s)
-print(f"🔗 路径替换 {n} 处: ../assets/ -> assets/")
+if n:
+    s = s.replace('../assets/', 'assets/')
+    open(html_path, 'w', encoding='utf-8', newline='').write(s)
+    print(f"🔗 路径替换 {n} 处: ../assets/ -> assets/")
 PYEOF
 else
   echo "ℹ️ 无 assets 目录（或未配置），跳过资源处理"
