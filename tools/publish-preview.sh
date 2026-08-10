@@ -20,6 +20,37 @@ set -e
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_DIR"
 
+# ---------- 下线模式: --remove <slug> ----------
+if [ "$1" = "--remove" ]; then
+  SLUG="$2"
+  [ -z "$SLUG" ] && { echo "用法: $0 --remove <slug>"; exit 1; }
+  if [ -d "$SLUG" ]; then rm -rf "$SLUG"; echo "🗑️ 已删除目录 $SLUG/"; fi
+  python - "$SLUG" <<'PYEOF'
+import sys
+slug = sys.argv[1]
+p = 'index.html'
+s = open(p, encoding='utf-8').read()
+start = s.find(f'    <a class="card" href="{slug}/">')
+if start >= 0:
+    end = s.find('    </a>', start)
+    if end >= 0:
+        end = end + len('    </a>\n')
+        s = s[:start] + s[end:]
+        open(p, 'w', encoding='utf-8', newline='\n').write(s)
+        print("✅ 导航页卡片已移除")
+    else:
+        print("⚠️ 卡片未闭合，请手动检查导航页")
+else:
+    print("ℹ️ 导航页未找到该卡片（可能已移除）")
+PYEOF
+  git add -A
+  git commit -q -m "Remove $SLUG preview" || echo "ℹ️ 无变更可提交"
+  git push origin main
+  echo ""
+  echo "🗑️ 已下线: https://kinger-han.github.io/prototype-preview/$SLUG/ （原地址将 404）"
+  exit 0
+fi
+
 # ---------- 解析任务列表 ----------
 if [ "$1" = "--project" ]; then
   PROJECT="$2"
