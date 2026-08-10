@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原型管理工具</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1f2329; }
+  .header { background: #fff; border-bottom: 1px solid #e5e6eb; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { font-size: 18px; }
+  .header .tip { font-size: 12px; color: #86909c; margin-top: 4px; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px 32px 60px; }
+  .section { background: #fff; border: 1px solid #e5e6eb; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; }
+  .section h2 { font-size: 15px; margin-bottom: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #f0f1f3; }
+  th { color: #86909c; font-weight: 500; }
+  .name-cell { font-weight: 600; }
+  .slug-cell { color: #86909c; font-size: 12px; }
+  .btn { display: inline-block; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; padding: 5px 12px; font-size: 13px; cursor: pointer; margin-right: 6px; }
+  .btn:hover { border-color: #3370ff; color: #3370ff; }
+  .btn.primary { background: #3370ff; border-color: #3370ff; color: #fff; }
+  .btn.primary:hover { background: #2b5fd9; }
+  .btn.danger { color: #f53f3f; border-color: #f53f3f; }
+  .btn.danger:hover { background: #f53f3f; color: #fff; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  select, input[type=text] { border: 1px solid #d9d9d9; border-radius: 4px; padding: 6px 10px; font-size: 13px; min-width: 220px; }
+  .status { background: #f7f8fa; border-radius: 6px; padding: 12px 14px; font-size: 12px; color: #4e5969; white-space: pre-wrap; font-family: Consolas, monospace; min-height: 40px; max-height: 300px; overflow-y: auto; }
+  .status.ok { color: #00b42a; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; background: #e8f3ff; color: #3370ff; margin-left: 6px; }
+  .edit-form { display: none; background: #f7f8fa; border-radius: 6px; padding: 12px 14px; margin-top: 6px; }
+  .edit-form.show { display: block; }
+  .link { color: #3370ff; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>原型管理工具</h1>
+      <div class="tip">本地管理 · 操作自动推送到 GitHub 预览仓，约 1 分钟生效</div>
+    </div>
+    <button class="btn" onclick="refreshAll()">刷新</button>
+  </div>
+  <div class="container">
+
+    <div class="section">
+      <h2>📦 发布新原型</h2>
+      <div class="row">
+        <select id="projectSelect" onchange="loadProjectItems()"><option value="">加载中…</option></select>
+        <select id="protoSelect"><option value="">请先选项目</option></select>
+        <button class="btn primary" id="publishBtn" onclick="publish()">发布</button>
+      </div>
+      <div class="status" id="publishStatus"></div>
+    </div>
+
+    <div class="section">
+      <h2>🌐 已发布原型</h2>
+      <table>
+        <thead><tr><th style="width:30%">名称</th><th style="width:28%">地址</th><th style="width:24%">Slug</th><th>操作</th></tr></thead>
+        <tbody id="previewList"></tbody>
+      </table>
+      <div class="status" id="listStatus" style="margin-top:12px"></div>
+    </div>
+
+  </div>
+
+<script>
+let previews = [];
+let projects = [];
+
+async function api(path, body) {
+  const opt = body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {};
+  const r = await fetch(path, opt);
+  return r.json();
+}
+
+async function refreshAll() {
+  document.getElementById('listStatus').textContent = '加载中…';
+  const [p, pr] = await Promise.all([api('/api/previews'), api('/api/projects')]);
+  previews = p.previews || [];
+  projects = pr.projects || [];
+  renderPreviews();
+  renderProjects();
+}
+
+function renderPreviews() {
+  const tb = document.getElementById('previewList');
+  tb.innerHTML = previews.map((v, i) => `
+    <tr>
+      <td class="name-cell">${esc(v.name)}</td>
+      <td><a class="link" target="_blank" href="https://kinger-han.github.io/prototype-preview/${v.slug}/">打开</a></td>
+      <td class="slug-cell">${v.slug}</td>
+      <td>
+        <button class="btn" onclick="openEdit(${i})">改名</button>
+        <button class="btn danger" onclick="remove(${i})">下线</button>
+        <div class="edit-form" id="edit-${i}">
+          <div class="row">
+            <input type="text" id="edit-name-${i}" value="${esc(v.name)}" placeholder="显示名称">
+            <input type="text" id="edit-desc-${i}" value="${esc(v.desc)}" placeholder="描述（留空不变）" style="min-width:300px">
+            <button class="btn primary" onclick="rename(${i})">保存</button>
+            <button class="btn" onclick="closeEdit(${i})">取消</button>
+          </div>
+        </div>
+      </td>
+    </tr>`).join('');
+  document.getElementById('listStatus').textContent = previews.length ? `共 ${previews.length} 个原型` : '暂无已发布原型';
+}
+
+function renderProjects() {
+  const sel = document.getElementById('projectSelect');
+  if (!projects.length) { sel.innerHTML = '<option value="">未找到带 publish-config.json 的项目</option>'; return; }
+  sel.innerHTML = '<option value="">选择项目…</option>' + projects.map(p =>
+    `<option value="${esc(p.path)}">${esc(p.dir)}</option>`).join('');
+}
+
+function loadProjectItems() {
+  const sel = document.getElementById('projectSelect');
+  const path = sel.value;
+  const ps = document.getElementById('protoSelect');
+  if (!path) { ps.innerHTML = '<option value="">请先选项目</option>'; return; }
+  const proj = projects.find(p => p.path === path);
+  if (!proj || !proj.items || !proj.items.length) { ps.innerHTML = '<option value="">（无原型条目）</option>'; return; }
+  ps.innerHTML = proj.items.map((it, i) =>
+    `<option value="${i}">${esc(it.name)} → ${esc(it.slug)}</option>`).join('');
+}
+
+async function publish() {
+  const sel = document.getElementById('projectSelect');
+  const ps = document.getElementById('protoSelect');
+  const st = document.getElementById('publishStatus');
+  if (!sel.value || ps.value === '') { st.textContent = '请选择项目'; return; }
+  st.className = 'status'; st.textContent = '发布中，等待构建+推送…';
+  document.getElementById('publishBtn').disabled = true;
+  const r = await api('/api/publish', { project_dir: sel.value });
+  st.textContent = r.output || (r.ok ? '完成' : r.error || '失败');
+  st.className = 'status' + (r.ok ? ' ok' : '');
+  document.getElementById('publishBtn').disabled = false;
+  refreshAll();
+}
+
+function openEdit(i) { document.getElementById('edit-' + i).classList.add('show'); }
+function closeEdit(i) { document.getElementById('edit-' + i).classList.remove('show'); }
+
+async function rename(i) {
+  const v = previews[i];
+  const name = document.getElementById('edit-name-' + i).value.trim();
+  const desc = document.getElementById('edit-desc-' + i).value.trim();
+  if (!name) { alert('名称不能为空'); return; }
+  const st = document.getElementById('listStatus');
+  st.textContent = '改名中…'; st.className = 'status';
+  const r = await api('/api/rename', { slug: v.slug, name, desc });
+  st.textContent = (r.msgs || []).join('\n') + (r.error ? '\n❌ ' + r.error : '');
+  st.className = 'status' + (r.ok ? ' ok' : '');
+  closeEdit(i);
+  refreshAll();
+}
+
+async function remove(i) {
+  const v = previews[i];
+  if (!confirm(`确定下线「${v.name}」？\n总览页卡片会移除，原型文件会删除，地址将 404。`)) return;
+  const st = document.getElementById('listStatus');
+  st.textContent = '下线中…'; st.className = 'status';
+  const r = await api('/api/remove', { slug: v.slug });
+  st.textContent = r.output || (r.ok ? '完成' : r.error || '失败');
+  st.className = 'status' + (r.ok ? ' ok' : '');
+  refreshAll();
+}
+
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+refreshAll();
+</script>
+</body>
+</html>
