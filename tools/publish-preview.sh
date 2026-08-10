@@ -32,7 +32,8 @@ cfg = json.load(open(os.path.join(proj, 'publish-config.json'), encoding='utf-8'
 items = cfg.get('prototypes') if isinstance(cfg.get('prototypes'), list) else [cfg]
 for c in items:
     files = glob.glob(os.path.join(proj, c.get('dist_glob', 'prototype/dist/*.html')))
-    files = [f for f in files if '标注' not in os.path.basename(f)]
+    ex = c.get('exclude', []) or []
+    files = [f for f in files if not any(x in os.path.basename(f) for x in ex)]
     if not files:
         print('ERROR|' + c.get('slug', '?') + '|no dist html found')
         continue
