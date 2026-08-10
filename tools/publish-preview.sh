@@ -70,7 +70,7 @@ for c in items:
         continue
     dist = max(files, key=os.path.getmtime)
     assets = os.path.join(proj, c.get('assets_dir', 'prototype/assets'))
-    print('|'.join([c['slug'], c['name'], c.get('desc', ''), os.path.abspath(dist), os.path.abspath(assets)]))
+    print('|'.join([c['slug'], c['name'], c.get('desc', ''), os.path.abspath(dist), os.path.abspath(assets), c.get('title', '')]))
 PYEOF
 )
   [ -n "$TASKS" ] || { echo "❌ 没有可发布任务"; exit 1; }
@@ -80,7 +80,7 @@ else
     echo "用法: $0 --project <目录>  或  $0 <slug> <dist路径> <名称> [描述]"; exit 1
   fi
   SRC_ABS="$(cd "$(dirname "$SRC")" && pwd)/$(basename "$SRC")"
-  TASKS="$SLUG|$NAME|$DESC|$SRC_ABS|"
+  TASKS="$SLUG|$NAME|$DESC|$SRC_ABS||"
 fi
 
 # ---------- 同步远端最新 ----------
@@ -97,11 +97,27 @@ while IFS= read -r line; do
   DESC=$(echo "$line" | cut -d'|' -f3)
   SRC=$(echo "$line" | cut -d'|' -f4)
   ASSETS_DIR=$(echo "$line" | cut -d'|' -f5)
+  TITLE=$(echo "$line" | cut -d'|' -f6)
   [ -f "$SRC" ] || { echo "❌ 产物不存在: $SRC"; continue; }
 
   echo "===== 发布: $NAME -> $SLUG ====="
   mkdir -p "$SLUG"
   cp "$SRC" "$SLUG/index.html"
+
+  # title 覆盖（publish-config.json 的 title 字段，替换浏览器标签标题）
+  if [ -n "$TITLE" ]; then
+    python - "$SLUG/index.html" "$TITLE" <<'PYEOF'
+import sys, re
+p, title = sys.argv[1], sys.argv[2]
+s = open(p, encoding='utf-8').read()
+s2 = re.sub(r'<title>.*?</title>', f'<title>{title}</title>', s, count=1, flags=re.S)
+if s2 != s:
+    open(p, 'w', encoding='utf-8', newline='').write(s2)
+    print(f"🔖 浏览器标题已设置: {title}")
+else:
+    print("⚠️ 未找到 <title> 标签，跳过标题设置")
+PYEOF
+  fi
 
   # assets 处理：复制 + 自动压缩大图(>300KB 缩放1080px 转WebP q82) + HTML 文件名/路径替换
   if [ -n "$ASSETS_DIR" ] && [ -d "$ASSETS_DIR" ]; then

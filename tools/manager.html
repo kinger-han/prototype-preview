@@ -79,7 +79,11 @@ async function api(path, body) {
 async function refreshAll() {
   document.getElementById('listStatus').textContent = '加载中…';
   const [p, pr] = await Promise.all([api('/api/previews'), api('/api/projects')]);
-  previews = p.previews || [];
+  previews = (p.previews || []).map(pv => {
+    const proj = (pr.projects || []).find(pj => (pj.items || []).some(it => it.slug === pv.slug));
+    const item = proj && proj.items.find(it => it.slug === pv.slug);
+    return { ...pv, title: item ? (item.title || '') : '' };
+  });
   projects = pr.projects || [];
   renderPreviews();
   renderProjects();
@@ -93,12 +97,16 @@ function renderPreviews() {
       <td><a class="link" target="_blank" href="https://kinger-han.github.io/prototype-preview/${v.slug}/">打开</a></td>
       <td class="slug-cell">${v.slug}</td>
       <td>
+        <button class="btn" onclick="copyLink('${v.slug}')">复制链接</button>
         <button class="btn" onclick="openEdit(${i})">改名</button>
         <button class="btn danger" onclick="remove(${i})">下线</button>
         <div class="edit-form" id="edit-${i}">
           <div class="row">
             <input type="text" id="edit-name-${i}" value="${esc(v.name)}" placeholder="显示名称">
             <input type="text" id="edit-desc-${i}" value="${esc(v.desc)}" placeholder="描述（留空不变）" style="min-width:300px">
+          </div>
+          <div class="row">
+            <input type="text" id="edit-title-${i}" value="${esc(v.title || '')}" placeholder="浏览器标签标题（留空不变）" style="min-width:300px">
             <button class="btn primary" onclick="rename(${i})">保存</button>
             <button class="btn" onclick="closeEdit(${i})">取消</button>
           </div>
@@ -147,14 +155,41 @@ async function rename(i) {
   const v = previews[i];
   const name = document.getElementById('edit-name-' + i).value.trim();
   const desc = document.getElementById('edit-desc-' + i).value.trim();
+  const title = document.getElementById('edit-title-' + i).value.trim();
   if (!name) { alert('名称不能为空'); return; }
   const st = document.getElementById('listStatus');
-  st.textContent = '改名中…'; st.className = 'status';
-  const r = await api('/api/rename', { slug: v.slug, name, desc });
+  st.textContent = '保存中…'; st.className = 'status';
+  const r = await api('/api/rename', { slug: v.slug, name, desc, title });
   st.textContent = (r.msgs || []).join('\n') + (r.error ? '\n❌ ' + r.error : '');
   st.className = 'status' + (r.ok ? ' ok' : '');
   closeEdit(i);
   refreshAll();
+}
+
+function copyLink(slug) {
+  const url = 'https://kinger-han.github.io/prototype-preview/' + slug + '/';
+  const done = () => {
+    const st = document.getElementById('listStatus');
+    st.className = 'status ok';
+    st.textContent = '✅ 链接已复制: ' + url;
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(done, () => fallbackCopy(url, done));
+  } else {
+    fallbackCopy(url, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
+  done();
 }
 
 async function remove(i) {

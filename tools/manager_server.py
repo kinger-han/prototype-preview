@@ -131,10 +131,11 @@ class Handler(BaseHTTPRequestHandler):
 
     # ---------- 命令 ----------
     def cmd_rename(self, body):
-        """改名：更新发布仓导航页卡片 + 项目 publish-config.json，然后 push"""
+        """改名/改描述/改浏览器标题：更新发布仓导航页卡片 + 发布仓HTML的<title> + 项目 publish-config.json，然后 push"""
         slug = (body.get('slug') or '').strip()
         name = (body.get('name') or '').strip()
         desc = (body.get('desc') or '').strip()
+        title = (body.get('title') or '').strip()
         if not slug or not name:
             return {'ok': False, 'error': 'slug 和 name 必填'}
         msgs = []
@@ -150,7 +151,21 @@ class Handler(BaseHTTPRequestHandler):
         open(idx, 'w', encoding='utf-8', newline='\n').write(s)
         msgs.append('✅ 总览页卡片名已更新')
 
-        # 2) 更新项目 publish-config.json（按 slug 匹配）
+        # 2) 浏览器标题：直接改发布仓 HTML 的 <title>（在线立即生效）
+        if title:
+            html_path = os.path.join(REPO, slug, 'index.html')
+            if os.path.isfile(html_path):
+                hs = open(html_path, encoding='utf-8').read()
+                hs2 = re.sub(r'<title>.*?</title>', f'<title>{title}</title>', hs, count=1, flags=re.S)
+                if hs2 != hs:
+                    open(html_path, 'w', encoding='utf-8', newline='').write(hs2)
+                    msgs.append(f'✅ 浏览器标题已设置: {title}')
+                else:
+                    msgs.append('⚠️ 发布仓 HTML 未找到 <title>，跳过')
+            else:
+                msgs.append(f'⚠️ 找不到 {slug}/index.html，标题未改（重新发布后由配置生效）')
+
+        # 3) 更新项目 publish-config.json（按 slug 匹配）
         for proj in scan_projects():
             cfg_path = os.path.join(proj['path'], 'publish-config.json')
             try:
@@ -167,11 +182,13 @@ class Handler(BaseHTTPRequestHandler):
                 hit['name'] = name
                 if desc:
                     hit['desc'] = desc
+                if title:
+                    hit['title'] = title
                 json.dump(cfg, open(cfg_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
                 ok, out = git_push(proj['path'])
                 msgs.append(('✅' if ok else '⚠️') + f' 项目配置 {proj["dir"]} 已更新' + ('' if ok else f'（push: {out[-200:]}）'))
 
-        # 3) push 发布仓
+        # 4) push 发布仓
         ok, out = git_push(REPO)
         msgs.append(('✅' if ok else '⚠️') + f' 发布仓已推送' + ('' if ok else f'（{out[-200:]}）'))
         return {'ok': ok, 'msgs': msgs}
