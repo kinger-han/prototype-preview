@@ -1140,11 +1140,11 @@ table tr { cursor: pointer; }
 <div class="proto-page" data-page-id="miss-stats" style="display:none;">
 <div class="page" id="pageMissStats">
 
-        <!-- 视图切换按钮 -->
-        <div style="display:flex;gap:8px;margin-bottom:12px;">
-          <button class="filter-btn primary" id="missViewList" onclick="switchMissView('list')">原始列表</button>
-          <button class="filter-btn" id="missViewGroup" onclick="switchMissView('group')">分组视图</button>
-        </div>
+        <!-- 视图切换按钮（分组视图暂隐藏，恢复时去掉下一行 display:none） -->
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                  <button class="filter-btn primary" id="missViewList" onclick="switchMissView('list')">原始列表</button>
+                  <button class="filter-btn" id="missViewGroup" onclick="switchMissView('group')" style="display:none;">分组视图</button>
+                </div>
 
         <!-- 筛选栏 -->
         <div class="miss-filter-bar" data-anno="miss-01">
