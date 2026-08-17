@@ -1434,7 +1434,7 @@ table tr { cursor: pointer; }
         <!-- 筛选栏 -->
         <div class="filter-bar" data-anno="kb-04">
           <div class="filter-item">
-            <span class="filter-label">来源客户：</span>
+            <span class="filter-label">所属客户：</span>
             <select class="filter-select" id="kbFilterCustomer">
               <option value="">全部客户</option>
               <option>XX博物馆</option>
@@ -1443,7 +1443,7 @@ table tr { cursor: pointer; }
             </select>
           </div>
           <div class="filter-item">
-            <span class="filter-label">来源场馆：</span>
+            <span class="filter-label">所属场馆：</span>
             <select class="filter-select" id="kbFilterVenue" style="min-width:120px;">
               <option value="">全部场馆</option>
               <option>东馆</option>
@@ -1520,7 +1520,7 @@ table tr { cursor: pointer; }
                 <th style="width:90px;">状态</th>
                 <th style="width:90px;">近30天命中</th>
                 <th style="width:130px;">创建人/时间</th>
-                <th style="width:140px;" data-anno="kb-07">操作</th>
+                <th style="width:230px;" data-anno="kb-07">操作</th>
               </tr>
             </thead>
             <tbody id="kbTableBody">
@@ -3262,17 +3262,17 @@ function renderKbTable(data) {
 }
 
 function getFaqActions(item, idx) {
-  var moreItems = '<div class="more-menu-item" onclick="openFaqFormModal(' + idx + ')">编辑</div>';
-  if (item.status === '解析失败') moreItems += '<div class="more-menu-item" onclick="retryParse(' + idx + ')">重新解析</div>';
-  moreItems += '<div class="more-menu-item danger" onclick="confirmDeleteKb(' + idx + ')">删除</div>';
-  return '<button class="action-btn" onclick="openKbDetailModal(' + idx + ')">详情</button> <span class="more-menu-wrap"><button class="action-btn" onclick="toggleMoreMenu(event,' + idx + ')" data-anno="kb-more-menu">更多 ▾</button><div class="more-menu" id="moreMenu' + idx + '">' + moreItems + '</div></span>';
+  var retryBtn = item.status === '解析失败' ? ' <button class="action-btn" onclick="retryParse(' + idx + ')">重新解析</button>' : '';
+  return '<button class="action-btn" onclick="openKbDetailModal(' + idx + ')">详情</button>' +
+    ' <button class="action-btn" onclick="openFaqFormModal(' + idx + ')">编辑</button>' + retryBtn +
+    ' <button class="action-btn danger" onclick="confirmDeleteKb(' + idx + ')">删除</button>';
 }
 
 function getDocActions(item, idx) {
-  var moreItems = '<div class="more-menu-item" onclick="showToast(\'文档下载中...\')">下载</div>';
-  if (item.status === '解析失败') moreItems += '<div class="more-menu-item" onclick="retryParse(' + idx + ')">重新解析</div>';
-  moreItems += '<div class="more-menu-item danger" onclick="confirmDeleteKb(' + idx + ')">删除</div>';
-  return '<button class="action-btn" onclick="openKbDetailModal(' + idx + ')">详情</button> <span class="more-menu-wrap"><button class="action-btn" onclick="toggleMoreMenu(event,' + idx + ')">更多 ▾</button><div class="more-menu" id="moreMenu' + idx + '">' + moreItems + '</div></span>';
+  var retryBtn = item.status === '解析失败' ? ' <button class="action-btn" onclick="retryParse(' + idx + ')">重新解析</button>' : '';
+  return '<button class="action-btn" onclick="openKbDetailModal(' + idx + ')">详情</button>' +
+    ' <button class="action-btn" onclick="showToast(\'文档下载中...\')">下载</button>' + retryBtn +
+    ' <button class="action-btn danger" onclick="confirmDeleteKb(' + idx + ')">删除</button>';
 }
 
 let currentEditKbIdx = -1;
