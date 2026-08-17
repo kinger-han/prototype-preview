@@ -17,6 +17,32 @@
 # ============================================================
 set -e
 
+PROXY_ADDR="http://127.0.0.1:10809"
+
+git_push_with_retry() {
+  local msg="${1:-发布}"
+  # 第一次尝试：使用全局 git 配置的代理（如果已配置）
+  echo "📡 尝试推送（第1次）..."
+  if git push origin main 2>&1; then
+    echo "✅ 推送成功"
+    return 0
+  fi
+  # 第二次尝试：显式指定代理
+  echo "⚠️ 推送失败，尝试使用显式代理 $PROXY_ADDR 重试（第2次）..."
+  if git -c http.proxy="$PROXY_ADDR" -c https.proxy="$PROXY_ADDR" push origin main 2>&1; then
+    echo "✅ 推送成功（通过代理）"
+    return 0
+  fi
+  # 两次都失败
+  echo ""
+  echo "❌ 推送失败！可能原因与解决方案："
+  echo "   1. 代理 $PROXY_ADDR 未启动 → 请启动代理软件后重试"
+  echo "   2. 网络不通 → 请检查网络连接"
+  echo "   3. GitHub 认证过期 → 请运行 gh auth login 重新登录"
+  echo "   4. 手动执行: git -c http.proxy=$PROXY_ADDR push origin main"
+  return 1
+}
+
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_DIR"
 
@@ -45,7 +71,7 @@ else:
 PYEOF
   git add -A
   git commit -q -m "Remove $SLUG preview" || echo "ℹ️ 无变更可提交"
-  git push origin main
+  git_push_with_retry "下线 $SLUG" || exit 1
   echo ""
   echo "🗑️ 已下线: https://kinger-han.github.io/prototype-preview/$SLUG/ （原地址将 404）"
   exit 0
@@ -199,7 +225,7 @@ done <<< "$TASKS"
 [ "$ANY" = "0" ] && { echo "❌ 所有任务失败，未发布"; exit 1; }
 git add -A
 git commit -q -m "Publish previews" || echo "ℹ️ 无变更可提交"
-git push origin main
+git_push_with_retry "发布" || exit 1
 echo ""
 echo "🎉 发布完成，约 1 分钟后生效："
 echo "   总览: https://kinger-han.github.io/prototype-preview/"
