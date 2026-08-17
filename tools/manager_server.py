@@ -8,6 +8,7 @@
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import urllib.parse
@@ -17,6 +18,16 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # 发布仓
 BASE = os.path.dirname(REPO)                                          # 项目根 (数熙相关文档)
 SCRIPT = os.path.join(REPO, 'tools', 'publish-preview.sh')
 PORT = 8765
+
+# Windows 原生 Python 的 PATH 里没有 git-bash，必须用绝对路径调用 bash
+BASH = None
+for _cand in (shutil.which('bash'),
+              r'C:\Program Files\Git\bin\bash.exe',
+              r'C:\Program Files\Git\usr\bin\bash.exe',
+              r'C:\Program Files (x86)\Git\bin\bash.exe'):
+    if _cand and os.path.isfile(_cand):
+        BASH = _cand
+        break
 
 
 def run(cmd, cwd=None, timeout=300):
@@ -198,7 +209,9 @@ class Handler(BaseHTTPRequestHandler):
         proj = (body.get('project_dir') or '').strip()
         if not proj or not os.path.isdir(proj):
             return {'ok': False, 'error': 'project_dir 无效'}
-        code, out = run(['bash', SCRIPT, '--project', proj])
+        if not BASH:
+            return {'ok': False, 'error': '未找到 git-bash (bash.exe)，请安装 Git for Windows 或检查路径'}
+        code, out = run([BASH, SCRIPT, '--project', proj])
         return {'ok': code == 0, 'output': out}
 
     def cmd_remove(self, body):
@@ -206,7 +219,9 @@ class Handler(BaseHTTPRequestHandler):
         slug = (body.get('slug') or '').strip()
         if not slug:
             return {'ok': False, 'error': 'slug 必填'}
-        code, out = run(['bash', SCRIPT, '--remove', slug])
+        if not BASH:
+            return {'ok': False, 'error': '未找到 git-bash (bash.exe)，请安装 Git for Windows 或检查路径'}
+        code, out = run([BASH, SCRIPT, '--remove', slug])
         return {'ok': code == 0, 'output': out}
 
 
