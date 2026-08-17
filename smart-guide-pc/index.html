@@ -1083,7 +1083,6 @@ table tr { cursor: pointer; }
                   <th style="width:80px;">客户ID</th>
                   <th style="width:120px;">客户名称</th>
                   <th style="width:180px;">公共知识库ID</th>
-                  <th style="width:160px;">知识库API Key</th>
                   <th style="width:140px;">更新时间</th>
                   <th style="width:180px;">操作</th>
                 </tr>
@@ -1120,10 +1119,6 @@ table tr { cursor: pointer; }
         <div class="form-row">
           <span class="form-label">公共知识库ID：<span style="color:#f5222d;">*</span></span>
           <input type="text" class="form-control" id="pubKbFormKbId" placeholder="对应Dify的Dataset ID">
-        </div>
-        <div class="form-row">
-          <span class="form-label">知识库API Key：</span>
-          <input type="text" class="form-control" id="pubKbFormApiKey" placeholder="写入时用的密钥">
         </div>
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0;">
@@ -2798,15 +2793,15 @@ function init_venue_mgmt() { renderVenueTable(); }
 
 // ---- 场馆管理Tab切换 ----
 const pubKbData = [
-  { id: 'C001', name: 'XX博物馆', kbId: 'dataset_xx_museum_public', apiKey: 'sk-xx...7f', updateTime: '2026-07-10 14:30' },
-  { id: 'C002', name: '科技馆', kbId: 'dataset_tech_museum_public', apiKey: 'sk-xx...9a', updateTime: '2026-07-08 11:00' },
-  { id: 'C003', name: '自然博物馆', kbId: 'dataset_nature_museum_public', apiKey: 'sk-xx...2d', updateTime: '2026-07-05 16:45' }
+  { id: 'C001', name: 'XX博物馆', kbId: 'dataset_xx_museum_public', updateTime: '2026-07-10 14:30' },
+  { id: 'C002', name: '科技馆', kbId: 'dataset_tech_museum_public', updateTime: '2026-07-08 11:00' },
+  { id: 'C003', name: '自然博物馆', kbId: 'dataset_nature_museum_public', updateTime: '2026-07-05 16:45' }
 ];
 function renderPubKbTable() {
   var tbody = document.getElementById('pubKbTableBody');
   if (!tbody) return;
   tbody.innerHTML = pubKbData.map(function(item, i) {
-    return '<tr><td>' + item.id + '</td><td style="font-weight:500;">' + item.name + '</td><td><code style="font-size:12px;background:#f5f5f5;padding:2px 6px;border-radius:3px;">' + item.kbId + '</code></td><td><span style="font-family:monospace;">' + (item.apiKey || '<span style="color:#999;">未配置</span>') + '</span></td><td style="font-size:12px;color:#666;">' + item.updateTime + '</td><td><button class="action-btn" onclick="editPubKb(' + i + ')" data-anno="venue-08">编辑</button> <button class="action-btn" onclick="testPubKbConn(' + i + ')" data-anno="venue-08">测试连接</button> <button class="action-btn danger" onclick="deletePubKb(' + i + ')" data-anno="venue-08">删除</button></td></tr>';
+    return '<tr><td>' + item.id + '</td><td style="font-weight:500;">' + item.name + '</td><td><code style="font-size:12px;background:#f5f5f5;padding:2px 6px;border-radius:3px;">' + item.kbId + '</code></td><td style="font-size:12px;color:#666;">' + item.updateTime + '</td><td><button class="action-btn" onclick="editPubKb(' + i + ')" data-anno="venue-08">编辑</button> <button class="action-btn" onclick="testPubKbConn(' + i + ')" data-anno="venue-08">测试连接</button> <button class="action-btn danger" onclick="deletePubKb(' + i + ')" data-anno="venue-08">删除</button></td></tr>';
   }).join('');
 }
 function switchVenueTab(tab) {
@@ -2818,8 +2813,8 @@ function switchVenueTab(tab) {
   if (tab === 'pubkb') renderPubKbTable();
   document.dispatchEvent(new CustomEvent('tab-changed', { detail: { tab: tab } }));
 }
-function openAddPubKbModal() { document.getElementById('pubKbFormTitle').textContent = '新增公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = ''; document.getElementById('pubKbFormCustomerName').value = ''; document.getElementById('pubKbFormKbId').value = ''; document.getElementById('pubKbFormApiKey').value = ''; document.getElementById('pubKbFormModal').classList.add('show'); }
-function editPubKb(idx) { var item = pubKbData[idx]; document.getElementById('pubKbFormTitle').textContent = '编辑公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = item.id; document.getElementById('pubKbFormCustomerName').value = item.name; document.getElementById('pubKbFormKbId').value = item.kbId; document.getElementById('pubKbFormApiKey').value = item.apiKey; document.getElementById('pubKbFormModal').classList.add('show'); }
+function openAddPubKbModal() { document.getElementById('pubKbFormTitle').textContent = '新增公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = ''; document.getElementById('pubKbFormCustomerName').value = ''; document.getElementById('pubKbFormKbId').value = ''; document.getElementById('pubKbFormModal').classList.add('show'); }
+function editPubKb(idx) { var item = pubKbData[idx]; document.getElementById('pubKbFormTitle').textContent = '编辑公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = item.id; document.getElementById('pubKbFormCustomerName').value = item.name; document.getElementById('pubKbFormKbId').value = item.kbId; document.getElementById('pubKbFormModal').classList.add('show'); }
 function closePubKbFormModal() { document.getElementById('pubKbFormModal').classList.remove('show'); }
 function savePubKb() { var kid = document.getElementById('pubKbFormKbId').value.trim(); if (!kid) { showToast('请输入公共知识库ID', 'warn'); return; } closePubKbFormModal(); showToast('保存成功', 'success'); renderPubKbTable(); }
 function onPubKbCustomerChange() { var sel = document.getElementById('pubKbFormCustomerId'); var nameEl = document.getElementById('pubKbFormCustomerName'); var names = {'C001': 'XX博物馆', 'C002': '科技馆', 'C003': '自然博物馆'}; nameEl.value = names[sel.value] || ''; }
@@ -3685,11 +3680,9 @@ function closeSessionDetail() { document.getElementById('sessionDetailModal').cl
 function jumpToSessionByTime(time, customer) {
   const match = allSessionLogs.find(s => s.time.startsWith(time.split(' ')[0]) && s.time.includes(time.split(' ')[1]) && s.customer === customer);
   if (match) {
-    jumpToSessionLog(match.id);
+    openSessionDetail(match.id);
   } else {
-    closeUserDetail();
-    switchPage('sessionLogs');
-    showToast('未找到精确匹配的会话，已打开会话记录页');
+    showToast('未找到精确匹配的会话', 'warn');
   }
 }
 
