@@ -735,6 +735,11 @@ table tr { cursor: pointer; }
 .venue-tab:hover { color: #1890ff; }
 .venue-tab.active { color: #1890ff; border-bottom-color: #1890ff; font-weight: 500; }
 
+/* mergeModal 搜索结果滚动条 */
+#mergeSearchResults::-webkit-scrollbar { width: 6px; }
+#mergeSearchResults::-webkit-scrollbar-track { background: #F0F0F0; border-radius: 3px; }
+#mergeSearchResults::-webkit-scrollbar-thumb { background: #C0C4CC; border-radius: 3px; }
+
 </style>
 </head>
 <body>
@@ -1221,7 +1226,7 @@ table tr { cursor: pointer; }
                   <td>2026-07-07 14:23</td>
                   <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(0)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
+                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(0)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">新增知识</button></td>
                 </tr>
                 <tr style="cursor:pointer;" onclick="openGroupDetail(1)">
                   <td>2</td>
@@ -1233,7 +1238,7 @@ table tr { cursor: pointer; }
                   <td>2026-07-06 15:10</td>
                   <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(1)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
+                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(1)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">新增知识</button></td>
                 </tr>
                 <tr style="cursor:pointer;" onclick="openGroupDetail(2)">
                   <td>3</td>
@@ -1245,7 +1250,7 @@ table tr { cursor: pointer; }
                   <td>2026-07-04 16:45</td>
                   <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(2)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
+                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(2)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">新增知识</button></td>
                 </tr>
                 <tr style="cursor:pointer;" onclick="openGroupDetail(3)">
                   <td>4</td>
@@ -1301,7 +1306,7 @@ table tr { cursor: pointer; }
               <b>分组规则：</b>按「问题类别 × 客户」分组，每个分组对应单一客户（不同客户由不同运营人员负责）<br>
               <b>处理层级：</b>
               • <b>L1 自动忽略</b>：AI判断明显无关问题，自动标记已忽略，不进入人工队列<br>
-              • <b>L2 AI聚类+人工决策</b>：语义相近问题自动归类，人工对「组」做决策（补充知识库/忽略）<br>
+              • <b>L2 AI聚类+人工决策</b>：语义相近问题自动归类，人工对「组」做决策（新增知识/忽略）<br>
               • <b>L3 人工处理</b>：AI无法判断的问题进入待处理台账
             </div>
           </div>
@@ -1355,7 +1360,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-06 10:15</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：156****5678')">王五 (156****5678)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore" style="color:#999;">忽略</button></td>
               </tr>
               <tr>
                 <td>可以带宠物进来吗</td>
@@ -1375,7 +1380,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-04 16:45</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有讲解员服务','XX博物馆','少儿馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
               </tr>
               <tr>
                 <td>能不能帮我叫个外卖</td>
@@ -1395,7 +1400,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-02 11:05</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openNewKnowledge('这个展品是真品还是仿品','XX博物馆','东馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
               </tr>
             </tbody>
           </table>
@@ -1976,54 +1981,55 @@ table tr { cursor: pointer; }
     </div>
   </div>
 
-  <!-- 15. mergeModal → 补充知识库弹窗（Radio 二选一：新增到知识库 / 合并到已有知识） -->
-  <!-- openSupplementKbModal/closeMergeModal/onSupplementModeChange/searchMergeTarget/confirmSupplementKb 在 pages/03-miss-stats.html -->
+  <!-- 15. mergeModal → 合并到已有知识弹窗 -->
+  <!-- openSupplementKbModal/closeMergeModal/searchMergeTarget/confirmMergeKb/openNewKnowledge 在 pages/03-miss-stats.html -->
   <div class="modal-overlay" id="mergeModal">
-    <div class="modal" style="width:560px;">
-      <div class="modal-header">
-        <h3>补充知识库</h3>
-        <button class="modal-close" onclick="closeMergeModal()">&#10005;</button>
+    <div class="modal" style="width:560px;max-height:680px;border-radius:8px;background:#FFFFFF;border:1px solid #E4E7ED;box-shadow:0 4px 16px 0 rgba(0,0,0,0.08);">
+      <div class="modal-header" style="height:56px;padding:16px 24px;border-bottom:1px solid #E4E7ED;">
+        <h3 style="font-size:16px;font-weight:500;color:#303133;">合并到已有知识</h3>
+        <button class="modal-close" style="width:20px;height:20px;color:#909399;font-size:16px;" onclick="closeMergeModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
-      <div class="modal-body">
-        <div style="margin-bottom:12px;">
-          <div style="font-size:13px;color:#666;margin-bottom:4px;">问题原文</div>
-          <div id="mergeQuestion" style="background:#f5f5f5;padding:8px 12px;border-radius:4px;font-size:13px;"></div>
+      <div class="modal-body" style="padding:0 24px;overflow-y:auto;max-height:calc(680px - 56px - 80px);">
+        <!-- 区块A：问题原文 -->
+        <div style="margin-top:24px;margin-bottom:24px;">
+          <div style="font-size:12px;font-weight:400;color:#909399;margin-bottom:12px;">问题原文</div>
+          <div id="mergeQuestion" style="background:#F5F7FA;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:500;color:#303133;"></div>
         </div>
-        <div style="margin-bottom:14px;">
-          <div style="font-size:13px;color:#666;margin-bottom:4px;">所属范围</div>
-          <div id="mergeScope" style="font-size:13px;"></div>
-        </div>
-
-        <!-- 补充方式：Radio 二选一（垂直排列） -->
-        <div style="margin-bottom:14px;" data-anno="miss-supplement-mode">
-          <div style="font-size:13px;color:#666;margin-bottom:8px;">补充方式</div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <label id="supplementModeNewLabel" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;color:#333;cursor:pointer;transition:all .2s;">
-              <input type="radio" name="supplementMode" value="new" checked onchange="onSupplementModeChange()" style="accent-color:#1677ff;width:14px;height:14px;margin:0;">
-              新增到知识库
-            </label>
-            <label id="supplementModeMergeLabel" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;color:#333;cursor:pointer;transition:all .2s;">
-              <input type="radio" name="supplementMode" value="merge" onchange="onSupplementModeChange()" style="accent-color:#1677ff;width:14px;height:14px;margin:0;">
-              合并到已有知识
-            </label>
+        <!-- 区块B：所属范围 -->
+        <div style="margin-bottom:24px;">
+          <div style="font-size:12px;font-weight:400;color:#909399;margin-bottom:8px;">所属范围</div>
+          <div id="mergeScope" style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:400;color:#303133;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#909399" stroke-width="2" width="16" height="16" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="mergeScopeText"></span>
           </div>
         </div>
-
-        <!-- 选项1 说明 -->
-        <div id="supplementNewHint" style="background:#e6f4ff;border:1px solid #91caff;border-radius:6px;padding:9px 12px;font-size:12px;color:#0958d9;">
-          将打开新增问答表单，自动带入当前问题
+        <!-- 区块C：搜索合并目标 -->
+        <div id="supplementMergeArea" style="margin-bottom:24px;" data-anno="miss-merge">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px;">
+            <span style="font-size:13px;font-weight:500;color:#303133;">搜索合并目标</span>
+            <span style="font-size:12px;color:#909399;">(输入关键词检索已有问答知识)</span>
+          </div>
+          <div style="position:relative;">
+            <input type="text" id="mergeSearchInput" class="form-control" placeholder="请输入关键词搜索" oninput="searchMergeTarget()" style="height:40px;border-radius:8px;border:1px solid #DCDFE6;padding:0 44px 0 16px;font-size:13px;color:#303133;">
+            <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:8px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#C0C4CC" stroke-width="2" width="16" height="16" style="cursor:pointer;" onclick="document.getElementById('mergeSearchInput').value='';document.getElementById('mergeResultCount').textContent='';document.getElementById('mergeSearchResults').innerHTML='';"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#C0C4CC" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+          </div>
+          <div id="mergeResultCount" style="font-size:12px;color:#909399;margin-top:12px;margin-bottom:8px;"></div>
+          <div id="mergeSearchResults" style="max-height:240px;overflow-y:auto;"></div>
         </div>
-
-        <!-- 选项2 搜索区（合并到已有知识） -->
-        <div id="supplementMergeArea" style="display:none;" data-anno="miss-merge">
-          <div style="font-size:13px;color:#666;margin-bottom:4px;">搜索已有知识</div>
-          <input type="text" id="mergeSearchInput" class="form-control" placeholder="输入关键词搜索问答类知识" oninput="searchMergeTarget()">
-          <div id="mergeSearchResults" style="max-height:200px;overflow-y:auto;margin-top:8px;"></div>
+        <!-- 区块D：底部提示条 -->
+        <div style="background:#F0F5FF;border:1px solid #B4D8FF;border-radius:4px;padding:12px;display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1677FF" stroke-width="2" width="16" height="16" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span style="font-size:12px;color:#909399;">合并后，该问题将作为目标知识的相似问法，未命中问题将标记为已处理</span>
         </div>
       </div>
-      <div style="display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #f0f0f0;">
-        <button class="confirm-btn" onclick="closeMergeModal()">取消</button>
-        <button class="confirm-btn export-btn-confirm" onclick="confirmSupplementKb()">确定</button>
+      <div style="display:flex;justify-content:flex-end;gap:12px;padding:0 24px 24px 0;border-top:1px solid #E4E7ED;">
+        <button style="background:#FFFFFF;color:#606266;border-radius:4px;height:40px;min-width:64px;font-size:13px;font-weight:400;border:1px solid #DCDFE6;cursor:pointer;padding:0 16px;" onclick="closeMergeModal()">取消</button>
+        <button style="background:#1677FF;color:#FFFFFF;border-radius:4px;height:40px;min-width:88px;font-size:13px;font-weight:500;border:none;cursor:pointer;padding:0 16px;" onclick="confirmMergeKb()">确认合并</button>
       </div>
     </div>
   </div>
@@ -3002,7 +3008,7 @@ function prefillFaqFromSession() {
 
 function closeMissModal() { document.getElementById('missModal').classList.remove('show'); }
 
-// ====== 补充知识库弹窗（Radio 二选一：新增到知识库 / 合并到已有知识） ======
+// ====== 合并到已有知识弹窗 ======
 var _supplementCtx = null;   // 当前行上下文：{ question, customer, venue }
 var _supplementRow = null;   // 当前行 tr，用于成功后更新操作列
 
@@ -3010,36 +3016,14 @@ function openSupplementKbModal(question, customer, venue) {
   _supplementCtx = { question: question, customer: customer, venue: venue };
   _supplementRow = findMissRowByQuestion(question);
   document.getElementById('mergeQuestion').textContent = question;
-  document.getElementById('mergeScope').textContent = customer + ' - ' + venue;
-  var first = document.querySelector('input[name="supplementMode"][value="new"]');
-  if (first) first.checked = true;
+  document.getElementById('mergeScopeText').textContent = customer + ' - ' + venue;
   document.getElementById('mergeSearchInput').value = '';
   document.getElementById('mergeSearchResults').innerHTML = '';
-  onSupplementModeChange();
+  document.getElementById('mergeResultCount').textContent = '';
   document.getElementById('mergeModal').classList.add('show');
 }
 
 function closeMergeModal() { document.getElementById('mergeModal').classList.remove('show'); }
-
-function getSupplementMode() {
-  var checked = document.querySelector('input[name="supplementMode"]:checked');
-  return checked ? checked.value : 'new';
-}
-
-function onSupplementModeChange() {
-  var mode = getSupplementMode();
-  document.getElementById('supplementNewHint').style.display = mode === 'new' ? '' : 'none';
-  document.getElementById('supplementMergeArea').style.display = mode === 'merge' ? '' : 'none';
-  setSupplementLabelActive(document.getElementById('supplementModeNewLabel'), mode === 'new');
-  setSupplementLabelActive(document.getElementById('supplementModeMergeLabel'), mode === 'merge');
-}
-
-function setSupplementLabelActive(el, active) {
-  if (!el) return;
-  el.style.borderColor = active ? '#1677ff' : '#d9d9d9';
-  el.style.background = active ? '#e6f4ff' : '#fff';
-  el.style.color = active ? '#1677ff' : '#333';
-}
 
 function findMissRowByQuestion(question) {
   var trs = document.querySelectorAll('#missListView tbody tr');
@@ -3050,36 +3034,65 @@ function findMissRowByQuestion(question) {
   return null;
 }
 
-// 合并搜索：数据源为 kbData（知识库管理页全局数组），只保留问答类型
+// 合并搜索：数据源为 kbData（知识库管理页全局数组），只保留问答类型，卡片式单选
 function searchMergeTarget() {
   var keyword = document.getElementById('mergeSearchInput').value.trim().toLowerCase();
   var results = document.getElementById('mergeSearchResults');
-  if (!keyword) { results.innerHTML = ''; return; }
+  var countEl = document.getElementById('mergeResultCount');
+  if (!keyword) { results.innerHTML = ''; countEl.textContent = ''; return; }
   var matches = kbData.filter(function(item) {
     if (item.type !== 'faq') return false;
     var similar = (item.similarQuestions || []).join(' ');
     return item.standardQuestion.toLowerCase().indexOf(keyword) >= 0 || similar.toLowerCase().indexOf(keyword) >= 0;
   });
-  results.innerHTML = matches.length === 0
-    ? '<div style="color:#999;font-size:12px;padding:8px 0;">未找到匹配的问答类知识条目</div>'
-    : matches.map(function(item) {
-        var similar = (item.similarQuestions || []).join(' / ') || '暂无';
-        return '<label style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;"><input type="radio" name="mergeTarget" value="' + item.id + '" style="margin-top:3px;accent-color:#1677ff;"><div><div style="font-weight:500;">' + item.standardQuestion + '</div><div style="font-size:12px;color:#999;">现有相似问法：' + similar + '</div></div></label>';
-      }).join('');
-}
-
-function confirmSupplementKb() {
-  if (getSupplementMode() === 'merge') {
-    var selected = document.querySelector('input[name="mergeTarget"]:checked');
-    if (!selected) { showToast('请选择目标知识条目', 'warn'); return; }
-    var target = kbData.find(function(item) { return item.id === selected.value; });
-    closeMergeModal();
-    markMissSupplemented(_supplementRow);
-    showToast('已合并至「' + (target ? target.standardQuestion : '目标知识') + '」，正在重新向量化...', 'success');
+  countEl.textContent = matches.length > 0 ? '共找到 ' + matches.length + ' 条相关结果' : '';
+  if (matches.length === 0) {
+    results.innerHTML = '<div style="text-align:center;padding:24px 0;">' +
+          '<svg viewBox="0 0 120 120" fill="none" width="88" height="88" style="margin:0 auto 12px;display:block;"><rect x="20" y="20" width="80" height="80" rx="8" fill="#F5F5F5" stroke="#C0C4CC" stroke-width="2"/><path d="M50 50 L70 70 M70 50 L50 70" stroke="#C0C4CC" stroke-width="3" stroke-linecap="round"/><circle cx="85" cy="85" r="20" fill="#FFFFFF" stroke="#C0C4CC" stroke-width="2"/><circle cx="85" cy="85" r="10" stroke="#C0C4CC" stroke-width="2" fill="none"/><line x1="92" y1="92" x2="100" y2="100" stroke="#C0C4CC" stroke-width="2" stroke-linecap="round"/></svg>' +
+          '<div style="font-size:14px;color:#303133;margin-bottom:6px;">未找到相近知识</div>' +
+          '<div style="font-size:13px;color:#909399;margin-bottom:12px;">请尝试更换关键词</div>' +
+          '<button style="background:#FFFFFF;color:#606266;border-radius:4px;height:36px;min-width:64px;font-size:13px;font-weight:400;border:1px solid #DCDFE6;cursor:pointer;padding:0 16px;" onclick="closeMergeModal();openNewKnowledge((_supplementCtx?_supplementCtx.question:\'\'),(_supplementCtx?_supplementCtx.customer:\'\'),(_supplementCtx?_supplementCtx.venue:\'\'))">返回选择新增到知识库</button>' +
+          '</div>';
     return;
   }
-  // 新增到知识库：跳转知识库管理 → 打开新增问答弹窗 → 预填当前行数据
-  var ctx = _supplementCtx || { question: '', customer: '', venue: '' };
+  results.innerHTML = matches.map(function(item) {
+    var similar = (item.similarQuestions || []).join(' / ') || '暂无';
+    return '<label class="merge-result-card" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #E4E7ED;border-radius:4px;margin-bottom:8px;cursor:pointer;min-height:64px;background:#FFFFFF;transition:all .15s;">' +
+      '<input type="radio" name="mergeTarget" value="' + item.id + '" onchange="selectMergeCard(this)" style="accent-color:#1677FF;width:16px;height:16px;margin:0;flex-shrink:0;">' +
+      '<div style="flex:1;min-width:0;">' +
+              '<div style="font-size:13px;font-weight:500;color:#303133;margin-bottom:4px;">' + item.standardQuestion + '</div>' +
+              '<div style="font-size:12px;color:#909399;">现有相似问法：' + similar + '</div>' +
+            '</div>' +
+      '<div style="flex-shrink:0;font-size:12px;color:#909399;white-space:nowrap;">近30天命中 <span style="font-weight:500;">' + (item.hitCount30d || 0) + '</span>次</div>' +
+      '</label>';
+  }).join('');
+}
+
+function selectMergeCard(radio) {
+  var cards = document.querySelectorAll('.merge-result-card');
+  cards.forEach(function(card) {
+    var r = card.querySelector('input[type="radio"]');
+    if (r && r.checked) {
+      card.style.borderColor = '#1677FF';
+      card.style.background = '#F0F5FF';
+    } else {
+      card.style.borderColor = '#E4E7ED';
+      card.style.background = '#FFFFFF';
+    }
+  });
+}
+
+function confirmMergeKb() {
+  var selected = document.querySelector('input[name="mergeTarget"]:checked');
+  if (!selected) { showToast('请选择目标知识条目', 'warn'); return; }
+  var target = kbData.find(function(item) { return item.id === selected.value; });
+  closeMergeModal();
+  markMissSupplemented(_supplementRow);
+  showToast('已合并至「' + (target ? target.standardQuestion : '目标知识') + '」，正在重新向量化...', 'success');
+}
+
+function openNewKnowledge(question, customer, venue) {
+  var ctx = { question: question || '', customer: customer || '', venue: venue || '' };
   sessionStorage.setItem('pendingGroupToFaq', JSON.stringify({
     customer: ctx.customer,
     venue: ctx.venue,
@@ -3089,16 +3102,10 @@ function confirmSupplementKb() {
   }));
   closeMergeModal();
   markMissSupplemented(_supplementRow);
-  showToast('正在跳转知识库管理...', 'success');
-  setTimeout(function() {
-    switchPage('知识库管理', document.getElementById('menuKbMgmt'));
-    setTimeout(function() {
-      if (typeof openFaqFormModal === 'function') {
-        openFaqFormModal();
-        prefillFaqFromSession();
-      }
-    }, 300);
-  }, 500);
+  if (typeof openFaqFormModal === 'function') {
+    openFaqFormModal();
+    prefillFaqFromSession();
+  }
 }
 
 function markMissSupplemented(tr) {
@@ -3122,15 +3129,9 @@ function viewLinkedKb(faqId) {
 
 
 function jumpToSessionFromMiss(sessionId) {
-  showToast('正在跳转会话记录...', 'success');
-  setTimeout(function() {
-    switchPage('会话记录', document.getElementById('menuSessionLogs'));
-    setTimeout(function() {
-      if (typeof openSessionDetail === 'function') {
-        openSessionDetail(sessionId);
-      }
-    }, 300);
-  }, 500);
+  if (typeof openSessionDetail === 'function') {
+    openSessionDetail(sessionId);
+  }
 }
 
 const kbData = [
@@ -3410,21 +3411,18 @@ document.addEventListener('click', closeMoreMenus);
 
 // 知识来源记录（未命中问题沉淀而来）：q 问题文本 / user 用户 / time 时间 / type 来源方式
 const KB_SOURCE_RECORDS = [
-  { q: '有没有停车场，怎么收费', user: '王五', time: '07-06', type: '转入' },
-  { q: '车停在哪里', user: '张三', time: '07-05', type: '转入' },
-  { q: '停车多少钱一小时', user: '李四', time: '07-04', type: '合并' }
+  { q: '有没有停车场，怎么收费', user: '王五', askTime: '07-04 14:32', mergeTime: '07-06 10:20' },
+  { q: '车停在哪里', user: '张三', askTime: '07-03 09:15', mergeTime: '07-06 10:20' },
+  { q: '停车多少钱一小时', user: '李四', askTime: '07-02 16:40', mergeTime: '07-06 10:20' }
 ];
 
 function renderKbSourceRow(rec, i, arr) {
-  var badge = rec.type === '转入'
-    ? '<span class="badge-status" style="background:#e6f4ff;color:#1677ff;border:1px solid #91caff;">转入</span>'
-    : '<span class="badge-status" style="background:#f5f5f5;color:#666;border:1px solid #e8e8e8;">合并</span>';
   var line = (i === arr.length - 1) ? 'none' : '1px solid #f0f0f0';
   return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:' + line + ';font-size:13px;">' +
-    '<span style="flex:1;color:#333;">' + rec.q + '</span>' +
-    badge +
-    '<span style="width:52px;text-align:right;color:#666;">' + rec.user + '</span>' +
-    '<span style="width:52px;text-align:right;color:#999;font-size:12px;">' + rec.time + '</span>' +
+    '<span style="flex:1;color:#333;font-size:13px;">' + rec.q + '</span>' +
+    '<span style="color:#666;font-size:12px;">' + rec.user + '</span>' +
+    '<span style="display:inline-block;padding:2px 8px;background:#f5f5f5;border:1px solid #e8e8e8;border-radius:3px;color:#999;font-size:11px;white-space:nowrap;">提出 ' + rec.askTime + '</span>' +
+    '<span style="display:inline-block;padding:2px 8px;background:#e6f4ff;border:1px solid #91caff;border-radius:3px;color:#1677ff;font-size:11px;white-space:nowrap;">合并 ' + rec.mergeTime + '</span>' +
     '</div>';
 }
 
@@ -3462,7 +3460,7 @@ function openKbDetailModal(idx) {
     html += '</div>';
     if (item.source === '未命中问题转入') {
       html += '<div style="border-top:1px solid #f0f0f0;padding-top:12px;margin-top:12px;">';
-      html += '<div style="font-weight:500;color:#333;cursor:pointer;" onclick="var el=this.nextElementSibling;el.style.display=el.style.display===\'none\'?\'\':\'none\';this.querySelector(\'span\').textContent=el.style.display===\'none\'?\'展开 ▾\':\'收起 ▴\'">知识来源（' + KB_SOURCE_RECORDS.length + '条未命中问题沉淀而来） <span style="color:#0B5DEA;font-size:12px;">展开 ▾</span></div>';
+      html += '<div style="font-weight:500;color:#333;cursor:pointer;" onclick="var el=this.nextElementSibling;el.style.display=el.style.display===\'none\'?\'\':\'none\';this.querySelector(\'span\').textContent=el.style.display===\'none\'?\'展开 ▾\':\'收起 ▴\'">知识来源（' + KB_SOURCE_RECORDS.length + '条未命中问题合并而来） <span style="color:#0B5DEA;font-size:12px;">展开 ▾</span></div>';
       html += '<div style="display:none;margin-top:8px;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;padding:4px 12px;">';
       html += KB_SOURCE_RECORDS.map(renderKbSourceRow).join('');
       html += '</div></div>';
