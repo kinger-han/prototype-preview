@@ -1219,6 +1219,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">博物馆导览助手</span></td>
                   <td><span class="num-highlight">8</span></td>
                   <td>2026-07-07 14:23</td>
+                  <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(0)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
                 </tr>
@@ -1230,6 +1231,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">科技馆讲解员</span></td>
                   <td><span class="num-highlight">4</span></td>
                   <td>2026-07-06 15:10</td>
+                  <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(1)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
                 </tr>
@@ -1241,6 +1243,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">博物馆导览助手</span></td>
                   <td><span class="num-highlight">8</span></td>
                   <td>2026-07-04 16:45</td>
+                  <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(2)">查看详情</button> <button class="action-btn" onclick="event.stopPropagation();jumpToKbFromGroup(0)">补充知识库</button></td>
                 </tr>
@@ -1252,6 +1255,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">博物馆导览助手</span></td>
                   <td><span class="num-highlight">4</span></td>
                   <td>2026-07-07 14:23</td>
+                  <td><span class="badge-status" style="background:#f5f5f5;color:#666;border:1px solid #e8e8e8;">超出导游职责（忽略）</span></td>
                                     <td><span class="badge-status active">已忽略</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(3)">查看详情</button> <span style="color:#999;font-size:12px;">已忽略</span></td>
                 </tr>
@@ -1263,6 +1267,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">博物馆导览助手</span></td>
                   <td><span class="num-highlight">10</span></td>
                   <td>2026-07-03 12:10</td>
+                  <td><span class="badge-status" style="background:#f5f5f5;color:#666;border:1px solid #e8e8e8;">超出导游职责（忽略）</span></td>
                                     <td><span class="badge-status active">已忽略</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(4)">查看详情</button> <span style="color:#999;font-size:12px;">AI自动忽略</span></td>
                 </tr>
@@ -1274,6 +1279,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">科技馆讲解员</span></td>
                   <td><span class="num-highlight">6</span></td>
                   <td>2026-07-02 18:30</td>
+                  <td><span class="badge-status" style="background:#f5f5f5;color:#666;border:1px solid #e8e8e8;">超出导游职责（忽略）</span></td>
                                     <td><span class="badge-status active">已忽略</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(5)">查看详情</button> <span style="color:#999;font-size:12px;">AI自动忽略</span></td>
                 </tr>
@@ -1285,6 +1291,7 @@ table tr { cursor: pointer; }
                   <td><span style="font-size:13px;">科技馆讲解员</span></td>
                   <td><span class="num-highlight">5</span></td>
                   <td>2026-07-05 09:30</td>
+                  <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
                                     <td><span class="badge-status active">已处理</span></td>
                   <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(6)">查看详情</button> <span style="color:#999;font-size:12px;">已更新知识库</span></td>
                 </tr>
@@ -1348,7 +1355,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-06 10:15</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：156****5678')">王五 (156****5678)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="joinKnowledgeSingle()" data-anno="miss-join-kb">补充知识库</button> <button class="action-btn" onclick="openMergeModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-merge">合并至已有</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore" style="color:#999;">忽略</button></td>
               </tr>
               <tr>
                 <td>可以带宠物进来吗</td>
@@ -1368,7 +1375,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-04 16:45</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="joinKnowledgeSingle()">补充知识库</button> <button class="action-btn" onclick="openMergeModal('有没有讲解员服务','XX博物馆','少儿馆')">合并至已有</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
               </tr>
               <tr>
                 <td>能不能帮我叫个外卖</td>
@@ -1388,7 +1395,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-02 11:05</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="joinKnowledgeSingle()">补充知识库</button> <button class="action-btn" onclick="openMergeModal('这个展品是真品还是仿品','XX博物馆','东馆')">合并至已有</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')">补充知识库</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
               </tr>
             </tbody>
           </table>
@@ -1597,7 +1604,6 @@ table tr { cursor: pointer; }
           <table class="session-log-table">
             <thead>
               <tr>
-                <th style="width:60px;">会话ID</th>
                 <th style="width:120px;">用户</th>
                 <th style="width:100px;">来源客户</th>
                 <th style="width:80px;">来源场馆</th>
@@ -1970,11 +1976,12 @@ table tr { cursor: pointer; }
     </div>
   </div>
 
-  <!-- 15. mergeModal（批次B） -->
+  <!-- 15. mergeModal → 补充知识库弹窗（Radio 二选一：新增到知识库 / 合并到已有知识） -->
+  <!-- openSupplementKbModal/closeMergeModal/onSupplementModeChange/searchMergeTarget/confirmSupplementKb 在 pages/03-miss-stats.html -->
   <div class="modal-overlay" id="mergeModal">
     <div class="modal" style="width:560px;">
       <div class="modal-header">
-        <h3>合并至已有知识</h3>
+        <h3>补充知识库</h3>
         <button class="modal-close" onclick="closeMergeModal()">&#10005;</button>
       </div>
       <div class="modal-body">
@@ -1982,19 +1989,41 @@ table tr { cursor: pointer; }
           <div style="font-size:13px;color:#666;margin-bottom:4px;">问题原文</div>
           <div id="mergeQuestion" style="background:#f5f5f5;padding:8px 12px;border-radius:4px;font-size:13px;"></div>
         </div>
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:14px;">
           <div style="font-size:13px;color:#666;margin-bottom:4px;">所属范围</div>
           <div id="mergeScope" style="font-size:13px;"></div>
         </div>
-        <div style="margin-bottom:12px;">
-          <div style="font-size:13px;color:#666;margin-bottom:4px;">搜索已有知识</div>
-          <input type="text" id="mergeSearchInput" class="form-control" placeholder="输入关键词搜索" oninput="searchMergeKb()">
+
+        <!-- 补充方式：Radio 二选一（垂直排列） -->
+        <div style="margin-bottom:14px;" data-anno="miss-supplement-mode">
+          <div style="font-size:13px;color:#666;margin-bottom:8px;">补充方式</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label id="supplementModeNewLabel" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;color:#333;cursor:pointer;transition:all .2s;">
+              <input type="radio" name="supplementMode" value="new" checked onchange="onSupplementModeChange()" style="accent-color:#1677ff;width:14px;height:14px;margin:0;">
+              新增到知识库
+            </label>
+            <label id="supplementModeMergeLabel" style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;color:#333;cursor:pointer;transition:all .2s;">
+              <input type="radio" name="supplementMode" value="merge" onchange="onSupplementModeChange()" style="accent-color:#1677ff;width:14px;height:14px;margin:0;">
+              合并到已有知识
+            </label>
+          </div>
         </div>
-        <div id="mergeSearchResults" style="max-height:200px;overflow-y:auto;"></div>
+
+        <!-- 选项1 说明 -->
+        <div id="supplementNewHint" style="background:#e6f4ff;border:1px solid #91caff;border-radius:6px;padding:9px 12px;font-size:12px;color:#0958d9;">
+          将打开新增问答表单，自动带入当前问题
+        </div>
+
+        <!-- 选项2 搜索区（合并到已有知识） -->
+        <div id="supplementMergeArea" style="display:none;" data-anno="miss-merge">
+          <div style="font-size:13px;color:#666;margin-bottom:4px;">搜索已有知识</div>
+          <input type="text" id="mergeSearchInput" class="form-control" placeholder="输入关键词搜索问答类知识" oninput="searchMergeTarget()">
+          <div id="mergeSearchResults" style="max-height:200px;overflow-y:auto;margin-top:8px;"></div>
+        </div>
       </div>
       <div style="display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #f0f0f0;">
         <button class="confirm-btn" onclick="closeMergeModal()">取消</button>
-        <button class="confirm-btn export-btn-confirm" onclick="confirmMerge()">确认合并</button>
+        <button class="confirm-btn export-btn-confirm" onclick="confirmSupplementKb()">确定</button>
       </div>
     </div>
   </div>
@@ -2083,7 +2112,7 @@ table tr { cursor: pointer; }
             <b>导出说明：</b><br>
             • 选择「来源客户」后，仅导出该客户下的会话数据<br>
             • 选择「会话质量」后，仅导出对应质量的会话<br>
-            • 导出字段：会话ID、用户、来源客户、来源场馆、智能体、开始时间、消息轮次、兜底次数、会话质量
+            • 导出字段：用户、来源客户、来源场馆、智能体、开始时间、消息轮次、兜底次数、会话质量
           </div>
           <div class="export-actions">
             <button class="confirm-btn" onclick="closeSessionExportModal()">取消</button>
@@ -2971,50 +3000,113 @@ function prefillFaqFromSession() {
   }
 }
 
-function joinKnowledgeSingle() {
-  showToast('正在跳转知识库管理...', 'success');
-  setTimeout(function() {
-    switchPage('知识库管理', document.getElementById('menuKbMgmt'));
-    setTimeout(function() {
-      if (typeof openFaqFormModal === 'function') openFaqFormModal();
-    }, 300);
-  }, 500);
-}
-
 function closeMissModal() { document.getElementById('missModal').classList.remove('show'); }
 
-function openMergeModal(question, customer, venue) {
+// ====== 补充知识库弹窗（Radio 二选一：新增到知识库 / 合并到已有知识） ======
+var _supplementCtx = null;   // 当前行上下文：{ question, customer, venue }
+var _supplementRow = null;   // 当前行 tr，用于成功后更新操作列
+
+function openSupplementKbModal(question, customer, venue) {
+  _supplementCtx = { question: question, customer: customer, venue: venue };
+  _supplementRow = findMissRowByQuestion(question);
   document.getElementById('mergeQuestion').textContent = question;
   document.getElementById('mergeScope').textContent = customer + ' - ' + venue;
+  var first = document.querySelector('input[name="supplementMode"][value="new"]');
+  if (first) first.checked = true;
   document.getElementById('mergeSearchInput').value = '';
   document.getElementById('mergeSearchResults').innerHTML = '';
+  onSupplementModeChange();
   document.getElementById('mergeModal').classList.add('show');
 }
 
 function closeMergeModal() { document.getElementById('mergeModal').classList.remove('show'); }
 
+function getSupplementMode() {
+  var checked = document.querySelector('input[name="supplementMode"]:checked');
+  return checked ? checked.value : 'new';
+}
+
+function onSupplementModeChange() {
+  var mode = getSupplementMode();
+  document.getElementById('supplementNewHint').style.display = mode === 'new' ? '' : 'none';
+  document.getElementById('supplementMergeArea').style.display = mode === 'merge' ? '' : 'none';
+  setSupplementLabelActive(document.getElementById('supplementModeNewLabel'), mode === 'new');
+  setSupplementLabelActive(document.getElementById('supplementModeMergeLabel'), mode === 'merge');
+}
+
+function setSupplementLabelActive(el, active) {
+  if (!el) return;
+  el.style.borderColor = active ? '#1677ff' : '#d9d9d9';
+  el.style.background = active ? '#e6f4ff' : '#fff';
+  el.style.color = active ? '#1677ff' : '#333';
+}
+
+function findMissRowByQuestion(question) {
+  var trs = document.querySelectorAll('#missListView tbody tr');
+  for (var i = 0; i < trs.length; i++) {
+    var td = trs[i].querySelector('td');
+    if (td && td.textContent.trim() === question) return trs[i];
+  }
+  return null;
+}
+
+// 合并搜索：数据源为 kbData（知识库管理页全局数组），只保留问答类型
 function searchMergeTarget() {
   var keyword = document.getElementById('mergeSearchInput').value.trim().toLowerCase();
   var results = document.getElementById('mergeSearchResults');
   if (!keyword) { results.innerHTML = ''; return; }
-  // Simulate search results from kbData
-  var matches = [
-    { q: '博物馆是否提供停车场', similar: '有没有停车场/停车怎么收费...' },
-    { q: '博物馆开放时间', similar: '几点开门/几点闭馆...' },
-    { q: '博物馆门票多少钱', similar: '门票价格/学生票有优惠吗...' }
-  ].filter(function(m) { return m.q.toLowerCase().indexOf(keyword) >= 0 || m.similar.toLowerCase().indexOf(keyword) >= 0; });
+  var matches = kbData.filter(function(item) {
+    if (item.type !== 'faq') return false;
+    var similar = (item.similarQuestions || []).join(' ');
+    return item.standardQuestion.toLowerCase().indexOf(keyword) >= 0 || similar.toLowerCase().indexOf(keyword) >= 0;
+  });
   results.innerHTML = matches.length === 0
-    ? '<div style="color:#999;font-size:12px;padding:8px 0;">未找到匹配的知识条目</div>'
-    : matches.map(function(m, i) {
-        return '<label style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;"><input type="radio" name="mergeTarget" value="' + i + '" style="margin-top:3px;"><div><div style="font-weight:500;">' + m.q + '</div><div style="font-size:12px;color:#999;">现有相似问法：' + m.similar + '</div></div></label>';
+    ? '<div style="color:#999;font-size:12px;padding:8px 0;">未找到匹配的问答类知识条目</div>'
+    : matches.map(function(item) {
+        var similar = (item.similarQuestions || []).join(' / ') || '暂无';
+        return '<label style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f5f5f5;cursor:pointer;"><input type="radio" name="mergeTarget" value="' + item.id + '" style="margin-top:3px;accent-color:#1677ff;"><div><div style="font-weight:500;">' + item.standardQuestion + '</div><div style="font-size:12px;color:#999;">现有相似问法：' + similar + '</div></div></label>';
       }).join('');
 }
 
-function confirmMerge() {
-  var selected = document.querySelector('input[name="mergeTarget"]:checked');
-  if (!selected) { showToast('请选择目标知识条目', 'warn'); return; }
+function confirmSupplementKb() {
+  if (getSupplementMode() === 'merge') {
+    var selected = document.querySelector('input[name="mergeTarget"]:checked');
+    if (!selected) { showToast('请选择目标知识条目', 'warn'); return; }
+    var target = kbData.find(function(item) { return item.id === selected.value; });
+    closeMergeModal();
+    markMissSupplemented(_supplementRow);
+    showToast('已合并至「' + (target ? target.standardQuestion : '目标知识') + '」，正在重新向量化...', 'success');
+    return;
+  }
+  // 新增到知识库：跳转知识库管理 → 打开新增问答弹窗 → 预填当前行数据
+  var ctx = _supplementCtx || { question: '', customer: '', venue: '' };
+  sessionStorage.setItem('pendingGroupToFaq', JSON.stringify({
+    customer: ctx.customer,
+    venue: ctx.venue,
+    question: ctx.question,
+    similarQuestions: [],
+    groupId: null
+  }));
   closeMergeModal();
-  showToast('已合并至目标知识条目，正在重新向量化...', 'success');
+  markMissSupplemented(_supplementRow);
+  showToast('正在跳转知识库管理...', 'success');
+  setTimeout(function() {
+    switchPage('知识库管理', document.getElementById('menuKbMgmt'));
+    setTimeout(function() {
+      if (typeof openFaqFormModal === 'function') {
+        openFaqFormModal();
+        prefillFaqFromSession();
+      }
+    }, 300);
+  }, 500);
+}
+
+function markMissSupplemented(tr) {
+  if (!tr) return;
+  var tds = tr.querySelectorAll('td');
+  if (tds.length < 8) return;
+  tds[6].innerHTML = '<span class="badge-status active">已处理</span>';
+  tds[7].innerHTML = '<span style="color:#666;font-size:12px;">已补充知识库</span>';
 }
 
 function viewLinkedKb(faqId) {
@@ -3316,6 +3408,26 @@ function closeMoreMenus() {
 }
 document.addEventListener('click', closeMoreMenus);
 
+// 知识来源记录（未命中问题沉淀而来）：q 问题文本 / user 用户 / time 时间 / type 来源方式
+const KB_SOURCE_RECORDS = [
+  { q: '有没有停车场，怎么收费', user: '王五', time: '07-06', type: '转入' },
+  { q: '车停在哪里', user: '张三', time: '07-05', type: '转入' },
+  { q: '停车多少钱一小时', user: '李四', time: '07-04', type: '合并' }
+];
+
+function renderKbSourceRow(rec, i, arr) {
+  var badge = rec.type === '转入'
+    ? '<span class="badge-status" style="background:#e6f4ff;color:#1677ff;border:1px solid #91caff;">转入</span>'
+    : '<span class="badge-status" style="background:#f5f5f5;color:#666;border:1px solid #e8e8e8;">合并</span>';
+  var line = (i === arr.length - 1) ? 'none' : '1px solid #f0f0f0';
+  return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:' + line + ';font-size:13px;">' +
+    '<span style="flex:1;color:#333;">' + rec.q + '</span>' +
+    badge +
+    '<span style="width:52px;text-align:right;color:#666;">' + rec.user + '</span>' +
+    '<span style="width:52px;text-align:right;color:#999;font-size:12px;">' + rec.time + '</span>' +
+    '</div>';
+}
+
 function openKbDetailModal(idx) {
   var item = kbData[idx];
   var isFaq = item.type === 'faq';
@@ -3350,11 +3462,9 @@ function openKbDetailModal(idx) {
     html += '</div>';
     if (item.source === '未命中问题转入') {
       html += '<div style="border-top:1px solid #f0f0f0;padding-top:12px;margin-top:12px;">';
-      html += '<div style="font-weight:500;color:#333;cursor:pointer;" onclick="var el=this.nextElementSibling;el.style.display=el.style.display===\'none\'?\'\':\'none\';this.querySelector(\'span\').textContent=el.style.display===\'none\'?\'展开 ▾\':\'收起 ▴\'">知识来源（3条未命中问题沉淀而来） <span style="color:#0B5DEA;font-size:12px;">展开 ▾</span></div>';
-      html += '<div style="display:none;margin-top:8px;background:#fafafa;border-radius:6px;padding:10px;font-size:12px;color:#666;line-height:2;">';
-      html += '· 有没有停车场，怎么收费 王五 07-06 转入<br>';
-      html += '· 车停在哪里 张三 07-05 转入<br>';
-      html += '· 停车多少钱一小时 李四 07-04 合并';
+      html += '<div style="font-weight:500;color:#333;cursor:pointer;" onclick="var el=this.nextElementSibling;el.style.display=el.style.display===\'none\'?\'\':\'none\';this.querySelector(\'span\').textContent=el.style.display===\'none\'?\'展开 ▾\':\'收起 ▴\'">知识来源（' + KB_SOURCE_RECORDS.length + '条未命中问题沉淀而来） <span style="color:#0B5DEA;font-size:12px;">展开 ▾</span></div>';
+      html += '<div style="display:none;margin-top:8px;background:#fafafa;border:1px solid #f0f0f0;border-radius:6px;padding:4px 12px;">';
+      html += KB_SOURCE_RECORDS.map(renderKbSourceRow).join('');
       html += '</div></div>';
     }
   } else {
@@ -3484,7 +3594,6 @@ function renderSessionLogs(filteredData) {
     const tagClass = s.quality;
     const tagText = s.quality === 'good' ? '优质' : s.quality === 'warn' ? '一般' : '需关注';
     return `<tr>
-      <td><span style="color:#0B5DEA;font-weight:500;">${s.id}</span></td>
       <td>${s.user}</td>
       <td>${s.customer}</td>
       <td>${s.venue}</td>
