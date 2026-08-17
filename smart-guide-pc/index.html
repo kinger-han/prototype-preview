@@ -3638,9 +3638,10 @@ function openSessionDetail(sessionId) {
   if (!s) return;
 
   document.getElementById('sessionDetailTitle').textContent = '会话详情';
+  const userFull = s.user.split(' (')[0] + ' (' + (s.phone || '') + ')';
   document.getElementById('sessionMetaRow').innerHTML = `
     <div class="session-meta-row" style="border:none;padding:0;">
-      <div><span class="label">用户：</span><span class="value">${s.user}</span></div>
+      <div><span class="label">用户：</span><span class="value">${userFull}</span></div>
       <div><span class="label">来源客户：</span><span class="value">${s.customer}</span></div>
       <div><span class="label">来源场馆：</span><span class="value">${s.venue}</span></div>
       <div><span class="label">开始时间：</span><span class="value">${s.time}</span></div>
