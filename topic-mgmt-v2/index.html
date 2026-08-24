@@ -2300,9 +2300,8 @@ if (tagFilterActive.length > 0) {
   document.getElementById('tabCountUncat').textContent = uncat;
   document.getElementById('tabCountCat').textContent = total - uncat;
  }
- /* V4.20b 公共主题v2 菜单已隐藏，默认落地页改为公共资源 */
+ /* V4.20b 公共主题v2 菜单已隐藏，默认落地页改为公共资源；init 由 protoShowPage 内部调用，不再手动执行（否则覆盖面包屑） */
  if (typeof protoShowPage === 'function') { protoShowPage('resource-mgmt'); }
-  init_topic_mgmt();
  </script>
 </div>
 </div>
@@ -14383,9 +14382,8 @@ if (tagFilterActive.length > 0) {
   document.getElementById('tabCountUncat').textContent = uncat;
   document.getElementById('tabCountCat').textContent = total - uncat;
  }
- /* V4.20b 公共主题v2 菜单已隐藏，默认落地页改为公共资源 */
+ /* V4.20b 公共主题v2 菜单已隐藏，默认落地页改为公共资源；init 由 protoShowPage 内部调用，不再手动执行（否则覆盖面包屑） */
  if (typeof protoShowPage === 'function') { protoShowPage('resource-mgmt'); }
-  init_topic_mgmt();
 
 /* ===== 资源管理共享状态（02-06 共用） ===== */
     var RES_CURRENT_PAGE = 'resource-mgmt-a';
