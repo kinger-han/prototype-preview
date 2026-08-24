@@ -5847,7 +5847,7 @@ if (tagFilterActive.length > 0) {
 <div class="proto-page" id="page-resource-mgmt" data-page-id="resource-mgmt">
   <style>
     /* ===== 资源管理主页（07）样式 ===== */
-    .resmg-layout { display: flex; gap: 14px; align-items: flex-start; }
+    .resmg-layout { display: flex; gap: 12px; align-items: flex-start; }
     .resmg-tree-panel { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; position: sticky; top: 16px; height: calc(100vh - 32px); }
     .resmg-tree-panel .res-tree-head { padding-right: 4px; }
     .resmg-tree-panel .res-tree-list { max-height: none; flex: 1; }
@@ -5945,7 +5945,7 @@ if (tagFilterActive.length > 0) {
     .resmg-hintbar svg { flex-shrink: 0; color: #1677ff; }
 
     /* 每行 4 个资源卡（中屏降 3 列、窄屏降 2 列见底部媒体查询） */
-    .resmg-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+    .resmg-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
     /* 卡片统一上下结构：上预览 + 下信息。不在卡片上设 overflow:hidden，避免裁切「更多」下拉菜单 */
     .resmg-card { background: #fff; border: 1px solid #eef0f4; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; transition: box-shadow 0.15s, border-color 0.15s; display: flex; flex-direction: column; }
     .resmg-card:hover { box-shadow: 0 4px 16px rgba(15,55,120,0.08); border-color: #91caff; }
@@ -6165,11 +6165,10 @@ if (tagFilterActive.length > 0) {
         <div class="resmg-more-wrap">
           <button class="resmg-btn" onclick="toggleResMgmtBatchMore(this)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>批量操作<span class="resmg-tag-arrow">▾</span></button>
           <div class="resmg-more-menu" id="resMgmtMoreMenu">
-            <div class="resmg-more-item" onclick="resToast('批量导出（演示）')">批量导出</div>
             <div class="resmg-more-item" onclick="openResMgmtBatchTagModal()">批量打标签</div>
-            <div class="resmg-more-item" onclick="openDurationModal()">批量设置时长</div>
-            <div class="resmg-more-item" onclick="openImportModal()">批量导入</div>
+            <div class="resmg-more-item" onclick="resToast('批量下载（演示）')">批量下载</div>
             <div class="resmg-more-item danger" onclick="resToast('批量删除（演示）')">批量删除</div>
+            <div class="resmg-more-item" onclick="openResMgmtBatchShelfDown()">批量下架</div>
           </div>
         </div>
         <button class="resmg-btn" id="resMgmtViewBtn" onclick="toggleResMgmtView()" title="切换主题/资源视图">主题<span class="resmg-tag-arrow">▾</span></button>
@@ -6531,9 +6530,9 @@ if (tagFilterActive.length > 0) {
         + '<div class="resmg-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '<button class="action-btn" onclick="openResEdit(' + c.id + ')">编辑</button>'
-        + '<button class="action-btn" onclick="openMoveModal(' + c.id + ')">移动</button>'
         + '<span class="res-more-wrap"><button class="action-btn" onclick="toggleResMgmtMore(' + c.id + ', this)">更多<span class="grey-arrow">▾</span></button>'
         + '<div class="res-more-menu" id="resMgmtMore-' + c.id + '">'
+        + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ')">移动</div>'
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
@@ -6737,6 +6736,18 @@ if (tagFilterActive.length > 0) {
       closeAllResMore();
       renderResMgmtCards();
       resToast(r.visible ? '上架中' : '已下架', 'success');
+    }
+
+    /* 批量下架：勾选资源全部下架（演示，原地置灰不重排序，与单卡下架同渲染） */
+    function openResMgmtBatchShelfDown() {
+      if (!RES_MGMT_BATCH_IDS.length) { resToast('请先勾选要下架的资源', 'error'); return; }
+      for (var i = 0; i < RES_MGMT_BATCH_IDS.length; i++) {
+        var r = findRes(RES_MGMT_BATCH_IDS[i]);
+        if (r) r.visible = false;
+      }
+      closeAllResMore();
+      renderResMgmtCards();
+      resToast('批量下架成功（演示）', 'success');
     }
 
     function renderResMgmtCards() {
@@ -9083,7 +9094,7 @@ if (tagFilterActive.length > 0) {
 <div class="proto-page" id="page-private-resource-mgmt" data-page-id="private-resource-mgmt">
   <style>
     /* ===== 资源管理主页（07）样式 ===== */
-    .resmg-layout { display: flex; gap: 14px; align-items: flex-start; }
+    .resmg-layout { display: flex; gap: 12px; align-items: flex-start; }
     .resmg-tree-panel { width: 280px; flex-shrink: 0; display: flex; flex-direction: column; position: sticky; top: 16px; height: calc(100vh - 32px); }
     .resmg-tree-panel .res-tree-head { padding-right: 4px; }
     .resmg-tree-panel .res-tree-list { max-height: none; flex: 1; }
@@ -9155,7 +9166,7 @@ if (tagFilterActive.length > 0) {
     .resmg-hintbar svg { flex-shrink: 0; color: #1677ff; }
 
     /* 每行 4 个资源卡（中屏降 3 列、窄屏降 2 列见底部媒体查询） */
-    .resmg-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+    .resmg-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
     /* 卡片统一上下结构：上预览 + 下信息。不在卡片上设 overflow:hidden，避免裁切「更多」下拉菜单 */
     .resmg-card { background: #fff; border: 1px solid #eef0f4; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; transition: box-shadow 0.15s, border-color 0.15s; display: flex; flex-direction: column; }
     .resmg-card:hover { box-shadow: 0 4px 16px rgba(15,55,120,0.08); border-color: #91caff; }
@@ -9339,11 +9350,10 @@ if (tagFilterActive.length > 0) {
         <div class="resmg-more-wrap">
           <button class="resmg-btn" onclick="togglePvtMgmtBatchMore(this)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>批量操作<span class="resmg-tag-arrow">▾</span></button>
           <div class="resmg-more-menu" id="pvtMgmtMoreMenu">
-            <div class="resmg-more-item" onclick="resToast('批量导出（演示）')">批量导出</div>
             <div class="resmg-more-item" onclick="openPvtMgmtBatchTagModal()">批量打标签</div>
-            <div class="resmg-more-item" onclick="openDurationModal()">批量设置时长</div>
-            <div class="resmg-more-item" onclick="openImportModal()">批量导入</div>
+            <div class="resmg-more-item" onclick="resToast('批量下载（演示）')">批量下载</div>
             <div class="resmg-more-item danger" onclick="resToast('批量删除（演示）')">批量删除</div>
+            <div class="resmg-more-item" onclick="openPvtMgmtBatchShelfDown()">批量下架</div>
           </div>
         </div>
         <button class="resmg-btn" id="pvtMgmtViewBtn" onclick="togglePvtMgmtView()" title="切换主题/资源视图">主题<span class="resmg-tag-arrow">▾</span></button>
@@ -9790,9 +9800,9 @@ if (tagFilterActive.length > 0) {
         + '<div class="resmg-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '<button class="action-btn" onclick="openResEdit(' + c.id + ')">编辑</button>'
-        + '<button class="action-btn" onclick="openMoveModal(' + c.id + ')">移动</button>'
         + '<span class="res-more-wrap"><button class="action-btn" onclick="togglePvtMgmtMore(' + c.id + ', this)">更多<span class="grey-arrow">▾</span></button>'
         + '<div class="res-more-menu" id="pvtMgmtMore-' + c.id + '">'
+        + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ')">移动</div>'
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
@@ -9926,6 +9936,18 @@ if (tagFilterActive.length > 0) {
       closeAllResMore();
       renderPvtMgmtCards();
       resToast(r.visible ? '上架中' : '已下架', 'success');
+    }
+
+    /* 批量下架：勾选资源全部下架（演示，原地置灰不重排序，与单卡下架同渲染） */
+    function openPvtMgmtBatchShelfDown() {
+      if (!PVT_MGMT_BATCH_IDS.length) { resToast('请先勾选要下架的资源', 'error'); return; }
+      for (var i = 0; i < PVT_MGMT_BATCH_IDS.length; i++) {
+        var r = findRes(PVT_MGMT_BATCH_IDS[i]);
+        if (r) r.visible = false;
+      }
+      closeAllResMore();
+      renderPvtMgmtCards();
+      resToast('批量下架成功（演示）', 'success');
     }
 
     function renderPvtMgmtCards() {
@@ -17122,9 +17144,9 @@ function editThemeOptions() {
         + '<div class="resmg-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '<button class="action-btn" onclick="openResEdit(' + c.id + ')">编辑</button>'
-        + '<button class="action-btn" onclick="openMoveModal(' + c.id + ')">移动</button>'
         + '<span class="res-more-wrap"><button class="action-btn" onclick="toggleResMgmtMore(' + c.id + ', this)">更多<span class="grey-arrow">▾</span></button>'
         + '<div class="res-more-menu" id="resMgmtMore-' + c.id + '">'
+        + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ')">移动</div>'
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
@@ -17328,6 +17350,18 @@ function editThemeOptions() {
       closeAllResMore();
       renderResMgmtCards();
       resToast(r.visible ? '上架中' : '已下架', 'success');
+    }
+
+    /* 批量下架：勾选资源全部下架（演示，原地置灰不重排序，与单卡下架同渲染） */
+    function openResMgmtBatchShelfDown() {
+      if (!RES_MGMT_BATCH_IDS.length) { resToast('请先勾选要下架的资源', 'error'); return; }
+      for (var i = 0; i < RES_MGMT_BATCH_IDS.length; i++) {
+        var r = findRes(RES_MGMT_BATCH_IDS[i]);
+        if (r) r.visible = false;
+      }
+      closeAllResMore();
+      renderResMgmtCards();
+      resToast('批量下架成功（演示）', 'success');
     }
 
     function renderResMgmtCards() {
@@ -19931,9 +19965,9 @@ var CAT_MGMT_EDIT_INDEX = -1;
         + '<div class="resmg-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '<button class="action-btn" onclick="openResEdit(' + c.id + ')">编辑</button>'
-        + '<button class="action-btn" onclick="openMoveModal(' + c.id + ')">移动</button>'
         + '<span class="res-more-wrap"><button class="action-btn" onclick="togglePvtMgmtMore(' + c.id + ', this)">更多<span class="grey-arrow">▾</span></button>'
         + '<div class="res-more-menu" id="pvtMgmtMore-' + c.id + '">'
+        + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ')">移动</div>'
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
@@ -20067,6 +20101,18 @@ var CAT_MGMT_EDIT_INDEX = -1;
       closeAllResMore();
       renderPvtMgmtCards();
       resToast(r.visible ? '上架中' : '已下架', 'success');
+    }
+
+    /* 批量下架：勾选资源全部下架（演示，原地置灰不重排序，与单卡下架同渲染） */
+    function openPvtMgmtBatchShelfDown() {
+      if (!PVT_MGMT_BATCH_IDS.length) { resToast('请先勾选要下架的资源', 'error'); return; }
+      for (var i = 0; i < PVT_MGMT_BATCH_IDS.length; i++) {
+        var r = findRes(PVT_MGMT_BATCH_IDS[i]);
+        if (r) r.visible = false;
+      }
+      closeAllResMore();
+      renderPvtMgmtCards();
+      resToast('批量下架成功（演示）', 'success');
     }
 
     function renderPvtMgmtCards() {
