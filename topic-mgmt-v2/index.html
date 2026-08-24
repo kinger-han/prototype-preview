@@ -11267,8 +11267,6 @@ if (tagFilterActive.length > 0) {
     }
 
     function sdlCardHtml(c) {
-      var shelfClass = c.visible ? 'on' : 'off';
-      var shelfText = c.visible ? '已上架' : '已下架';
       var playBtn = c.type === '视频' ? '<span class="sdl-play" onclick="event.stopPropagation();resToast(\'视频播放演示\')">▶</span>' : '';
       var checked = SDL_SELECTED_IDS.indexOf(c.id) >= 0 ? ' checked' : '';
       var checkHtml = '<input type="checkbox" class="sdl-card-check"' + checked + ' onclick="event.stopPropagation();toggleSdlSelect(' + c.id + ', this)">';
@@ -11283,21 +11281,12 @@ if (tagFilterActive.length > 0) {
         for (var q = maxTags; q < c.tags.length; q++) rest.push(c.tags[q]);
         tagHtml += '<span class="sdl-tag more" title="' + sdlEsc(rest.join('、')) + '">+' + (c.tags.length - maxTags) + '</span>';
       }
-      var platHtml = '';
-      for (var p = 0; p < c.platforms.length; p++) {
-        platHtml += '<span class="sdl-plat ' + sdlPlatClass(c.platforms[p].status) + '" title="' + sdlEsc(c.platforms[p].name + '　' + c.platforms[p].status) + '">' + sdlEsc(c.platforms[p].name) + '</span>';
-      }
       return '<div class="sdl-card">'
         + '<div class="sdl-preview"' + previewClick + '>' + checkHtml + (c.img ? '<img src="' + c.img + '" alt="' + sdlEsc(c.title) + '">' : '') + playBtn + '</div>'
         + '<div class="sdl-info">'
-        + '<div class="sdl-info-top">'
-        + '<span class="sdl-shelf ' + shelfClass + '">' + shelfText + '</span>'
-        + '<span class="res-status ' + resStatusClass(c.status) + '">' + c.status + '</span>'
-        + '</div>'
         + '<div class="sdl-card-title">' + sdlEsc(c.title) + '</div>'
         + '<div class="sdl-theme-row">所属主题：<b>' + sdlEsc(c.theme) + '</b></div>'
         + '<div class="sdl-tags">' + tagHtml + '</div>'
-        + '<div class="sdl-ext-row">' + platHtml + '</div>'
         + '<div class="sdl-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '</div>'
@@ -21285,8 +21274,6 @@ var SDL_SCOPE = 'public';
     }
 
     function sdlCardHtml(c) {
-      var shelfClass = c.visible ? 'on' : 'off';
-      var shelfText = c.visible ? '已上架' : '已下架';
       var playBtn = c.type === '视频' ? '<span class="sdl-play" onclick="event.stopPropagation();resToast(\'视频播放演示\')">▶</span>' : '';
       var checked = SDL_SELECTED_IDS.indexOf(c.id) >= 0 ? ' checked' : '';
       var checkHtml = '<input type="checkbox" class="sdl-card-check"' + checked + ' onclick="event.stopPropagation();toggleSdlSelect(' + c.id + ', this)">';
@@ -21301,21 +21288,12 @@ var SDL_SCOPE = 'public';
         for (var q = maxTags; q < c.tags.length; q++) rest.push(c.tags[q]);
         tagHtml += '<span class="sdl-tag more" title="' + sdlEsc(rest.join('、')) + '">+' + (c.tags.length - maxTags) + '</span>';
       }
-      var platHtml = '';
-      for (var p = 0; p < c.platforms.length; p++) {
-        platHtml += '<span class="sdl-plat ' + sdlPlatClass(c.platforms[p].status) + '" title="' + sdlEsc(c.platforms[p].name + '　' + c.platforms[p].status) + '">' + sdlEsc(c.platforms[p].name) + '</span>';
-      }
       return '<div class="sdl-card">'
         + '<div class="sdl-preview"' + previewClick + '>' + checkHtml + (c.img ? '<img src="' + c.img + '" alt="' + sdlEsc(c.title) + '">' : '') + playBtn + '</div>'
         + '<div class="sdl-info">'
-        + '<div class="sdl-info-top">'
-        + '<span class="sdl-shelf ' + shelfClass + '">' + shelfText + '</span>'
-        + '<span class="res-status ' + resStatusClass(c.status) + '">' + c.status + '</span>'
-        + '</div>'
         + '<div class="sdl-card-title">' + sdlEsc(c.title) + '</div>'
         + '<div class="sdl-theme-row">所属主题：<b>' + sdlEsc(c.theme) + '</b></div>'
         + '<div class="sdl-tags">' + tagHtml + '</div>'
-        + '<div class="sdl-ext-row">' + platHtml + '</div>'
         + '<div class="sdl-card-actions">'
         + '<button class="action-btn" onclick="openResDetail(' + c.id + ')">查看</button>'
         + '</div>'
