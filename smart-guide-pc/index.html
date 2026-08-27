@@ -156,6 +156,22 @@ table tr { cursor: pointer; }
 }
 .badge-status.active { background: #e6fffb; color: #13c2c2; border: 1px solid #b5f5ec; }
 .badge-status.disabled { background: #fff1f0; color: #f5222d; border: 1px solid #ffa39e; }
+/* 未命中问题-更多操作按钮 */
+.more-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border: none; background: transparent;
+  color: #999; border-radius: 4px; cursor: pointer; padding: 0; vertical-align: middle;
+  transition: all .15s;
+}
+.more-btn:hover { background: #f0f5ff; color: #1677ff; }
+.more-btn svg { width: 16px; height: 16px; }
+.more-menu-item.disabled { color: #c0c4cc !important; cursor: not-allowed; background: transparent !important; }
+/* 状态=知识链接（点击打开知识详情），AntD Tag 风格 */
+.status-kb-add { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+.status-kb-merge { background: #e6f4ff; color: #1677ff; border: 1px solid #91caff; }
+.badge-status.status-link { cursor: pointer; transition: all .15s; }
+.badge-status.status-link:hover { filter: brightness(1.06); box-shadow: 0 0 0 1px currentColor inset; transform: translateY(-1px); }
+
 .venue-tags { display: flex; gap: 4px; flex-wrap: wrap; }
 .venue-tag {
   display: inline-block; padding: 1px 8px; background: #f0f5ff;
@@ -1111,7 +1127,8 @@ table tr { cursor: pointer; }
               <select class="filter-select" style="min-width:100px;">
               <option value="">全部</option>
               <option>待处理</option>
-              <option>已处理</option>
+              <option>已新增</option>
+              <option>已合并</option>
               <option>已忽略</option>
             </select>
           </div>
@@ -1229,8 +1246,8 @@ table tr { cursor: pointer; }
                   <td><span class="num-highlight">5</span></td>
                   <td>2026-07-05 09:30</td>
                   <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
-                                    <td><span class="badge-status active">已处理</span></td>
-                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(6)">查看详情</button> <span style="color:#999;font-size:12px;">已更新知识库</span></td>
+                                    <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="event.stopPropagation();openKbFromMiss(this)">已新增 ›</span></td>
+                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(6)">查看详情</button> <span style="color:#999;font-size:12px;">已新增</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1282,7 +1299,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-07 14:23</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status active">已忽略</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
                 <td>有没有停车场，怎么收费</td>
@@ -1292,7 +1309,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-06 10:15</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：156****5678')">王五 (156****5678)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;有没有停车场，怎么收费&apos;,&apos;XX博物馆&apos;,&apos;西馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;有没有停车场，怎么收费&apos;,&apos;XX博物馆&apos;,&apos;西馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
               </tr>
               <tr>
                 <td>可以带宠物进来吗</td>
@@ -1301,8 +1318,8 @@ table tr { cursor: pointer; }
                 <td><span style="font-size:13px;">科技馆讲解员</span></td>
                 <td>2026-07-05 09:30</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：186****9012')">赵六 (186****9012)</span></td>
-                <td><span class="badge-status active">已处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <button class="action-btn" data-kb="kb_1028" onclick="openKbFromMiss(this)">已补充</button></td>
+                <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="openKbFromMiss(this)">已新增 ›</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
 <tr>
                 <td>博物馆停车场入口在哪</td>
@@ -1311,8 +1328,8 @@ table tr { cursor: pointer; }
                 <td><span style="font-size:13px;">博物馆导览助手</span></td>
                 <td>2026-07-06 15:40</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
-                <td><span class="badge-status active">已处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(2)">详情</button> <button class="action-btn" data-kb="kb_1024" onclick="openKbFromMiss(this)">已合并</button></td>
+                <td><span class="badge-status status-kb-merge status-link" data-kb="kb_1024" onclick="openKbFromMiss(this)">已合并 ›</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(2)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
                 <td>有没有讲解员服务</td>
@@ -1322,7 +1339,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-04 16:45</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有讲解员服务','XX博物馆','少儿馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;有没有讲解员服务&apos;,&apos;XX博物馆&apos;,&apos;少儿馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;有没有讲解员服务&apos;,&apos;XX博物馆&apos;,&apos;少儿馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
               </tr>
               <tr>
                 <td>能不能帮我叫个外卖</td>
@@ -1332,7 +1349,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-03 12:10</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：135****7890')">周八 (135****7890)</span></td>
                                 <td><span class="badge-status active">已忽略</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
                 <td>这个展品是真品还是仿品</td>
@@ -1342,7 +1359,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-02 11:05</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openNewKnowledge('这个展品是真品还是仿品','XX博物馆','东馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;这个展品是真品还是仿品&apos;,&apos;XX博物馆&apos;,&apos;东馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;这个展品是真品还是仿品&apos;,&apos;XX博物馆&apos;,&apos;东馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
               </tr>
             </tbody>
           </table>
@@ -2803,9 +2820,9 @@ function openGroupDetail(idx) {
     tbody.innerHTML = g.items.map(item => {
       const badge = item.status === '待处理'
         ? '<span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span>'
-        : item.status === '已处理' ? '<span class="badge-status active">已处理</span>' : '<span class="badge-status active">已忽略</span>';
+        : item.status === '已新增' ? '<span class="badge-status status-kb-add status-link" data-kb="' + (item.linkedFaqId || '') + '" onclick="openKbFromMiss(this)">已新增 ›</span>' : '<span class="badge-status active">已忽略</span>';
       const btns = item.status === '待处理'
-        ? '<button class="action-btn" onclick="markSingleHandled(this,\'已处理\')">标记已处理</button> <button class="action-btn" onclick="markSingleHandled(this,\'已忽略\')" style="color:#999;">忽略</button>'
+        ? '<button class="action-btn" onclick="markSingleHandled(this,\'已新增\')">标记已新增</button> <button class="action-btn" onclick="markSingleHandled(this,\'已忽略\')" style="color:#999;">忽略</button>'
         : '<span style="color:#999;font-size:12px;">—</span>';
       return '<tr><td>' + item.q + '</td><td>' + item.user + '</td><td>' + item.time + '</td><td>' + badge + '</td><td>' + btns + '</td></tr>';
     }).join('');
@@ -2839,8 +2856,8 @@ function switchMissView(view) {
 function markAllGroupHandled(status) {
     document.querySelectorAll('#groupDetailBody tr').forEach(tr => {
       const tds = tr.querySelectorAll('td');
-      if (status === '已处理') {
-        tds[3].innerHTML = '<span class="badge-status active">已处理</span>';
+      if (status === '已新增') {
+        tds[3].innerHTML = '<span class="badge-status active">已新增</span>';
         tds[4].innerHTML = '<span style="color:#999;font-size:12px;">已更新知识库</span>';
       } else {
         tds[3].innerHTML = '<span class="badge-status active">已忽略</span>';
@@ -2853,10 +2870,10 @@ function markAllGroupHandled(status) {
 function markGroupHandled(btn, status) {
   const tr = btn.closest('tr');
   const tds = tr.querySelectorAll('td');
-  if (status === '已处理') {
-    tds[6].innerHTML = '<span class="badge-status active">已处理</span>';
+  if (status === '已新增') {
+    tds[6].innerHTML = '<span class="badge-status active">已新增</span>';
     tds[7].innerHTML = '<span class="link-btn" onclick="showToast(\'跳转知识库管理...\')">已更新知识库</span>';
-    showToast('该组问题已标记为已处理，请前往知识库补充内容', 'success');
+    showToast('该组问题已标记为已新增，请前往知识库补充内容', 'success');
   } else {
     tds[6].innerHTML = '<span class="badge-status active">已忽略</span>';
     tds[7].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
@@ -2867,9 +2884,9 @@ function markGroupHandled(btn, status) {
 function markSingleHandled(btn, status) {
     const tr = btn.closest('tr');
     const tds = tr.querySelectorAll('td');
-    if (status === '已处理') {
-      tds[3].innerHTML = '<span class="badge-status active">已处理</span>';
-      tds[4].innerHTML = '<span style="color:#999;font-size:12px;">已更新知识库</span>';
+    if (status === '已新增') {
+      tds[3].innerHTML = '<span class="badge-status status-kb-add status-link" onclick="openKbFromMiss(this)">已新增 ›</span>';
+      tds[4].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
     } else {
       tds[3].innerHTML = '<span class="badge-status active">已忽略</span>';
       tds[4].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
@@ -2880,15 +2897,12 @@ function markSingleHandled(btn, status) {
 function markMissHandled(btn, status) {
   const tr = btn.closest('tr');
   const tds = tr.querySelectorAll('td');
-  if (status === '已处理') {
-    tds[6].innerHTML = '<span class="badge-status active">已处理</span>';
-    tds[7].innerHTML = '<span style="color:#999;font-size:12px;">已更新知识库</span>';
-    showToast('已标记为已处理', 'success');
-  } else {
-    tds[6].innerHTML = '<span class="badge-status active">已忽略</span>';
-    tds[7].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
-    showToast('已标记为已忽略', 'success');
-  }
+  if (tds.length < 8) return;
+  tds[6].innerHTML = '<span class="badge-status active">已忽略</span>';
+  var detailBtn = tds[7].querySelector('.action-btn');
+  var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
+  tds[7].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  showToast('已标记为已忽略', 'success');
 }
 
 const groupDetailData = [
@@ -2918,8 +2932,8 @@ const groupDetailData = [
       { q: '帮我查下公交', user: '赵六 (186****9012)', time: '2026-07-02 18:30', status: '已忽略' }
     ]},
     { category: '带宠物入园', customer: '科技馆', venue: '主馆', aiType: '知识库缺失（可补充）', linkedFaqId: 'kb_1028', items: [
-      { q: '可以带宠物进来吗', user: '赵六 (186****9012)', time: '2026-07-05 09:30', status: '已处理' },
-      { q: '可以带狗进去吗', user: '张三 (138****6789)', time: '2026-07-04 10:15', status: '已处理' }
+      { q: '可以带宠物进来吗', user: '赵六 (186****9012)', time: '2026-07-05 09:30', status: '已新增' },
+      { q: '可以带狗进去吗', user: '张三 (138****6789)', time: '2026-07-04 10:15', status: '已新增' }
     ]}
    ];
 
@@ -3081,16 +3095,57 @@ function openKbFromMiss(btn) {
   else showToast('关联知识已删除', 'warn');
 }
 
+// ====== 更多操作折叠菜单 ======
+var _missMenuSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
+function toggleMissMenu(ev, elm) {
+  if (ev) ev.stopPropagation();
+  if (!elm) return;
+  var wrap = elm.closest('.more-menu-wrap');
+  if (!wrap) return;
+  var menu = wrap.querySelector('.more-menu');
+  var isShow = menu.classList.contains('show');
+  closeMissMenuAll();
+  if (!isShow) menu.classList.add('show');
+}
+function closeMissMenuAll() {
+  document.querySelectorAll('.more-menu.show').forEach(function(m) { m.classList.remove('show'); });
+}
+function missMenuAction(type, a, b, c) {
+  closeMissMenuAll();
+  if (type === 'add') openNewKnowledge(a, b, c);
+  else if (type === 'merge') openSupplementKbModal(a, b, c);
+  else markMissHandled(a, '已忽略');
+}
+document.addEventListener('click', function(e) {
+  if (e.target.closest && !e.target.closest('.more-menu-wrap')) closeMissMenuAll();
+});
+function missMenuHtml(tr, disabled) {
+  var tds = tr.querySelectorAll('td');
+  var q = tds[0] ? tds[0].textContent.trim() : '';
+  var c = tds[1] ? tds[1].textContent.trim() : '';
+  var v = tds[2] ? tds[2].textContent.trim() : '';
+  var items;
+  if (disabled) {
+    items = '<div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div>';
+  } else {
+    items = '<div class="more-menu-item" onclick="missMenuAction(\'add\',\'' + q + '\',\'' + c + '\',\'' + v + '\')">新增知识</div>'
+      + '<div class="more-menu-item" onclick="missMenuAction(\'merge\',\'' + q + '\',\'' + c + '\',\'' + v + '\')">合并知识</div>'
+      + '<div class="more-menu-item danger" onclick="missMenuAction(\'ignore\', this)">忽略</div>';
+  }
+  return '<div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作">' + _missMenuSvg + '</button><div class="more-menu">' + items + '</div></div>';
+}
+
 function markMissSupplemented(tr, type, kbId) {
   if (!tr) return;
   var tds = tr.querySelectorAll('td');
   if (tds.length < 8) return;
-  tds[6].innerHTML = '<span class="badge-status active">已处理</span>';
+  var label = type === 'merge' ? '已合并' : '已新增';
+  var cls = type === 'merge' ? 'status-kb-merge' : 'status-kb-add';
+  var kbAttr = kbId ? 'data-kb="' + kbId + '"' : '';
+  tds[6].innerHTML = '<span class="badge-status ' + cls + ' status-link" ' + kbAttr + ' onclick="openKbFromMiss(this)">' + label + ' ›</span>';
   var detailBtn = tds[7].querySelector('.action-btn');
   var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
-  var label = type === 'merge' ? '已合并' : '已补充';
-  var kbAttr = kbId ? 'data-kb="' + kbId + '"' : '';
-  tds[7].innerHTML = detailHtml + ' <button class="action-btn" ' + kbAttr + ' onclick="openKbFromMiss(this)">' + label + '</button>';
+  tds[7].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
 }
 
 function viewLinkedKb(faqId) {
