@@ -674,7 +674,7 @@ table tr { cursor: pointer; }
 .tooltip-icon::after {
   content: attr(data-tip);
   position: absolute;
-  bottom: calc(100% + 8px);
+  top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: #fff;
@@ -771,11 +771,12 @@ table tr { cursor: pointer; }
         <span class="menu-icon">🏛️</span>智能导游<span class="menu-arrow">▾</span>
       </div>
       <div class="sub-menu open">
-        <div class="menu-item active" onclick="switchPage('用户管理', this)" id="menuUserMgmt">用户管理</div>
-        <div class="menu-item" onclick="switchPage('场馆管理', this)" id="menuVenueMgmt">场馆管理</div>
-        <div class="menu-item" onclick="switchPage('知识库管理', this)" id="menuKbMgmt">知识库管理</div>
+        <div class="menu-item active" onclick="switchPage('知识库管理', this)" id="menuKbMgmt">知识库管理</div>
+        <div class="menu-item" onclick="switchPage('未命中问题', this)" id="menuMissStats">未命中问题</div>
         <div class="menu-item" onclick="switchPage('会话记录', this)" id="menuSessionLogs">会话记录</div>
-        <div class="menu-item" onclick="switchPage('未命中问题统计', this)" id="menuMissStats">未命中问题统计</div>
+        <div class="menu-item" onclick="switchPage('用户管理', this)" id="menuUserMgmt">用户管理</div>
+        <div class="menu-item" onclick="switchPage('场馆管理', this)" id="menuVenueMgmt">场馆管理</div>
+        <div class="menu-item" onclick="switchPage('客户知识库', this)" id="menuCustomerKb">客户知识库</div>
       </div>
     </div>
   </div>
@@ -786,7 +787,7 @@ table tr { cursor: pointer; }
       <div class="breadcrumb">
         <a href="#">首页</a><span class="sep">/</span>
         <span style="color:#0B5DEA;">智能导游</span><span class="sep">/</span>
-        <span class="current">用户管理</span>
+        <span class="current">知识库管理</span>
       </div>
       <div class="top-nav-right">
         <span class="nav-greeting">您好，张三</span>
@@ -979,11 +980,6 @@ table tr { cursor: pointer; }
 <div class="proto-page" data-page-id="venue-mgmt" style="display:none;">
 <div class="page" id="pageVenueMgmt">
 
-        <!-- Tab切换 -->
-        <div style="display:flex;gap:0;border-bottom:1px solid #e8e8e8;margin-bottom:0;align-items:center;">
-          <div id="tabVenueList" class="venue-tab active" onclick="switchVenueTab('list')">场馆列表</div>
-          <div id="tabPubKb" class="venue-tab" onclick="switchVenueTab('pubkb')">公共知识库配置</div>
-        </div>
 
         <!-- 场馆列表Tab内容 -->
         <div id="venueTabList">
@@ -1068,67 +1064,8 @@ table tr { cursor: pointer; }
         </div>
         </div><!-- /venueTabList -->
 
-        <!-- 公共知识库配置Tab内容 -->
-        <div id="venueTabPubKb" style="display:none;">
-          <div class="table-card" data-anno="venue-06">
-            <div class="table-toolbar">
-              <button class="toolbar-btn" data-anno="venue-07" onclick="openAddPubKbModal()" style="background:#E6EFFD;color:#0B5DEA;border:1px solid #b3c8f7;" onmouseover="this.style.background='#095CEA';this.style.color='#fff';this.style.borderColor='#095CEA'" onmouseout="this.style.background='#E6EFFD';this.style.color='#0B5DEA';this.style.borderColor='#b3c8f7'">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                新增配置
-              </button>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:80px;">客户ID</th>
-                  <th style="width:120px;">客户名称</th>
-                  <th style="width:180px;">公共知识库ID</th>
-                  <th style="width:140px;">更新时间</th>
-                  <th style="width:180px;">操作</th>
-                </tr>
-              </thead>
-              <tbody id="pubKbTableBody">
-              </tbody>
-            </table>
-          </div>
-        </div>
 
       
-<!-- ====== 公共知识库配置弹窗 ====== -->
-<div class="modal-overlay" id="pubKbFormModal" data-anno="venue-pubkb">
-  <div class="modal" style="width:520px;">
-    <div class="modal-header">
-      <h3 id="pubKbFormTitle">新增公共知识库配置</h3>
-      <button class="modal-close" onclick="closePubKbFormModal()">&#10005;</button>
-    </div>
-    <div class="modal-body">
-      <div class="venue-form">
-        <div class="form-row">
-          <span class="form-label">客户ID：<span style="color:#f5222d;">*</span></span>
-          <select class="form-control" id="pubKbFormCustomerId" onchange="onPubKbCustomerChange()">
-            <option value="">请选择客户</option>
-            <option value="C001">C001</option>
-            <option value="C002">C002</option>
-            <option value="C003">C003</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <span class="form-label">客户名称：</span>
-          <input type="text" class="form-control" id="pubKbFormCustomerName" readonly style="background:#f5f5f5;">
-        </div>
-        <div class="form-row">
-          <span class="form-label">公共知识库ID：<span style="color:#f5222d;">*</span></span>
-          <input type="text" class="form-control" id="pubKbFormKbId" placeholder="对应Dify的Dataset ID">
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0;">
-        <button class="confirm-btn" onclick="closePubKbFormModal()">取消</button>
-        <button class="confirm-btn export-btn-confirm" onclick="savePubKb()">保存</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 </div>
 </div>
 
@@ -1345,7 +1282,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-07 14:23</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status active">已忽略</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button> <span style="color:#999;font-size:12px;">已忽略</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button></td>
               </tr>
               <tr>
                 <td>有没有停车场，怎么收费</td>
@@ -1355,7 +1292,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-06 10:15</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：156****5678')">王五 (156****5678)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-join-kb">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有停车场，怎么收费','XX博物馆','西馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" data-anno="miss-ignore">忽略</button></td>
               </tr>
               <tr>
                 <td>可以带宠物进来吗</td>
@@ -1365,7 +1302,17 @@ table tr { cursor: pointer; }
                 <td>2026-07-05 09:30</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：186****9012')">赵六 (186****9012)</span></td>
                 <td><span class="badge-status active">已处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <span style="color:#666;font-size:12px;">已补充知识库</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <button class="action-btn" data-kb="kb_1028" onclick="openKbFromMiss(this)">已补充</button></td>
+              </tr>
+<tr>
+                <td>博物馆停车场入口在哪</td>
+                <td>XX博物馆</td>
+                <td>东馆</td>
+                <td><span style="font-size:13px;">博物馆导览助手</span></td>
+                <td>2026-07-06 15:40</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
+                <td><span class="badge-status active">已处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(2)">详情</button> <button class="action-btn" data-kb="kb_1024" onclick="openKbFromMiss(this)">已合并</button></td>
               </tr>
               <tr>
                 <td>有没有讲解员服务</td>
@@ -1375,7 +1322,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-04 16:45</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：138****6789')">张三 (138****6789)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有讲解员服务','XX博物馆','少儿馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <button class="action-btn" onclick="openNewKnowledge('有没有讲解员服务','XX博物馆','少儿馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('有没有讲解员服务','XX博物馆','少儿馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')">忽略</button></td>
               </tr>
               <tr>
                 <td>能不能帮我叫个外卖</td>
@@ -1385,7 +1332,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-03 12:10</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：135****7890')">周八 (135****7890)</span></td>
                                 <td><span class="badge-status active">已忽略</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button> <span style="color:#999;font-size:12px;">已忽略</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button></td>
               </tr>
               <tr>
                 <td>这个展品是真品还是仿品</td>
@@ -1395,7 +1342,7 @@ table tr { cursor: pointer; }
                 <td>2026-07-02 11:05</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：139****1234')">李四 (139****1234)</span></td>
                 <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
-                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openNewKnowledge('这个展品是真品还是仿品','XX博物馆','东馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')" style="color:#999;">忽略</button></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <button class="action-btn" onclick="openNewKnowledge('这个展品是真品还是仿品','XX博物馆','东馆')">新增知识</button> <button class="action-btn" onclick="openSupplementKbModal('这个展品是真品还是仿品','XX博物馆','东馆')" data-anno="miss-merge-btn">合并知识</button> <button class="action-btn" onclick="markMissHandled(this,'已忽略')">忽略</button></td>
               </tr>
             </tbody>
           </table>
@@ -1636,6 +1583,59 @@ table tr { cursor: pointer; }
             </div>
           </div>
         </div>
+      </div>
+</div>
+
+<div class="proto-page" data-page-id="customer-kb" style="display:none;">
+<div class="page" id="pageCustomerKb">
+
+        <div class="table-card" data-anno="venue-06">
+          <div class="table-toolbar">
+            <button class="toolbar-btn" data-anno="venue-07" onclick="openAddPubKbModal()" style="background:#E6EFFD;color:#0B5DEA;border:1px solid #b3c8f7;" onmouseover="this.style.background='#095CEA';this.style.color='#fff';this.style.borderColor='#095CEA'" onmouseout="this.style.background='#E6EFFD';this.style.color='#0B5DEA';this.style.borderColor='#b3c8f7'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              新增配置
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:160px;">客户名称</th>
+                <th style="width:220px;">公共知识库ID</th>
+                <th style="width:160px;">更新时间</th>
+                <th style="width:180px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="pubKbTableBody">
+            </tbody>
+          </table>
+        </div>
+
+<!-- ====== 公共知识库配置弹窗 ====== -->
+<div class="modal-overlay" id="pubKbFormModal" data-anno="venue-pubkb">
+  <div class="modal" style="width:520px;">
+    <div class="modal-header">
+      <h3 id="pubKbFormTitle">新增公共知识库配置</h3>
+      <button class="modal-close" onclick="closePubKbFormModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="venue-form">
+        <div class="form-row">
+          <span class="form-label">客户名称：<span style="color:#f5222d;">*</span></span>
+          <input type="text" class="form-control" id="pubKbFormCustomerName" placeholder="请输入客户名称">
+        </div>
+        <div class="form-row">
+          <span class="form-label">公共知识库ID：<span style="color:#f5222d;">*</span></span>
+          <input type="text" class="form-control" id="pubKbFormKbId" placeholder="对应Dify的Dataset ID">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0;">
+        <button class="confirm-btn" onclick="closePubKbFormModal()">取消</button>
+        <button class="confirm-btn export-btn-confirm" onclick="savePubKb()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
 </div>
 
@@ -2590,7 +2590,7 @@ function updateBreadcrumb(title) {
 
 // ---- ProtoKit 页面路由 ----
 var _protoPages = document.querySelectorAll('.proto-page');
-var _pageTitleToId = {"用户管理": "user-mgmt", "场馆管理": "venue-mgmt", "未命中问题统计": "miss-stats", "知识库管理": "kb-management", "会话记录": "session-logs"};
+var _pageTitleToId = {"用户管理": "user-mgmt", "场馆管理": "venue-mgmt", "未命中问题": "miss-stats", "知识库管理": "kb-management", "会话记录": "session-logs", "客户知识库": "customer-kb"};
 
 function protoShowPage(pageId) {
   _protoPages.forEach(function(p) {
@@ -2790,36 +2790,6 @@ function closeVenueExportModal() { document.getElementById('venueExportModal').c
 function doVenueExport() { const customer = document.getElementById('venueExportCustomer').value; let desc = '正在导出场馆数据'; if (customer) desc += '（' + customer + '）'; closeVenueExportModal(); showToast(desc + '...', 'success'); }
 
 function init_venue_mgmt() { renderVenueTable(); }
-
-// ---- 场馆管理Tab切换 ----
-const pubKbData = [
-  { id: 'C001', name: 'XX博物馆', kbId: 'dataset_xx_museum_public', updateTime: '2026-07-10 14:30' },
-  { id: 'C002', name: '科技馆', kbId: 'dataset_tech_museum_public', updateTime: '2026-07-08 11:00' },
-  { id: 'C003', name: '自然博物馆', kbId: 'dataset_nature_museum_public', updateTime: '2026-07-05 16:45' }
-];
-function renderPubKbTable() {
-  var tbody = document.getElementById('pubKbTableBody');
-  if (!tbody) return;
-  tbody.innerHTML = pubKbData.map(function(item, i) {
-    return '<tr><td>' + item.id + '</td><td style="font-weight:500;">' + item.name + '</td><td><code style="font-size:12px;background:#f5f5f5;padding:2px 6px;border-radius:3px;">' + item.kbId + '</code></td><td style="font-size:12px;color:#666;">' + item.updateTime + '</td><td><button class="action-btn" onclick="editPubKb(' + i + ')" data-anno="venue-08">编辑</button> <button class="action-btn" onclick="testPubKbConn(' + i + ')" data-anno="venue-08">测试连接</button> <button class="action-btn danger" onclick="deletePubKb(' + i + ')" data-anno="venue-08">删除</button></td></tr>';
-  }).join('');
-}
-function switchVenueTab(tab) {
-  document.getElementById('venueTabList').style.display = tab === 'list' ? '' : 'none';
-  document.getElementById('venueTabPubKb').style.display = tab === 'pubkb' ? '' : 'none';
-  document.getElementById('tabVenueList').className = 'venue-tab' + (tab === 'list' ? ' active' : '');
-  document.getElementById('tabPubKb').className = 'venue-tab' + (tab === 'pubkb' ? ' active' : '');
-  document.getElementById('btnAddVenue').style.display = tab === 'list' ? '' : 'none';
-  if (tab === 'pubkb') renderPubKbTable();
-  document.dispatchEvent(new CustomEvent('tab-changed', { detail: { tab: tab } }));
-}
-function openAddPubKbModal() { document.getElementById('pubKbFormTitle').textContent = '新增公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = ''; document.getElementById('pubKbFormCustomerName').value = ''; document.getElementById('pubKbFormKbId').value = ''; document.getElementById('pubKbFormModal').classList.add('show'); }
-function editPubKb(idx) { var item = pubKbData[idx]; document.getElementById('pubKbFormTitle').textContent = '编辑公共知识库配置'; document.getElementById('pubKbFormCustomerId').value = item.id; document.getElementById('pubKbFormCustomerName').value = item.name; document.getElementById('pubKbFormKbId').value = item.kbId; document.getElementById('pubKbFormModal').classList.add('show'); }
-function closePubKbFormModal() { document.getElementById('pubKbFormModal').classList.remove('show'); }
-function savePubKb() { var kid = document.getElementById('pubKbFormKbId').value.trim(); if (!kid) { showToast('请输入公共知识库ID', 'warn'); return; } closePubKbFormModal(); showToast('保存成功', 'success'); renderPubKbTable(); }
-function onPubKbCustomerChange() { var sel = document.getElementById('pubKbFormCustomerId'); var nameEl = document.getElementById('pubKbFormCustomerName'); var names = {'C001': 'XX博物馆', 'C002': '科技馆', 'C003': '自然博物馆'}; nameEl.value = names[sel.value] || ''; }
-function testPubKbConn(idx) { showToast('测试连接中...', 'success'); setTimeout(function() { showToast('连接成功 ✅', 'success'); }, 1500); }
-function deletePubKb(idx) { if (confirm('确认删除 ' + pubKbData[idx].name + ' 的公共知识库配置？')) { pubKbData.splice(idx, 1); renderPubKbTable(); showToast('已删除', 'success'); } }
 
 function openGroupDetail(idx) {
     const g = groupDetailData[idx];
@@ -3082,7 +3052,7 @@ function confirmMergeKb() {
   if (!selected) { showToast('请选择目标知识条目', 'warn'); return; }
   var target = kbData.find(function(item) { return item.id === selected.value; });
   closeMergeModal();
-  markMissSupplemented(_supplementRow);
+  markMissSupplemented(_supplementRow, 'merge', target ? target.id : null);
   showToast('已合并至「' + (target ? target.standardQuestion : '目标知识') + '」，正在重新向量化...', 'success');
 }
 
@@ -3096,19 +3066,31 @@ function openNewKnowledge(question, customer, venue) {
     groupId: null
   }));
   closeMergeModal();
-  markMissSupplemented(_supplementRow);
+  markMissSupplemented(_supplementRow, 'supplement', null);
   if (typeof openFaqFormModal === 'function') {
     openFaqFormModal();
     prefillFaqFromSession();
   }
 }
 
-function markMissSupplemented(tr) {
+function openKbFromMiss(btn) {
+  var kbId = btn.getAttribute('data-kb');
+  if (!kbId) { showToast('请先在对应知识编辑中完善内容后查看', 'warn'); return; }
+  var idx = kbData.findIndex(function(item) { return item.id === kbId; });
+  if (idx >= 0) openKbDetailModal(idx);
+  else showToast('关联知识已删除', 'warn');
+}
+
+function markMissSupplemented(tr, type, kbId) {
   if (!tr) return;
   var tds = tr.querySelectorAll('td');
   if (tds.length < 8) return;
   tds[6].innerHTML = '<span class="badge-status active">已处理</span>';
-  tds[7].innerHTML = '<span style="color:#666;font-size:12px;">已补充知识库</span>';
+  var detailBtn = tds[7].querySelector('.action-btn');
+  var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
+  var label = type === 'merge' ? '已合并' : '已补充';
+  var kbAttr = kbId ? 'data-kb="' + kbId + '"' : '';
+  tds[7].innerHTML = detailHtml + ' <button class="action-btn" ' + kbAttr + ' onclick="openKbFromMiss(this)">' + label + '</button>';
 }
 
 function viewLinkedKb(faqId) {
@@ -3483,6 +3465,9 @@ function init_kb_management() {
   renderKbTable();
 }
 
+// 默认落地页：知识库管理（菜单第一项）
+if (typeof protoShowPage === 'function') { protoShowPage('kb-management'); }
+
 const allSessionLogs = [
   { id: 1, agent: '博物馆导览助手', user: '张三 (138****6789)', phone: '13812346789', customer: 'XX博物馆', venue: '东馆', time: '2026-07-08 10:32', rounds: 8, fallback: 1, quality: 'good',
     messages: [
@@ -3727,6 +3712,70 @@ function onLogFilterCustomerChange() {
 function init_session_logs() {
   renderSessionLogs();
 }
+
+// ---- 客户知识库（原场馆管理-公共知识库配置Tab） ----
+const pubKbData = [
+  { id: 'C001', name: 'XX博物馆', kbId: 'dataset_xx_museum_public', updateTime: '2026-07-10 14:30' },
+  { id: 'C002', name: '科技馆', kbId: 'dataset_tech_museum_public', updateTime: '2026-07-08 11:00' },
+  { id: 'C003', name: '自然博物馆', kbId: 'dataset_nature_museum_public', updateTime: '2026-07-05 16:45' }
+];
+let _pubKbEditIdx = -1;
+
+function renderPubKbTable() {
+  var tbody = document.getElementById('pubKbTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = pubKbData.map(function(item, i) {
+    return '<tr><td style="font-weight:500;">' + item.name + '</td><td><code style="font-size:12px;background:#f5f5f5;padding:2px 6px;border-radius:3px;">' + item.kbId + '</code></td><td style="font-size:12px;color:#666;">' + item.updateTime + '</td><td><button class="action-btn" onclick="editPubKb(' + i + ')" data-anno="venue-08">编辑</button> <button class="action-btn" onclick="testPubKbConn(' + i + ')" data-anno="venue-08">测试连接</button> <button class="action-btn danger" onclick="deletePubKb(' + i + ')" data-anno="venue-08">删除</button></td></tr>';
+  }).join('');
+}
+
+function openAddPubKbModal() {
+  _pubKbEditIdx = -1;
+  document.getElementById('pubKbFormTitle').textContent = '新增公共知识库配置';
+  document.getElementById('pubKbFormCustomerName').value = '';
+  document.getElementById('pubKbFormKbId').value = '';
+  document.getElementById('pubKbFormModal').classList.add('show');
+}
+function editPubKb(idx) {
+  _pubKbEditIdx = idx;
+  var item = pubKbData[idx];
+  document.getElementById('pubKbFormTitle').textContent = '编辑公共知识库配置';
+  document.getElementById('pubKbFormCustomerName').value = item.name;
+  document.getElementById('pubKbFormKbId').value = item.kbId;
+  document.getElementById('pubKbFormModal').classList.add('show');
+}
+function closePubKbFormModal() { document.getElementById('pubKbFormModal').classList.remove('show'); }
+
+function savePubKb() {
+  var name = document.getElementById('pubKbFormCustomerName').value.trim();
+  var kid = document.getElementById('pubKbFormKbId').value.trim();
+  if (!name) { showToast('请输入客户名称', 'warn'); return; }
+  if (!kid) { showToast('请输入公共知识库ID', 'warn'); return; }
+  if (_pubKbEditIdx >= 0) {
+    pubKbData[_pubKbEditIdx].name = name;
+    pubKbData[_pubKbEditIdx].kbId = kid;
+    pubKbData[_pubKbEditIdx].updateTime = '2026-08-27 10:00';
+  } else {
+    pubKbData.push({ id: 'C00' + (pubKbData.length + 1), name: name, kbId: kid, updateTime: '2026-08-27 10:00' });
+  }
+  closePubKbFormModal();
+  renderPubKbTable();
+  showToast('保存成功', 'success');
+}
+
+function testPubKbConn(idx) {
+  showToast('测试连接中...', 'success');
+  setTimeout(function() { showToast('连接成功 ✅', 'success'); }, 1500);
+}
+function deletePubKb(idx) {
+  if (confirm('确认删除 ' + pubKbData[idx].name + ' 的公共知识库配置？')) {
+    pubKbData.splice(idx, 1);
+    renderPubKbTable();
+    showToast('已删除', 'success');
+  }
+}
+
+function init_customer_kb() { renderPubKbTable(); }
 </script>
 </body>
 </html>
