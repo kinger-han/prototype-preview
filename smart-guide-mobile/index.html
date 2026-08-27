@@ -712,6 +712,14 @@ body {
 .timeout-banner-scan { color: #C8862F; font-weight: 600; cursor: pointer; margin-left: 8px; white-space: nowrap; }
 .timeout-banner-close { color: #C8862F; cursor: pointer; margin-left: 10px; font-size: 14px; flex-shrink: 0; }
 .timeout-banner.hidden { display: none; }
+
+/* ==================== 切换会话场馆提醒横幅 ==================== */
+.switch-banner { background: #FDF3E3; padding: 10px 14px; display: flex; align-items: center; font-size: 12px; color: #B5742A; line-height: 1.4; flex-shrink: 0; border-bottom: 1px solid #F0E0C0; animation: switchBannerIn .25s ease; }
+.switch-banner.hidden { display: none; }
+.switch-banner-icon { width: 16px; height: 16px; border-radius: 50%; background: #C8862F; color: #fff; font-size: 11px; font-weight: 700; font-style: normal; display: flex; align-items: center; justify-content: center; margin-right: 8px; flex-shrink: 0; }
+.switch-banner-text { flex: 1; }
+.switch-banner-close { color: #B5742A; cursor: pointer; margin-left: 10px; font-size: 15px; flex-shrink: 0; opacity: .75; }
+@keyframes switchBannerIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 .demo-switcher { position: absolute; top: 50%; right: calc(50% - 300px); transform: translateY(-50%); z-index: 300; display: flex; gap: 6px; flex-direction: column; }
 .demo-switcher-btn { font-size: 11px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.9); color: #555; cursor: pointer; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.15s; }
 .demo-switcher-btn.active { background: #c9a96e; color: #fff; border-color: #c9a96e; }
@@ -789,6 +797,8 @@ body {
     </div>
 
     <div class="timeout-banner hidden" id="timeoutBanner"><span class="timeout-banner-text">当前为【<span id="timeoutVenueName">XX博物馆·东馆</span>】，如已更换场馆请重新扫码</span><span class="timeout-banner-scan" onclick="simulateScan()">扫码</span><span class="timeout-banner-close" onclick="closeTimeoutBanner()">×</span></div>
+    <!-- 消息列表 -->
+    <div class="switch-banner hidden" id="switchBanner"><span class="switch-banner-icon">i</span><span class="switch-banner-text">已切换至【<span id="switchVenueName"></span>】，新对话将沿用当前配置</span><span class="switch-banner-close" onclick="closeSwitchBanner()">×</span></div>
     <!-- 消息列表 -->
     <div class="chat-messages" id="chatMessages"></div>
 
@@ -1663,8 +1673,9 @@ function renderHistoryList() {
       if (s.id === activeHistoryId) { closeHistoryDrawer(); return; }
       activeHistoryId = s.id;
       closeHistoryDrawer();
-      if (s.id === 'cur') return;
+      if (s.id === 'cur') { hideSwitchBanner(); return; }
       // 切换到历史会话 - 同步 currentVenue
+      const prevVenue = currentVenue;
       if (s.venue) {
         currentVenue = s.venue;
         isTimeoutInherit = false;
@@ -1676,7 +1687,13 @@ function renderHistoryList() {
       const firstQ = s.preview.split(' / ')[0];
       const response = getAIResponse(firstQ);
       addAIMessage(response.content || response.text, false);
-      showToast('已切换到' + (s.venue ? s.venue.venueName : '历史会话'));
+      // 切换到不同场馆的历史会话时，顶部提醒（用户可手动关闭）；同场馆仍用轻提示
+      if (s.venue && s.venue !== prevVenue) {
+        showSwitchBanner(s.venue.venueName);
+      } else {
+        hideSwitchBanner();
+        showToast('已切换到' + (s.venue ? s.venue.venueName : '历史会话'));
+      }
     });
     wrap.appendChild(item);
   });
@@ -1686,6 +1703,7 @@ function renderHistoryList() {
 function newSession() {
   closeHistoryDrawer();
   activeHistoryId = 'cur';
+  hideSwitchBanner();
   initChat();
   showToast('已新建会话');
 }
@@ -1703,6 +1721,18 @@ function closeTimeoutBanner() {
   timeoutBannerDismissed = true;
   document.getElementById('timeoutBanner').classList.add('hidden');
 }
+
+/* ==================== 切换会话场馆提醒 ==================== */
+function showSwitchBanner(venueName) {
+  document.getElementById('switchVenueName').textContent = venueName;
+  document.getElementById('switchBanner').classList.remove('hidden');
+}
+function hideSwitchBanner() {
+  document.getElementById('switchBanner').classList.add('hidden');
+}
+function closeSwitchBanner() {
+  hideSwitchBanner();
+}
 function simulateScan() {
   const keys = Object.keys(VENUES);
   const randomKey = keys[Math.floor(Math.random() * keys.length)];
@@ -1711,6 +1741,7 @@ function simulateScan() {
   timeoutBannerDismissed = false;
   updateVenueDisplay();
   closeHistoryDrawer();
+  hideSwitchBanner();
   initChat();
   showToast('扫码成功：' + currentVenue.venueName);
 }
