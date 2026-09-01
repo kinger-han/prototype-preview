@@ -5039,14 +5039,38 @@ if (tagFilterActive.length > 0) {
       return html;
     }
 
+    var DET_LOG_PAGE = 0;
+    var DET_LOG_SIZE = 5;
+
     function renderDetailLogs(r) {
       var logs = resBuildLogs(r);
+      var total = logs.length;
+      var pages = Math.max(1, Math.ceil(total / DET_LOG_SIZE));
+      if (DET_LOG_PAGE >= pages) DET_LOG_PAGE = pages - 1;
+      if (DET_LOG_PAGE < 0) DET_LOG_PAGE = 0;
+      var start = DET_LOG_PAGE * DET_LOG_SIZE;
+      var end = Math.min(start + DET_LOG_SIZE, total);
       var html = '<tr><th>操作类型</th><th>操作人</th><th>操作内容</th><th>操作时间</th></tr>';
-      for (var i = 0; i < logs.length; i++) {
+      for (var i = start; i < end; i++) {
         var l = logs[i];
         html += '<tr><td>' + l.type + '</td><td>' + l.operator + '</td><td>' + l.content + '</td><td>' + l.time + '</td></tr>';
       }
+      if (total > DET_LOG_SIZE) {
+        html += '<tr><td colspan="4" style="text-align:center;padding:8px 0;border-bottom:none;">'
+          + '<span style="font-size:12px;color:#999;">'
+          + (DET_LOG_PAGE > 0 ? '<a href="javascript:void(0)" onclick="detLogPage(' + (DET_LOG_PAGE - 1) + ')" style="color:#1677ff;">上一页</a>' : '<span style="color:#ccc;">上一页</span>')
+          + ' <span style="margin:0 6px;">' + (DET_LOG_PAGE + 1) + ' / ' + pages + '</span> '
+          + (DET_LOG_PAGE < pages - 1 ? '<a href="javascript:void(0)" onclick="detLogPage(' + (DET_LOG_PAGE + 1) + ')" style="color:#1677ff;">下一页</a>' : '<span style="color:#ccc;">下一页</span>')
+          + '</span></td></tr>';
+      }
       return html;
+    }
+
+    function detLogPage(p) {
+      DET_LOG_PAGE = p;
+      var r = findRes(RES_CURRENT_ID) || MOCK_RESOURCES[0];
+      var box = document.getElementById('dtLogs');
+      if (box && r) box.innerHTML = renderDetailLogs(r);
     }
 
     function detPlatClass(status) {
@@ -5085,6 +5109,7 @@ if (tagFilterActive.length > 0) {
 
     function init_resource_detail() {
       RES_CURRENT_PAGE = 'resource-detail';
+      DET_LOG_PAGE = 0;
       var r = findRes(RES_CURRENT_ID) || MOCK_RESOURCES[0];
       if (!r) return;
       RES_CURRENT_ID = r.id;
@@ -6166,8 +6191,6 @@ if (tagFilterActive.length > 0) {
           <button class="resmg-btn" onclick="toggleResMgmtBatchMore(this)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>批量操作<span class="resmg-tag-arrow">▾</span></button>
           <div class="resmg-more-menu" id="resMgmtMoreMenu">
             <div class="resmg-more-item" onclick="openResMgmtBatchTagModal()">批量打标签</div>
-            <div class="resmg-more-item" onclick="resToast('批量下载（演示）')">批量下载</div>
-            <div class="resmg-more-item danger" onclick="resToast('批量删除（演示）')">批量删除</div>
             <div class="resmg-more-item" onclick="openResMgmtBatchShelfDown()">批量下架</div>
           </div>
         </div>
@@ -6536,7 +6559,6 @@ if (tagFilterActive.length > 0) {
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
-        + '<div class="res-more-item" onclick="resToast(\'下载功能开发中\')">下载</div>'
         + '<div class="res-more-item danger" onclick="openDeleteConfirm(' + c.id + ')">删除</div>'
         + '</div></span>'
         + '</div>'
@@ -7702,7 +7724,7 @@ if (tagFilterActive.length > 0) {
       <div class="filter-item">
         <span class="filter-label">是否必填</span>
         <select class="filter-select" id="tagMgmtRequiredFilter" style="min-width:130px;" onchange="renderTagMgmtList()">
-                  <option>全部</option><option>是</option><option>否</option><option>必填(全局)</option><option>必填(指定类别)</option>
+                  <option>全部</option><option>是</option><option>否</option>
                 </select>
       </div>
       <div class="tagmgmt-view-toggle">
@@ -9309,7 +9331,7 @@ if (tagFilterActive.length > 0) {
           </select>
         </div>
         <div class="filter-item">
-          <span class="filter-label">同步平台</span>
+          <span class="filter-label">外部状态</span>
           <select class="filter-select" id="pvtMgmtExternal" style="min-width:96px;" onchange="onPvtMgmtFilterChange()">
             <option>全部</option><option>待审核</option><option>审核通过</option><option>自动通过</option><option>审核退回</option>
           </select>
@@ -9351,8 +9373,6 @@ if (tagFilterActive.length > 0) {
           <button class="resmg-btn" onclick="togglePvtMgmtBatchMore(this)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>批量操作<span class="resmg-tag-arrow">▾</span></button>
           <div class="resmg-more-menu" id="pvtMgmtMoreMenu">
             <div class="resmg-more-item" onclick="openPvtMgmtBatchTagModal()">批量打标签</div>
-            <div class="resmg-more-item" onclick="resToast('批量下载（演示）')">批量下载</div>
-            <div class="resmg-more-item danger" onclick="resToast('批量删除（演示）')">批量删除</div>
             <div class="resmg-more-item" onclick="openPvtMgmtBatchShelfDown()">批量下架</div>
           </div>
         </div>
@@ -9806,7 +9826,6 @@ if (tagFilterActive.length > 0) {
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
-        + '<div class="res-more-item" onclick="resToast(\'下载功能开发中\')">下载</div>'
         + '<div class="res-more-item danger" onclick="openDeleteConfirm(' + c.id + ')">删除</div>'
         + '</div></span>'
         + '</div>'
@@ -16219,14 +16238,38 @@ function resTagChips(arr, cls) {
       return html;
     }
 
+    var DET_LOG_PAGE = 0;
+    var DET_LOG_SIZE = 5;
+
     function renderDetailLogs(r) {
       var logs = resBuildLogs(r);
+      var total = logs.length;
+      var pages = Math.max(1, Math.ceil(total / DET_LOG_SIZE));
+      if (DET_LOG_PAGE >= pages) DET_LOG_PAGE = pages - 1;
+      if (DET_LOG_PAGE < 0) DET_LOG_PAGE = 0;
+      var start = DET_LOG_PAGE * DET_LOG_SIZE;
+      var end = Math.min(start + DET_LOG_SIZE, total);
       var html = '<tr><th>操作类型</th><th>操作人</th><th>操作内容</th><th>操作时间</th></tr>';
-      for (var i = 0; i < logs.length; i++) {
+      for (var i = start; i < end; i++) {
         var l = logs[i];
         html += '<tr><td>' + l.type + '</td><td>' + l.operator + '</td><td>' + l.content + '</td><td>' + l.time + '</td></tr>';
       }
+      if (total > DET_LOG_SIZE) {
+        html += '<tr><td colspan="4" style="text-align:center;padding:8px 0;border-bottom:none;">'
+          + '<span style="font-size:12px;color:#999;">'
+          + (DET_LOG_PAGE > 0 ? '<a href="javascript:void(0)" onclick="detLogPage(' + (DET_LOG_PAGE - 1) + ')" style="color:#1677ff;">上一页</a>' : '<span style="color:#ccc;">上一页</span>')
+          + ' <span style="margin:0 6px;">' + (DET_LOG_PAGE + 1) + ' / ' + pages + '</span> '
+          + (DET_LOG_PAGE < pages - 1 ? '<a href="javascript:void(0)" onclick="detLogPage(' + (DET_LOG_PAGE + 1) + ')" style="color:#1677ff;">下一页</a>' : '<span style="color:#ccc;">下一页</span>')
+          + '</span></td></tr>';
+      }
       return html;
+    }
+
+    function detLogPage(p) {
+      DET_LOG_PAGE = p;
+      var r = findRes(RES_CURRENT_ID) || MOCK_RESOURCES[0];
+      var box = document.getElementById('dtLogs');
+      if (box && r) box.innerHTML = renderDetailLogs(r);
     }
 
     function detPlatClass(status) {
@@ -16265,6 +16308,7 @@ function resTagChips(arr, cls) {
 
     function init_resource_detail() {
       RES_CURRENT_PAGE = 'resource-detail';
+      DET_LOG_PAGE = 0;
       var r = findRes(RES_CURRENT_ID) || MOCK_RESOURCES[0];
       if (!r) return;
       RES_CURRENT_ID = r.id;
@@ -17139,7 +17183,6 @@ function editThemeOptions() {
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
-        + '<div class="res-more-item" onclick="resToast(\'下载功能开发中\')">下载</div>'
         + '<div class="res-more-item danger" onclick="openDeleteConfirm(' + c.id + ')">删除</div>'
         + '</div></span>'
         + '</div>'
@@ -19960,7 +20003,6 @@ var CAT_MGMT_EDIT_INDEX = -1;
         + '<div class="res-more-item" onclick="openMoveModal(' + c.id + ', \'copy\')">复制到其他</div>'
         + '<div class="res-more-item" onclick="openScreenModal(' + c.id + ')">上屏</div>'
         + moreVisItem
-        + '<div class="res-more-item" onclick="resToast(\'下载功能开发中\')">下载</div>'
         + '<div class="res-more-item danger" onclick="openDeleteConfirm(' + c.id + ')">删除</div>'
         + '</div></span>'
         + '</div>'
