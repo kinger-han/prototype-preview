@@ -371,12 +371,8 @@ body {
 .tpl-thumb { aspect-ratio: 3/4; width: 100%; position: relative; overflow: hidden; }
 .tpl-name {
   padding: 8px 10px 4px; font-size: 13px; font-weight: 600; color: var(--ink);
-  display: flex; align-items: center; justify-content: space-between;
+  display: block; text-align: center;
 }
-.tpl-name .cap-tag { font-size: 10px; border-radius: 4px; padding: 1px 5px; font-weight: 600; }
-.cap-tag.cap-a { color: #8A641E; background: #F4EBD8; }
-.cap-tag.cap-b { color: var(--red); background: #FDE6E4; }
-.cap-tag.cap-c { color: #3E4A66; background: #E9EDF4; }
 .tpl-desc { padding: 0 10px 10px; font-size: 11px; color: var(--gray); }
 .tpl-desc .tpl-cap-line { margin-top: 2px; color: #B0A99E; font-size: 10px; }
 
@@ -1536,10 +1532,9 @@ function renderTplGrid() {
   var list = TEMPLATES.filter(function(t){ return t.group === state.curTplGroup; });
   var html = '';
   list.forEach(function(t) {
-    var cap = CAPABILITIES[t.cap];
     html += '<div class="tpl-card" data-id="' + t.id + '" onclick="chooseTpl(\'' + t.id + '\')">' +
       '<div class="tpl-thumb"><div class="tpl-inner"><div class="tpl-' + t.id + '"><div class="avatar-dummy"></div></div></div></div>' +
-      '<div class="tpl-name">' + t.name + '<span class="cap-tag cap-' + t.cap.toLowerCase() + '">' + cap.name + '</span></div>' +
+      '<div class="tpl-name">' + t.name + '</div>' +
       '<div class="tpl-desc">' + t.guide + '<div class="tpl-cap-line">人数 ' + t.people + ' · ' + t.time + '</div></div>' +
       '</div>';
   });
@@ -1737,7 +1732,7 @@ function renderResult() {
   document.getElementById('result-number').textContent = '第 ' + ACTIVITY.archiveIndex + ' 号纪念档案 · ' + state.curWork.no;
   var photo = document.getElementById('result-photo');
   photo.querySelector('.photo-bg').setAttribute('data-tpl', t.id);
-  document.getElementById('result-tpl-name').textContent = t.name + ' · ' + CAPABILITIES[t.cap].name;
+  document.getElementById('result-tpl-name').textContent = t.name;
   document.getElementById('result-tip').textContent = CAPABILITIES[t.cap].desc;
   state.sbChecked = false;
   document.getElementById('sb-check').classList.remove('checked');
@@ -1817,7 +1812,7 @@ function openWallDetail(idx) {
   d.classList.add('show');
   var wp = document.getElementById('wd-photo');
   wp.querySelector('.wall-bg').className = 'wall-bg wb-' + p.bg;
-  document.getElementById('wd-name').textContent = t.name + ' · ' + CAPABILITIES[t.cap].name;
+  document.getElementById('wd-name').textContent = t.name;
   document.getElementById('wd-num').textContent = p.num + ' · 点击可拍同款';
   state.wallWork = p;
 }
@@ -1853,7 +1848,7 @@ function renderMine() {
     html += '<div class="mine-card" data-num="' + w.no + '" onclick="openWorkFromMine(' + i + ')">' +
       '<div class="mc-photo"><div class="photo-bg" data-tpl="' + w.tpl + '"></div><div class="photo-person"></div></div>' +
       '<div class="mc-info">' +
-        '<div class="mc-tpl">' + t.name + ' · ' + CAPABILITIES[t.cap].name + '</div>' +
+        '<div class="mc-tpl">' + t.name + '</div>' +
         '<div class="mc-num">' + w.no + ' · ' + w.time + '</div>' +
         '<div class="mc-status">' + pill +
         '</div>' +
