@@ -353,14 +353,6 @@ body {
 .ci-ico.ic-c { background: linear-gradient(135deg, #3E4A66, #5B6B8F); }
 
 /* ============ H03 模板列表 ============ */
-.tpl-tabs { display: flex; gap: 8px; padding: 12px 16px; background: #fff; border-bottom: 1px solid #F0ECE2; flex-shrink: 0; overflow-x: auto; }
-.tpl-tabs::-webkit-scrollbar { display: none; }
-.tpl-tab {
-  padding: 7px 14px; border-radius: 20px; font-size: 13px; cursor: pointer;
-  background: #F5F1E8; color: var(--ink); border: none; white-space: nowrap; transition: all 0.2s;
-}
-.tpl-tab.active { background: var(--red); color: #fff; font-weight: 600; }
-.tpl-tab .tag-hot { font-size: 10px; margin-left: 2px; color: var(--gold); }
 .tpl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px 16px 20px; }
 .tpl-card {
   border-radius: 12px; overflow: hidden; border: 2px solid transparent;
@@ -374,7 +366,6 @@ body {
   display: block; text-align: center;
 }
 .tpl-desc { padding: 0 10px 10px; font-size: 11px; color: var(--gray); }
-.tpl-desc .tpl-cap-line { margin-top: 2px; color: #B0A99E; font-size: 10px; }
 
 /* 模板缩略图（CSS 绘制示意） */
 .tpl-thumb .tpl-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -1063,7 +1054,6 @@ body {
     <h2>选择纪念模板</h2>
     <span class="hdr-right" onclick="toast('模板效果会因照片而异，请使用本人照片')">?</span>
   </div>
-  <div class="tpl-tabs" id="tpl-tabs"></div>
   <div class="page-body">
     <div class="tpl-grid" id="tpl-grid"></div>
   </div>
@@ -1469,7 +1459,7 @@ function refreshTabs(id) {
   tabBar.querySelectorAll('.tab-bar-item').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-page') === id); });
 }
 function goHome()   { state.visitFromWall = false; PAGE_STACK.length = 0; PAGE_STACK.push('home'); showPage('home'); }
-function goTemplates() { state.visitFromWall = false; PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderTplTabs(); renderTplGrid(); showPage('templates'); }
+function goTemplates() { state.visitFromWall = false; PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderTplGrid(); showPage('templates'); }
 function goPhoto()  { showPage('photo'); }
 function goGenerating() { showPage('generating'); }
 function goGallery() { PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderWall(); showPage('gallery'); }
@@ -1513,32 +1503,19 @@ document.getElementById('home-tip-num').textContent = ACTIVITY.workCount;
 renderSpot();
 
 /* ================= H03 模板列表 ================= */
-function renderTplTabs() {
-  var wrap = document.getElementById('tpl-tabs');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  TPL_GROUPS.forEach(function(g, i) {
-    var b = document.createElement('button');
-    b.className = 'tpl-tab' + (g.id === state.curTplGroup ? ' active' : '');
-    b.textContent = g.name;
-    if (i === 3) { var hot = document.createElement('span'); hot.className = 'tag-hot'; hot.textContent = '创意'; b.appendChild(hot); }
-    b.onclick = function() { state.curTplGroup = g.id; renderTplTabs(); renderTplGrid(); };
-    wrap.appendChild(b);
-  });
-}
 function renderTplGrid() {
   var grid = document.getElementById('tpl-grid');
   if (!grid) return;
-  var list = TEMPLATES.filter(function(t){ return t.group === state.curTplGroup; });
+  var list = TEMPLATES;
   var html = '';
   list.forEach(function(t) {
     html += '<div class="tpl-card" data-id="' + t.id + '" onclick="chooseTpl(\'' + t.id + '\')">' +
       '<div class="tpl-thumb"><div class="tpl-inner"><div class="tpl-' + t.id + '"><div class="avatar-dummy"></div></div></div></div>' +
       '<div class="tpl-name">' + t.name + '</div>' +
-      '<div class="tpl-desc">' + t.guide + '<div class="tpl-cap-line">人数 ' + t.people + ' · ' + t.time + '</div></div>' +
+      '<div class="tpl-desc">' + t.guide + '</div>' +
       '</div>';
   });
-  if (list.length === 0) html = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--gray);font-size:13px">该分类暂无模板</div>';
+  if (list.length === 0) html = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--gray);font-size:13px">暂无模板</div>';
   grid.innerHTML = html;
 }
 /* 选模板：首次弹出照片使用说明，确认后进拍照页 */
@@ -1741,12 +1718,12 @@ function renderResult() {
   var workStatus = state.curWork.status || 'notsub';
   var sbTitle = document.getElementById('sb-title');
   if (workStatus === 'selected') {
-    sbTitle.textContent = '正在现场大屏展示';
+    sbTitle.textContent = '正在展示';
     document.getElementById('sb-desc').textContent = '你的风采正在现场与参会者相遇。';
     document.getElementById('sb-check').style.display = 'none';
     document.getElementById('sb-submit').style.display = 'none';
   } else if (workStatus === 'wait') {
-    sbTitle.textContent = '已提交，等待安排展示';
+    sbTitle.textContent = '已提交，等待上屏';
     document.getElementById('sb-desc').textContent = '工作人员确认后，你的风采就有机会与现场参会者相遇，你可以在「我的纪念」查看状态。';
     document.getElementById('sb-check').style.display = 'none';
     document.getElementById('sb-submit').style.display = 'none';
@@ -1858,8 +1835,8 @@ function renderMine() {
   list.innerHTML = html;
 }
 function statusPill(s) {
-  if (s === 'selected') return '<span class="status-pill on">● 正在现场大屏展示</span>';
-  if (s === 'wait')    return '<span class="status-pill wait">● 等待亮相</span>';
+  if (s === 'selected') return '<span class="status-pill on">● 正在展示</span>';
+  if (s === 'wait')    return '<span class="status-pill wait">● 等待上屏</span>';
   return '<span class="status-pill off">○ 暂未分享</span>';
 }
 function openWorkFromMine(idx) {
