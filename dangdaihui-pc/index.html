@@ -1118,6 +1118,9 @@ table tr { cursor: pointer; }
 
   <div class="page-header">
     <div class="page-title">模板管理 <span class="sub">手机端拍照可选模板，与移动端模板库一致</span></div>
+    <div>
+      <button class="filter-btn primary" onclick="showTemplateForm()">新增模板</button>
+    </div>
   </div>
 
   <div class="filter-bar">
@@ -1152,7 +1155,9 @@ table tr { cursor: pointer; }
           <th class="tpl-thumb-cell">模板图片</th>
           <th>模板名称</th>
           <th>分类</th>
+          <th>适用建议</th>
           <th>人数支持</th>
+          <th>预计耗时</th>
           <th>状态</th>
           <th>使用次数</th>
           <th>更新时间</th>
@@ -1164,6 +1169,111 @@ table tr { cursor: pointer; }
   </div>
 
   <div id="tpl-toast-area"></div>
+</div>
+</div>
+
+<div class="proto-page" data-page-id="template-form" style="display:none;">
+<div class="page" id="page-template-form" style="display:none">
+  <style>
+    .form-card { background: #fff; border-radius: 4px; padding: 24px 28px; max-width: 720px; }
+    .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
+    .form-field { flex: 1; }
+    .form-label { font-size: 13px; color: #333; margin-bottom: 6px; display: block; }
+    .form-label .req { color: #ff4d4f; margin-left: 2px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; height: 36px; padding: 0 12px;
+      border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; outline: none;
+      box-sizing: border-box;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
+    .form-textarea { height: 72px; padding: 8px 12px; resize: none; }
+    .form-tip { font-size: 12px; color: #999; margin-top: 4px; }
+    .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid #f0f0f0; }
+    .form-preview { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .fp-thumb { width: 52px; height: 68px; border-radius: 4px; overflow: hidden; position: relative; background: #F0EAE0; border: 1px dashed #d9d9d9; }
+    .fp-thumb .pt-bg3 { position: absolute; inset: 0; }
+    .fp-thumb .pt-person3 { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 55%; aspect-ratio: 3/4; border-radius: 3px; z-index: 2; background: linear-gradient(135deg,#F5D0A9,#D9A066); border: 1.5px solid rgba(255,255,255,0.8); }
+    .fp-tip { font-size: 12px; color: #999; }
+  </style>
+
+  <div class="page-header">
+    <div class="page-title" id="tf-title">新增模板 <span class="sub">配置手机端可选模板</span></div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-preview">
+      <span class="fp-thumb" id="tf-thumb"><span class="pt-bg3 wb-1"></span><span class="pt-person3"></span></span>
+      <span class="fp-tip">模板缩略图（原型示意，正式版本上传设计稿）</span>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">模板名称<span class="req">*</span></label>
+        <input class="form-input" id="tf-name" placeholder="如：盛会留念框">
+      </div>
+      <div class="form-field">
+        <label class="form-label">分类<span class="req">*</span></label>
+        <select class="form-select" id="tf-group">
+          <option value="classic">庄重经典</option>
+          <option value="smart">智能海报</option>
+          <option value="aiguofeng">AI 国风</option>
+          <option value="aichuangyi">AI 创意</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">能力类型</label>
+        <select class="form-select" id="tf-cap">
+          <option value="A">A · 经典纪念框</option>
+          <option value="B">B · 智能主题海报</option>
+          <option value="C">C · AI 艺术创作</option>
+        </select>
+        <div class="form-tip">仅后台标记使用，前端模板卡片不展示</div>
+      </div>
+      <div class="form-field">
+        <label class="form-label">人数支持</label>
+        <select class="form-select" id="tf-people">
+          <option value="1 人">1 人</option>
+          <option value="1-2 人">1-2 人</option>
+          <option value="1-4 人">1-4 人</option>
+          <option value="1-6 人">1-6 人</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">预计耗时</label>
+        <select class="form-select" id="tf-estTime">
+          <option value="约 3 秒">约 3 秒</option>
+          <option value="约 10 秒">约 10 秒</option>
+          <option value="约 30 秒">约 30 秒</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">状态</label>
+        <select class="form-select" id="tf-state">
+          <option value="on">启用</option>
+          <option value="off">禁用</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="form-label">适用建议<span class="req">*</span></label>
+        <textarea class="form-textarea" id="tf-guide" placeholder="如：建议多人合照，原图居中，红金边框"></textarea>
+        <div class="form-tip">展示在移动端模板卡片上</div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="dv-btn" onclick="backToList()">返回</button>
+      <button class="dv-btn primary" onclick="saveTemplate()">保存</button>
+    </div>
+  </div>
 </div>
 </div>
     </div><!-- /content-area -->
@@ -1316,7 +1426,7 @@ function updateBreadcrumb(title) {
 
 // ---- ProtoKit 页面路由 ----
 var _protoPages = document.querySelectorAll('.proto-page');
-var _pageTitleToId = {"照片管理": "photo-mgmt", "上屏展示审核": "selection-mgmt", "模板管理": "template-mgmt"};
+var _pageTitleToId = {"照片管理": "photo-mgmt", "上屏展示审核": "selection-mgmt", "模板管理": "template-mgmt", "模板编辑": "template-form"};
 
 function protoShowPage(pageId) {
   _protoPages.forEach(function(p) {
@@ -1719,15 +1829,15 @@ init_selection_mgmt();
 
 /* ================= 模板管理（与移动端 TEMPLATES 一致） ================= */
 var TPL_LIST = [
-  { id: 'shenghui', name: '盛会留念框', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-6 人', state: 'on',  uses: 158, time: '09-28 14:30' },
-  { id: 'fenjin',   name: '奋进新征程', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-4 人', state: 'on',  uses: 121, time: '09-28 14:31' },
-  { id: 'dangqi',   name: '党旗礼赞',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 203, time: '09-28 14:28' },
-  { id: 'shengshi', name: '盛世华章',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 176, time: '09-28 14:28' },
-  { id: 'gutian',   name: '古田星火',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 98,  time: '09-28 14:29' },
-  { id: 'fujian',   name: '福见山海',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 64,  time: '09-28 14:29' },
-  { id: 'gongbi',   name: '工笔华章',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   state: 'on',  uses: 187, time: '09-28 14:32' },
-  { id: 'shuimo',   name: '水墨山河',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   state: 'on',  uses: 88,  time: '09-28 14:32' },
-  { id: 'qban',     name: 'Q版先锋',    group: 'aichuangyi', groupName: 'AI 创意',  cap: 'C', people: '1 人',   state: 'off', uses: 32,  time: '09-28 14:33' }
+  { id: 'shenghui', name: '盛会留念框', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-6 人', guide: '建议多人合照，原图居中，红金边框', estTime: '约 3 秒',  state: 'on',  uses: 158, time: '09-28 14:30' },
+  { id: 'fenjin',   name: '奋进新征程', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-4 人', guide: '竖版照片 + 金色题字 + 福建剪影',      estTime: '约 3 秒',  state: 'on',  uses: 121, time: '09-28 14:31' },
+  { id: 'dangqi',   name: '党旗礼赞',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', guide: '建议单人、正面、半身，红色主题场景', estTime: '约 10 秒', state: 'on',  uses: 203, time: '09-28 14:28' },
+  { id: 'shengshi', name: '盛世华章',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', guide: '人物居中，金色光影与山河纹理',      estTime: '约 10 秒', state: 'on',  uses: 176, time: '09-28 14:28' },
+  { id: 'gutian',   name: '古田星火',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', guide: '人物前景 + 红色文化场景',            estTime: '约 10 秒', state: 'on',  uses: 98,  time: '09-28 14:29' },
+  { id: 'fujian',   name: '福见山海',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', guide: '人物前景 + 福建山海与城市意象',      estTime: '约 10 秒', state: 'on',  uses: 64,  time: '09-28 14:29' },
+  { id: 'gongbi',   name: '工笔华章',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   guide: '建议单人、正面、半身，光线充足',    estTime: '约 30 秒', state: 'on',  uses: 187, time: '09-28 14:32' },
+  { id: 'shuimo',   name: '水墨山河',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   guide: '建议单人、正面、半身，淡彩水墨',    estTime: '约 30 秒', state: 'on',  uses: 88,  time: '09-28 14:32' },
+  { id: 'qban',     name: 'Q版先锋',    group: 'aichuangyi', groupName: 'AI 创意',  cap: 'C', people: '1 人',   guide: '得体正装半身照，创意风格',          estTime: '约 30 秒', state: 'off', uses: 32,  time: '09-28 14:33' }
 ];
 function tplBgOf(id) {
   var n = 0; for (var i = 0; i < id.length; i++) n += id.charCodeAt(i);
@@ -1754,19 +1864,23 @@ function renderTplMgmt() {
       '<td><span class="tpl-thumb"><span class="pt-bg2 wb-' + tplBgOf(t.id) + '"></span><span class="pt-person2"></span></span></td>' +
       '<td>' + t.name + (t.uses >= 150 ? ' <span class="tag-hot" style="color:#C0392B;background:#FDE6E4;font-size:12px;padding:1px 6px;border-radius:3px">热门</span>' : '') + '</td>' +
       '<td class="tpl-leaf">' + t.groupName + '</td>' +
+      '<td class="tpl-leaf">' + (t.guide || '—') + '</td>' +
       '<td class="tpl-leaf">' + t.people + '</td>' +
+      '<td class="tpl-leaf">' + (t.estTime || '—') + '</td>' +
       '<td>' + (t.state === 'on'
         ? '<span class="tpl-state-tag s-on">启用</span>'
         : '<span class="tpl-state-tag s-off">禁用</span>') + '</td>' +
       '<td class="tpl-leaf">' + t.uses + '</td>' +
       '<td class="tpl-leaf">' + t.time + '</td>' +
-      '<td>' + (t.state === 'on'
-        ? '<a class="action-link warn" onclick="tplToggle(\'' + t.id + '\')">禁用</a>'
-        : '<a class="action-link" onclick="tplToggle(\'' + t.id + '\')">启用</a>') + '</td>' +
+      '<td>' +
+        '<a class="action-link" onclick="editTemplate(\'' + t.id + '\')">编辑</a>' +
+        (t.state === 'on'
+          ? '<a class="action-link warn" onclick="tplToggle(\'' + t.id + '\')">禁用</a>'
+          : '<a class="action-link" onclick="tplToggle(\'' + t.id + '\')">启用</a>') + '</td>' +
       '</tr>';
   });
   if (!list.length) {
-    html = '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
+    html = '<tr><td colspan="9" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
   }
   tbody.innerHTML = html;
 }
@@ -1784,6 +1898,80 @@ function resetTplFilter() {
 }
 function init_template_mgmt() { renderTplMgmt(); }
 init_template_mgmt();
+
+/* 新增/编辑 → 表单页 */
+function showTemplateForm() {
+  window.__editTplId = null;
+  protoShowPage('template-form');
+  if (typeof init_template_form === 'function') init_template_form();
+  document.title = '党代会纪念相册 · 新增模板';
+}
+function editTemplate(id) {
+  window.__editTplId = id;
+  protoShowPage('template-form');
+  if (typeof init_template_form === 'function') init_template_form();
+  document.title = '党代会纪念相册 · 编辑模板';
+}
+
+/* ================= 模板新建/编辑表单页 ================= */
+var __EDITING_ID = null;
+
+function init_template_form() {
+  __EDITING_ID = window.__editTplId || null;
+  var title = document.getElementById('tf-title');
+  if (__EDITING_ID) {
+    var t = TPL_LIST.filter(function(x){ return x.id === __EDITING_ID; })[0];
+    if (t) {
+      title.textContent = '编辑模板 <span class="sub">修改后可实时同步手机端</span>';
+      document.getElementById('tf-name').value = t.name;
+      document.getElementById('tf-group').value = t.group;
+      document.getElementById('tf-cap').value = t.cap;
+      document.getElementById('tf-people').value = t.people;
+      document.getElementById('tf-estTime').value = t.estTime || '约 3 秒';
+      document.getElementById('tf-state').value = t.state;
+      document.getElementById('tf-guide').value = t.guide || '';
+    }
+  } else {
+    title.textContent = '新增模板 <span class="sub">配置手机端可选模板</span>';
+    ['tf-name','tf-group','tf-cap','tf-people','tf-estTime','tf-state','tf-guide'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el.tagName === 'SELECT') el.selectedIndex = 0;
+      else el.value = '';
+    });
+    document.getElementById('tf-state').value = 'on';
+  }
+}
+function backToList() {
+  protoShowPage('template-mgmt');
+  if (typeof init_template_mgmt === 'function') init_template_mgmt();
+  document.title = '党代会纪念相册 · 模板管理';
+}
+function saveTemplate() {
+  var name = document.getElementById('tf-name').value.trim();
+  var group = document.getElementById('tf-group').value;
+  var guide = document.getElementById('tf-guide').value.trim();
+  if (!name) { showToast('请填写模板名称', 'warn'); return; }
+  if (!guide) { showToast('请填写适用建议', 'warn'); return; }
+  var cap = document.getElementById('tf-cap').value;
+  var people = document.getElementById('tf-people').value;
+  var estTime = document.getElementById('tf-estTime').value;
+  var state = document.getElementById('tf-state').value;
+  var groupName = { classic: '庄重经典', smart: '智能海报', aiguofeng: 'AI 国风', aichuangyi: 'AI 创意' }[group];
+  if (__EDITING_ID) {
+    var t = TPL_LIST.filter(function(x){ return x.id === __EDITING_ID; })[0];
+    if (t) {
+      t.name = name; t.group = group; t.groupName = groupName; t.cap = cap;
+      t.people = people; t.guide = guide; t.estTime = estTime; t.state = state;
+      showToast('模板已保存：' + name, 'success');
+    }
+  } else {
+    var newId = 'tpl' + (TPL_LIST.length + 1);
+    TPL_LIST.push({ id: newId, name: name, group: group, groupName: groupName, cap: cap,
+      people: people, guide: guide, estTime: estTime, state: state, uses: 0, time: '09-02 现在' });
+    showToast('模板已新增：' + name, 'success');
+  }
+  backToList();
+}
 </script>
 </body>
 </html>
