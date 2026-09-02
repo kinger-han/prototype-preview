@@ -751,6 +751,7 @@ table tr { cursor: pointer; }
       <div class="sub-menu open">
         <div class="menu-item active" onclick="switchPage('照片管理', this)" id="menuPhotoMgmt">照片管理</div>
         <div class="menu-item" onclick="switchPage('上屏展示审核', this)" id="menuSelectionMgmt">上屏展示审核</div>
+        <div class="menu-item" onclick="switchPage('模板管理', this)" id="menuTemplateMgmt">模板管理</div>
       </div>
     </div>
   </div>
@@ -1087,6 +1088,84 @@ table tr { cursor: pointer; }
   <div id="sel-toast-area"></div>
 </div>
 </div>
+
+<div class="proto-page" data-page-id="template-mgmt" style="display:none;">
+<div class="page" id="page-template-mgmt">
+  <style>
+    /* 模板管理页局部样式 */
+    .tpl-tbl th { text-align: left; }
+    .tpl-tbl .tpl-thumb-cell { width: 60px; }
+    .tpl-thumb {
+      width: 44px; height: 58px; border-radius: 4px; overflow: hidden;
+      position: relative; display: inline-block; background: #F0EAE0; vertical-align: middle;
+    }
+    .tpl-thumb .pt-bg2 { position: absolute; inset: 0; }
+    .tpl-thumb .pt-person2 {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      width: 55%; aspect-ratio: 3/4; border-radius: 3px; z-index: 2;
+      background: linear-gradient(135deg, #F5D0A9, #D9A066);
+      border: 1.5px solid rgba(255,255,255,0.8);
+    }
+    .tpl-leaf { font-size: 13px; color: #666; }
+        .tpl-state-tag {
+      display: inline-block; padding: 2px 10px; border-radius: 3px; font-size: 12px;
+    }
+    .tpl-state-tag.s-on { color: #52c41a; background: #f6ffed; }
+    .tpl-state-tag.s-off { color: #999; background: #f5f5f5; }
+    .action-link { color: #1677ff; cursor: pointer; margin-right: 12px; font-size: 13px; }
+    .action-link.warn { color: #C0392B; }
+  </style>
+
+  <div class="page-header">
+    <div class="page-title">模板管理 <span class="sub">手机端拍照可选模板，与移动端模板库一致</span></div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-item">
+      <span class="filter-label">状态</span>
+      <select class="filter-select" id="f-tpl-state" onchange="renderTplMgmt()">
+        <option value="">全部</option>
+        <option value="on">启用</option>
+        <option value="off">禁用</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <span class="filter-label">分类</span>
+      <select class="filter-select" id="f-tpl-group" onchange="renderTplMgmt()">
+        <option value="">全部</option>
+        <option value="classic">庄重经典</option>
+        <option value="smart">智能海报</option>
+        <option value="aiguofeng">AI 国风</option>
+        <option value="aichuangyi">AI 创意</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <button class="filter-btn primary" onclick="renderTplMgmt()">查询</button>
+      <button class="filter-btn" onclick="resetTplFilter()">重置</button>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <table class="tpl-tbl">
+      <thead>
+        <tr>
+          <th class="tpl-thumb-cell">模板图片</th>
+          <th>模板名称</th>
+          <th>分类</th>
+          <th>人数支持</th>
+          <th>状态</th>
+          <th>使用次数</th>
+          <th>更新时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody id="tpl-tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="tpl-toast-area"></div>
+</div>
+</div>
     </div><!-- /content-area -->
   </div><!-- /main-area -->
 </div><!-- /layout -->
@@ -1237,7 +1316,7 @@ function updateBreadcrumb(title) {
 
 // ---- ProtoKit 页面路由 ----
 var _protoPages = document.querySelectorAll('.proto-page');
-var _pageTitleToId = {"照片管理": "photo-mgmt", "上屏展示审核": "selection-mgmt"};
+var _pageTitleToId = {"照片管理": "photo-mgmt", "上屏展示审核": "selection-mgmt", "模板管理": "template-mgmt"};
 
 function protoShowPage(pageId) {
   _protoPages.forEach(function(p) {
@@ -1637,6 +1716,74 @@ function selResetFilter() {
 }
 function init_selection_mgmt() { renderSelTable(); }
 init_selection_mgmt();
+
+/* ================= 模板管理（与移动端 TEMPLATES 一致） ================= */
+var TPL_LIST = [
+  { id: 'shenghui', name: '盛会留念框', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-6 人', state: 'on',  uses: 158, time: '09-28 14:30' },
+  { id: 'fenjin',   name: '奋进新征程', group: 'classic',    groupName: '庄重经典', cap: 'A', people: '1-4 人', state: 'on',  uses: 121, time: '09-28 14:31' },
+  { id: 'dangqi',   name: '党旗礼赞',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 203, time: '09-28 14:28' },
+  { id: 'shengshi', name: '盛世华章',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 176, time: '09-28 14:28' },
+  { id: 'gutian',   name: '古田星火',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 98,  time: '09-28 14:29' },
+  { id: 'fujian',   name: '福见山海',   group: 'smart',      groupName: '智能海报', cap: 'B', people: '1-2 人', state: 'on',  uses: 64,  time: '09-28 14:29' },
+  { id: 'gongbi',   name: '工笔华章',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   state: 'on',  uses: 187, time: '09-28 14:32' },
+  { id: 'shuimo',   name: '水墨山河',   group: 'aiguofeng',  groupName: 'AI 国风',  cap: 'C', people: '1 人',   state: 'on',  uses: 88,  time: '09-28 14:32' },
+  { id: 'qban',     name: 'Q版先锋',    group: 'aichuangyi', groupName: 'AI 创意',  cap: 'C', people: '1 人',   state: 'off', uses: 32,  time: '09-28 14:33' }
+];
+function tplBgOf(id) {
+  var n = 0; for (var i = 0; i < id.length; i++) n += id.charCodeAt(i);
+  return (n % 8) + 1;
+}
+function tplShowToast(msg) {
+  var ta = document.getElementById('tpl-toast-area');
+  ta.innerHTML = '<div class="toast" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:2000;background:rgba(0,0,0,0.82);color:#fff;padding:12px 24px;border-radius:8px;font-size:14px">' + msg + '</div>';
+  setTimeout(function(){ ta.innerHTML = ''; }, 1600);
+}
+function renderTplMgmt() {
+  var st = document.getElementById('f-tpl-state').value;
+  var gp = document.getElementById('f-tpl-group').value;
+  var list = TPL_LIST.filter(function(t) {
+    if (st === 'on' && t.state !== 'on') return false;
+    if (st === 'off' && t.state !== 'off') return false;
+    if (gp && t.group !== gp) return false;
+    return true;
+  });
+  var tbody = document.getElementById('tpl-tbody');
+  var html = '';
+  list.forEach(function(t) {
+    html += '<tr>' +
+      '<td><span class="tpl-thumb"><span class="pt-bg2 wb-' + tplBgOf(t.id) + '"></span><span class="pt-person2"></span></span></td>' +
+      '<td>' + t.name + (t.uses >= 150 ? ' <span class="tag-hot" style="color:#C0392B;background:#FDE6E4;font-size:12px;padding:1px 6px;border-radius:3px">热门</span>' : '') + '</td>' +
+      '<td class="tpl-leaf">' + t.groupName + '</td>' +
+      '<td class="tpl-leaf">' + t.people + '</td>' +
+      '<td>' + (t.state === 'on'
+        ? '<span class="tpl-state-tag s-on">启用</span>'
+        : '<span class="tpl-state-tag s-off">禁用</span>') + '</td>' +
+      '<td class="tpl-leaf">' + t.uses + '</td>' +
+      '<td class="tpl-leaf">' + t.time + '</td>' +
+      '<td>' + (t.state === 'on'
+        ? '<a class="action-link warn" onclick="tplToggle(\'' + t.id + '\')">禁用</a>'
+        : '<a class="action-link" onclick="tplToggle(\'' + t.id + '\')">启用</a>') + '</td>' +
+      '</tr>';
+  });
+  if (!list.length) {
+    html = '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function tplToggle(id) {
+  var t = TPL_LIST.filter(function(x){ return x.id === id; })[0];
+  if (!t) return;
+  t.state = (t.state === 'on') ? 'off' : 'on';
+  tplShowToast(t.state === 'on' ? '已启用：' + t.name : '已禁用：' + t.name);
+  renderTplMgmt();
+}
+function resetTplFilter() {
+  document.getElementById('f-tpl-state').value = '';
+  document.getElementById('f-tpl-group').value = '';
+  renderTplMgmt();
+}
+function init_template_mgmt() { renderTplMgmt(); }
+init_template_mgmt();
 </script>
 </body>
 </html>
