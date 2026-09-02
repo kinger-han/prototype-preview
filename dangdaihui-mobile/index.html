@@ -1072,7 +1072,7 @@ body {
 
 <div class="page" id="page-photo">
   <div class="page-header">
-    <button class="back-btn" onclick="goTemplates()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <button class="back-btn" onclick="historyBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>获取照片</h2>
     <span class="hdr-right"></span>
   </div>
@@ -1144,7 +1144,7 @@ body {
   <div class="page-header">
     <button class="back-btn" onclick="onResultBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>我的纪念作品</h2>
-    <span class="hdr-right" onclick="goMine()">我的纪念</span>
+    <span class="hdr-right" onclick="showPage('mine'); renderMine();">我的纪念</span>
   </div>
   <div class="page-body">
     <div class="result-hero">
@@ -1174,7 +1174,7 @@ body {
         <span>我同意将这张照片用于现场大屏展示</span>
       </div>
       <button class="sb-btn disabled" id="sb-submit" onclick="submitSelection()">分享这份美好</button>
-      <div class="sb-link" onclick="goTerms()">查看展示说明</div>
+      <div class="sb-link" onclick="showPage('terms')">查看展示说明</div>
     </div>
   </div>
 
@@ -1211,7 +1211,7 @@ body {
 
 <div class="page" id="page-gallery">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <button class="back-btn" onclick="historyBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>现场风采</h2>
     <span class="hdr-right" onclick="goTemplates()">我要拍</span>
   </div>
@@ -1241,7 +1241,7 @@ body {
 
 <div class="page" id="page-mine">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <button class="back-btn" onclick="historyBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>我的纪念</h2>
     <span class="hdr-right"></span>
   </div>
@@ -1257,7 +1257,7 @@ body {
 
 <div class="page" id="page-terms">
   <div class="page-header">
-    <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+    <button class="back-btn" onclick="historyBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
     <h2>说明与授权</h2>
     <span class="hdr-right"></span>
   </div>
@@ -1468,13 +1468,13 @@ function refreshTabs(id) {
   tabBar.style.display = 'flex';
   tabBar.querySelectorAll('.tab-bar-item').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-page') === id); });
 }
-function goHome()   { state.visitFromWall = false; showPage('home'); }
-function goTemplates() { state.visitFromWall = false; renderTplTabs(); renderTplGrid(); showPage('templates'); }
+function goHome()   { state.visitFromWall = false; PAGE_STACK.length = 0; PAGE_STACK.push('home'); showPage('home'); }
+function goTemplates() { state.visitFromWall = false; PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderTplTabs(); renderTplGrid(); showPage('templates'); }
 function goPhoto()  { showPage('photo'); }
 function goGenerating() { showPage('generating'); }
-function goGallery() { renderWall(); showPage('gallery'); }
-function goMine()   { renderMine(); showPage('mine'); }
-function goTerms()  { showPage('terms'); }
+function goGallery() { PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderWall(); showPage('gallery'); }
+function goMine()   { PAGE_STACK.length = 0; PAGE_STACK.push('home'); renderMine(); showPage('mine'); }
+function goTerms()  { PAGE_STACK.length = 0; PAGE_STACK.push('home'); showPage('terms'); }
 function goStatus() { showPage('status'); }
 
 /* ================= Toast ================= */
@@ -1785,7 +1785,7 @@ function submitSelection() {
 }
 function closeSubmitGoMine() {
   document.getElementById('submit-modal').classList.remove('show');
-  goMine();
+  showPage('mine'); renderMine();
 }
 function retryCreate() { goTemplates(); }
 function onResultBack() { goHome(); }
