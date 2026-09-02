@@ -1044,7 +1044,7 @@ body {
       <div class="home-slogan">扫码拍一张　带走专属纪念</div>
     </div>
     <div class="spot-scroll">
-      <div class="ss-title">★ 现场精选</div>
+      <div class="ss-title">★ 现场风采</div>
       <div class="spot-track" id="spot-track"></div>
       <div class="spot-empty" id="spot-empty" style="display:none">成为首批留下纪念的参与者</div>
     </div>
@@ -1055,7 +1055,6 @@ body {
     </div>
     <div class="home-main">
       <button class="entry-btn primary" onclick="goTemplates()">立即创作纪念照</button>
-      <button class="entry-btn ghost" onclick="goGallery()">看看现场精选</button>
       <button class="entry-btn ghost" onclick="goMine()">我的纪念照</button>
       <div class="home-tip"><span class="dot"></span> AI 已生成 <b id="home-tip-num"></b> 张现场纪念作品</div>
     </div>
@@ -1170,15 +1169,15 @@ body {
         <span class="ra-link" onclick="goPhoto()">再拍一张</span>
       </div>
     </div>
-    <!-- 精选邀请区 -->
+    <!-- 风采邀请区 -->
     <div class="selection-box">
-      <div class="sb-title" id="sb-title">有机会亮相现场大屏</div>
-      <div class="sb-desc" id="sb-desc">提交后，作品将经过内容检查和工作人员精选。入选作品可能在现场大屏展示。</div>
+      <div class="sb-title" id="sb-title">把这份美好，留在现场</div>
+      <div class="sb-desc" id="sb-desc">大会现场大屏将轮播参会者的风采瞬间。提交你的纪念照，就有机会与全体参会者分享这份美好。</div>
       <div class="sb-check" id="sb-check" onclick="toggleSbCheck()">
         <span class="ck-box" id="sb-ck-box">✓</span>
-        <span>我同意将这张作品用于本次活动现场展示</span>
+        <span>我同意将这张照片用于现场大屏展示</span>
       </div>
-      <button class="sb-btn disabled" id="sb-submit" onclick="submitSelection()">提交现场精选</button>
+      <button class="sb-btn disabled" id="sb-submit" onclick="submitSelection()">分享这份美好</button>
       <div class="sb-link" onclick="goTerms()">查看展示说明</div>
     </div>
   </div>
@@ -1191,12 +1190,12 @@ body {
   </div>
 
 
-  <!-- 精选提交成功弹层 -->
+  <!-- 风采提交成功弹层 -->
   <div class="submit-modal" id="submit-modal">
     <div class="sm-card">
       <div class="sm-check">✓</div>
-      <div class="sm-title">已提交现场精选</div>
-      <div class="sm-desc">工作人员将从符合展示要求的作品中进行精选。<br>你可以在 <b>“我的纪念”</b> 查看状态。</div>
+      <div class="sm-title">已提交</div>
+      <div class="sm-desc">你的风采，即将被更多人看见。<br>工作人员确认后，就有机会在现场大屏与全体参会者相遇。</div>
       <div class="sm-btns">
         <button class="btn plain" onclick="closeModal('submit-modal')">知道了</button>
         <button class="btn primary" onclick="closeSubmitGoMine()">查看我的纪念</button>
@@ -1217,11 +1216,11 @@ body {
 <div class="page" id="page-gallery">
   <div class="page-header">
     <button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
-    <h2>现场精选</h2>
+    <h2>现场风采</h2>
     <span class="hdr-right" onclick="goTemplates()">我要拍</span>
   </div>
   <div class="wall-toolbar">
-    <span class="wl">每一份认真记录，都值得被珍藏。</span>
+    <span class="wl">让每一份认真记录，都被时代看见。</span>
     <span class="wl">共 <b id="wall-count">0</b> 张</span>
   </div>
   <div class="page-body">
@@ -1270,15 +1269,15 @@ body {
     <div class="terms-body">
       <div class="terms-sec">
         <h3>活动说明</h3>
-        <p>AI 纪念相册是本次大会现场的互动留影服务。扫码进入后，上传或拍摄照片，选择纪念模板生成专属作品，可保存分享，也可申请参与现场精选。</p>
+        <p>AI 纪念相册是本次大会现场的互动留影服务。扫码进入后，上传或拍摄照片，选择纪念模板生成专属作品，可保存分享，也可把风采留在大屏上，与现场参会者分享美好。</p>
       </div>
       <div class="terms-sec">
         <h3>成像能力说明</h3>
         <p>三种能力：<b>经典纪念框</b>（原图合成，约 3 秒）、《智能主题海报》（人像抠图融合场景，约 10 秒）、《AI 艺术创作》（生成式风格化，约 30 秒）。AI 生成效果会因照片而异，请使用本人照片。</p>
       </div>
       <div class="terms-sec">
-        <h3>现场精选规则</h3>
-        <p>勾选同意后，作品将经过内容检查和工作人员精选，入选作品可能在现场大屏展示。未入选不代表作品有问题。作品提交后如需停止展示，请联系现场工作人员。</p>
+        <h3>现场大屏展示规则</h3>
+        <p>勾选同意后，作品经工作人员确认即可在现场大屏展示。未展示不代表照片有问题。提交后如需停止展示，请联系现场工作人员。</p>
       </div>
       <div class="terms-sec">
         <h3>隐私说明</h3>
@@ -1286,7 +1285,7 @@ body {
       </div>
       <div class="terms-sec">
         <h3>肖像授权说明</h3>
-        <p>提交现场精选即代表你同意将作品用于本次活动现场展示与相关宣传用途。多人照片请确保已获得同框人员同意。</p>
+        <p>提交展示即代表你同意将照片用于现场大屏展示与相关宣传用途。多人照片请确保已获得同框人员同意。</p>
       </div>
       <div class="terms-sec">
         <h3>内容规范</h3>
@@ -1318,7 +1317,7 @@ body {
           <div class="cm-caption">AI 纪念相册 · 现场互动</div>
           <div class="cm-body">
             你拍摄/上传的照片仅用于生成本次活动纪念作品。<br><br>
-            未经你主动提交，作品不会进入现场精选展示；提交精选需另行勾选同意。
+            未经你主动提交，作品不会进入现场大屏展示；提交展示需另行勾选同意。
           </div>
           <div class="cm-btns">
             <button class="btn primary" onclick="agreeNotice()">我已了解</button>
@@ -1747,18 +1746,18 @@ function renderResult() {
   var workStatus = state.curWork.status || 'notsub';
   var sbTitle = document.getElementById('sb-title');
   if (workStatus === 'selected') {
-    sbTitle.textContent = '已精选上屏';
-    document.getElementById('sb-desc').textContent = '这张纪念照已被精选，正在现场大屏展示。';
+    sbTitle.textContent = '正在现场大屏展示';
+    document.getElementById('sb-desc').textContent = '你的风采正在现场与参会者相遇。';
     document.getElementById('sb-check').style.display = 'none';
     document.getElementById('sb-submit').style.display = 'none';
   } else if (workStatus === 'wait') {
-    sbTitle.textContent = '已提交，等待精选';
-    document.getElementById('sb-desc').textContent = '工作人员将从符合展示要求的作品中进行精选，你可以在「我的纪念」查看状态。';
+    sbTitle.textContent = '已提交，等待安排展示';
+    document.getElementById('sb-desc').textContent = '工作人员确认后，你的风采就有机会与现场参会者相遇，你可以在「我的纪念」查看状态。';
     document.getElementById('sb-check').style.display = 'none';
     document.getElementById('sb-submit').style.display = 'none';
   } else {
-    sbTitle.textContent = '有机会亮相现场大屏';
-    document.getElementById('sb-desc').textContent = '提交后，作品将经过内容检查和工作人员精选。入选作品可能在现场大屏展示。';
+    sbTitle.textContent = '把这份美好，留在现场';
+    document.getElementById('sb-desc').textContent = '大会现场大屏将轮播参会者的风采瞬间。提交你的纪念照，就有机会与全体参会者分享这份美好。';
     document.getElementById('sb-check').style.display = '';
     document.getElementById('sb-submit').style.display = '';
   }
@@ -1796,7 +1795,7 @@ function closeSubmitGoMine() {
 function retryCreate() { goTemplates(); }
 function onResultBack() { goHome(); }
 
-/* ================= H09 精选照片墙 ================= */
+/* ================= H09 现场风采 ================= */
 function renderWall() {
   var grid = document.getElementById('wall-grid');
   if (!grid) return;
@@ -1864,9 +1863,9 @@ function renderMine() {
   list.innerHTML = html;
 }
 function statusPill(s) {
-  if (s === 'selected') return '<span class="status-pill on">● 已被精选上屏</span>';
-  if (s === 'wait')    return '<span class="status-pill wait">● 等待上屏</span>';
-  return '<span class="status-pill off">○ 不提交精选</span>';
+  if (s === 'selected') return '<span class="status-pill on">● 正在现场大屏展示</span>';
+  if (s === 'wait')    return '<span class="status-pill wait">● 等待亮相</span>';
+  return '<span class="status-pill off">○ 暂未分享</span>';
 }
 function openWorkFromMine(idx) {
   var w = MY_WORKS[idx];

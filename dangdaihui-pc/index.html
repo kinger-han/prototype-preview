@@ -750,7 +750,7 @@ table tr { cursor: pointer; }
       </div>
       <div class="sub-menu open">
         <div class="menu-item active" onclick="switchPage('照片管理', this)" id="menuPhotoMgmt">照片管理</div>
-        <div class="menu-item" onclick="switchPage('申请上屏', this)" id="menuSelectionMgmt">申请上屏</div>
+        <div class="menu-item" onclick="switchPage('上屏展示审核', this)" id="menuSelectionMgmt">上屏展示审核</div>
       </div>
     </div>
   </div>
@@ -841,7 +841,7 @@ table tr { cursor: pointer; }
 
   <div class="stat-cards">
     <div class="stat-card"><div class="sc-num" id="stat-total">0</div><div class="sc-label">全部照片</div></div>
-    <div class="stat-card"><div class="sc-num" id="stat-onscreen">0</div><div class="sc-label">已上屏</div></div>
+    <div class="stat-card"><div class="sc-num" id="stat-onscreen">0</div><div class="sc-label">展示中</div></div>
     <div class="stat-card"><div class="sc-num" id="stat-visitors">0</div><div class="sc-label">留影人数</div></div>
   </div>
 
@@ -855,11 +855,11 @@ table tr { cursor: pointer; }
 
   <div class="filter-bar">
     <div class="filter-item">
-      <span class="filter-label">上屏状态</span>
+      <span class="filter-label">展示状态</span>
       <select class="filter-select" id="f-on-screen" onchange="applyFilter()">
         <option value="">全部</option>
-        <option value="onscreen">已上屏</option>
-        <option value="off">未上屏</option>
+        <option value="onscreen">展示中</option>
+        <option value="off">未展示</option>
       </select>
     </div>
     <div class="filter-item">
@@ -899,7 +899,7 @@ table tr { cursor: pointer; }
           <th>来源屏幕</th>
           <th>生成状态</th>
           <th>AI 初审</th>
-          <th>上屏状态</th>
+          <th>展示状态</th>
           <th>创建时间</th>
           <th>操作</th>
         </tr>
@@ -1000,16 +1000,16 @@ table tr { cursor: pointer; }
   </style>
 
   <div class="page-header">
-    <div class="page-title">申请上屏 <span class="sub">用户已授权同意上屏的照片</span></div>
+    <div class="page-title">上屏展示审核 <span class="sub">用户已授权同意展示的照片，确认后投放至现场大屏</span></div>
   </div>
 
   <div class="filter-bar">
     <div class="filter-item">
-      <span class="filter-label">上屏状态</span>
+      <span class="filter-label">展示状态</span>
       <select class="filter-select" id="f-sel-onscreen" onchange="selApplyFilter()">
         <option value="">全部</option>
-        <option value="onscreen">已上屏</option>
-        <option value="off">未上屏</option>
+        <option value="onscreen">展示中</option>
+        <option value="off">未展示</option>
       </select>
     </div>
     <div class="filter-item">
@@ -1032,8 +1032,8 @@ table tr { cursor: pointer; }
     </div>
     <div class="filter-spacer" style="flex:1"></div>
     <div class="filter-item">
-      <button class="filter-btn disabled" id="btn-batch-on" onclick="selBatchOnScreen()">批量上屏</button>
-      <button class="filter-btn disabled" id="btn-batch-off" onclick="selBatchOffScreen()">批量下屏</button>
+      <button class="filter-btn disabled" id="btn-batch-on" onclick="selBatchOnScreen()">批量展示</button>
+      <button class="filter-btn disabled" id="btn-batch-off" onclick="selBatchOffScreen()">批量撤下</button>
     </div>
   </div>
 
@@ -1046,8 +1046,8 @@ table tr { cursor: pointer; }
           <th>编号</th>
           <th>模板</th>
           <th>微信号</th>
-          <th>上屏状态</th>
-          <th>上屏时间</th>
+          <th>展示状态</th>
+          <th>展示时间</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -1067,8 +1067,8 @@ table tr { cursor: pointer; }
   <!-- 上屏设备选择弹窗 -->
   <div class="device-modal" id="device-modal" onclick="closeDeviceModal()">
     <div class="device-box" onclick="event.stopPropagation()">
-      <div class="dv-title">选择上屏设备</div>
-      <div class="dv-sub" id="dv-sub">将作品投放至目标屏幕</div>
+      <div class="dv-title">选择展示屏幕</div>
+      <div class="dv-sub" id="dv-sub">将作品投放至目标大屏</div>
       <div class="device-group">
         <div class="dg-label">主会场</div>
         <div class="device-options" id="dev-main"></div>
@@ -1079,7 +1079,7 @@ table tr { cursor: pointer; }
       </div>
       <div class="dv-actions">
         <button class="dv-btn" onclick="closeDeviceModal()">取消</button>
-        <button class="dv-btn primary disabled" id="dv-confirm" onclick="confirmDevice()">确认上屏</button>
+        <button class="dv-btn primary disabled" id="dv-confirm" onclick="confirmDevice()">确认展示</button>
       </div>
     </div>
   </div>
@@ -1237,7 +1237,7 @@ function updateBreadcrumb(title) {
 
 // ---- ProtoKit 页面路由 ----
 var _protoPages = document.querySelectorAll('.proto-page');
-var _pageTitleToId = {"照片管理": "photo-mgmt", "申请上屏": "selection-mgmt"};
+var _pageTitleToId = {"照片管理": "photo-mgmt", "上屏展示审核": "selection-mgmt"};
 
 function protoShowPage(pageId) {
   _protoPages.forEach(function(p) {
@@ -1353,12 +1353,12 @@ function aiBadge(ai) {
   return '<span class="badge-status disabled">—</span>';
 }
 function onBadge(on) {
-  return on ? '<span class="badge-status active" style="background:#f6ffed;color:#52c41a">已上屏</span>'
-            : '<span class="badge-status disabled">未上屏</span>';
+  return on ? '<span class="badge-status active" style="background:#f6ffed;color:#52c41a">展示中</span>'
+            : '<span class="badge-status disabled">未展示</span>';
 }
 function onAction(p) {
-  if (p.on) return '<a class="action-btn" onclick="undoOnScreen(\'' + p.no + '\')">下屏</a>';
-  return '<a class="action-btn" onclick="singleOnScreen(\'' + p.no + '\')">上屏</a>';
+  if (p.on) return '<a class="action-btn" onclick="undoOnScreen(\'' + p.no + '\')">撤下</a>';
+  return '<a class="action-btn" onclick="singleOnScreen(\'' + p.no + '\')">展示</a>';
 }
 function showToast(msg) {
   var ta = document.getElementById('toast-area');
@@ -1369,7 +1369,7 @@ function singleOnScreen(no) {
   var p = PHOTO_LIST.filter(function(x){ return x.no === no; })[0];
   if (!p) return showToast('未找到该照片');
   p.on = true;
-  showToast('已上屏：' + no);
+  showToast('已展示：' + no);
   renderStatCards();
   renderPhotoTable();
 }
@@ -1489,11 +1489,11 @@ function renderSelTable() {
       '<td>' + p.no + '</td>' +
       '<td>' + p.tpl + '</td>' +
       '<td>' + p.wx + '</td>' +
-      '<td>' + (p.on ? '<span class="badge-status active" style="background:#f6ffed;color:#52c41a">已上屏</span>'
-                    : '<span class="badge-status disabled">未上屏</span>') + '</td>' +
+      '<td>' + (p.on ? '<span class="badge-status active" style="background:#f6ffed;color:#52c41a">展示中</span>'
+                    : '<span class="badge-status disabled">未展示</span>') + '</td>' +
       '<td>' + (p.onTime || '—') + '</td>' +
-      '<td>' + (p.on ? '<a class="action-btn" onclick="askOffScreen(\'' + p.no + '\')">下屏</a>'
-                     : '<a class="action-btn" onclick="askOnScreen(\'' + p.no + '\')">上屏</a>') + '</td>' +
+      '<td>' + (p.on ? '<a class="action-btn" onclick="askOffScreen(\'' + p.no + '\')">撤下</a>'
+                     : '<a class="action-btn" onclick="askOnScreen(\'' + p.no + '\')">展示</a>') + '</td>' +
       '</tr>';
   });
   if (!list.length) {
@@ -1528,14 +1528,14 @@ function onSelRowCheck(el) {
 function askOnScreen(no) {
   CURRENT_DEVICE_NO = no;
   CURRENT_DEVICE_MODE = 'single';
-  openDeviceModal('上屏：' + no);
+  openDeviceModal('展示：' + no);
 }
 function askOffScreen(no) {
   var p = SEL_LIST.filter(function(x){ return x.no === no; })[0];
   if (!p) return;
   p.on = false;
   p.onTime = null;
-  selShowToast('已下屏：' + no);
+  selShowToast('已撤下：' + no);
   renderSelTable();
 }
 /* ---- 批量操作（也走设备选择） ---- */
@@ -1544,21 +1544,21 @@ function selBatchOnScreen() {
   if (!keys.length) { selShowToast('请先勾选照片'); return; }
   /* 只对未上屏的照片执行批量上屏（按钮已按类型禁用，这里兜底） */
   var unsel = SEL_LIST.filter(function(x){ return SEL_SELECTED[x.no] && !x.on; });
-  if (!unsel.length) { selShowToast('勾选的照片均已上屏'); return; }
+  if (!unsel.length) { selShowToast('勾选的照片均已展示'); return; }
   CURRENT_DEVICE_NO = null;
   CURRENT_DEVICE_MODE = 'batch';
-  openDeviceModal('批量上屏 ' + unsel.length + ' 张');
+  openDeviceModal('批量展示 ' + unsel.length + ' 张');
 }
 function selBatchOffScreen() {
   var keys = Object.keys(SEL_SELECTED);
   if (!keys.length) { selShowToast('请先勾选照片'); return; }
   /* 只对已上屏的照片执行批量下屏（按钮已按类型禁用，这里兜底） */
   var onlist = SEL_LIST.filter(function(x){ return SEL_SELECTED[x.no] && x.on; });
-  if (!onlist.length) { selShowToast('勾选的照片均未上屏'); return; }
+  if (!onlist.length) { selShowToast('勾选的照片均未展示'); return; }
   onlist.forEach(function(p) { p.on = false; p.onTime = null; });
   var n = onlist.length;
   SEL_SELECTED = {};
-  selShowToast('已批量下屏 ' + n + ' 张');
+  selShowToast('已批量撤下 ' + n + ' 张');
   renderSelTable();
 }
 /* ---- 设备选择弹窗 ---- */
@@ -1606,11 +1606,11 @@ function confirmDevice() {
     var keys = Object.keys(SEL_SELECTED);
     SEL_LIST.forEach(function(p) { if (SEL_SELECTED[p.no]) { p.on = true; p.onTime = hm; } });
     SEL_SELECTED = {};
-    selShowToast('已批量上屏 ' + keys.length + ' 张 → ' + dev);
+    selShowToast('已批量展示 ' + keys.length + ' 张 → ' + dev);
   } else {
     var p = SEL_LIST.filter(function(x){ return x.no === CURRENT_DEVICE_NO; })[0];
     if (p) { p.on = true; p.onTime = hm; }
-    selShowToast('已上屏：' + CURRENT_DEVICE_NO + ' → ' + dev);
+    selShowToast('已展示：' + CURRENT_DEVICE_NO + ' → ' + dev);
   }
   closeDeviceModal();
   renderSelTable();
