@@ -781,6 +781,7 @@ table tr { cursor: pointer; }
         <div class="menu-item active" onclick="switchPage('照片管理', this)" id="menuPhotoMgmt">照片管理</div>
         <div class="menu-item" onclick="switchPage('上屏展示审核', this)" id="menuSelectionMgmt">上屏展示审核</div>
         <div class="menu-item" onclick="switchPage('模板管理', this)" id="menuTemplateMgmt">模板管理</div>
+        <div class="menu-item" onclick="switchDeviceMgmt(this)" id="menuDeviceMgmt">设备管理</div>
       </div>
     </div>
   </div>
@@ -1296,6 +1297,16 @@ table tr { cursor: pointer; }
   <div id="tpl-toast-area"></div>
 </div>
 </div>
+      <!-- 设备管理占位页（不做功能，仅菜单占位） -->
+      <div class="proto-page" id="page-device-mgmt" data-page-id="device-mgmt" style="display:none">
+        <div class="page-header">
+          <div class="page-title">设备管理 <span class="sub">现场大屏设备（原型暂未实现，仅菜单占位）</span></div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:60px 24px;text-align:center;color:#999;">
+          <div style="font-size:13px;margin-bottom:8px;">设备管理</div>
+          <div style="font-size:12px;">该模块原型暂未实现，后续补充现场大屏设备的管理能力</div>
+        </div>
+      </div>
     </div><!-- /content-area -->
   </div><!-- /main-area -->
 </div><!-- /layout -->
@@ -1460,6 +1471,12 @@ function showToast(text, type) {
 }
 function updateBreadcrumb(title) {
   document.querySelector('.breadcrumb .current').textContent = title;
+}
+/* 设备管理：占位菜单（不做功能，显示占位页） */
+function switchDeviceMgmt(element) {
+  _origSwitchPage('设备管理', element);
+  var pages = document.querySelectorAll('.proto-page');
+  pages.forEach(function(p) { p.style.display = p.getAttribute('data-page-id') === 'device-mgmt' ? 'block' : 'none'; });
 }
 
 /* ===== 照片详情弹窗（全局，照片管理/上屏展示审核共用） ===== */
