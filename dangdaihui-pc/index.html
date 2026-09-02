@@ -1156,6 +1156,15 @@ table tr { cursor: pointer; }
     .tf-input:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
     .tf-tip { font-size: 12px; color: #999; margin-top: 4px; }
     .tpl-modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #f0f0f0; }
+    /* 模板图片上传 */
+    .tpl-img-row { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 16px; }
+    .tpl-img-preview { width: 120px; height: 160px; border: 1px dashed #d9d9d9; border-radius: 4px; overflow: hidden; flex-shrink: 0; background: #fafafa; display: flex; align-items: center; justify-content: center; }
+    .tpl-img-preview.has-img { border-style: solid; border-color: #e0e0e0; }
+    .tpl-img-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tpl-img-ph { width: 100%; height: 100%; background: linear-gradient(135deg,#F0EAE0 0%,#E8DFD0 100%); position: relative; }
+    .tpl-img-ph::after { content: '模板图片'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 12px; color: #b8a88f; }
+    .tpl-img-ops { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+    .tpl-img-tip { font-size: 12px; color: #999; line-height: 1.6; margin-top: 4px; }
   </style>
 
   <div class="page-header">
@@ -1216,6 +1225,17 @@ table tr { cursor: pointer; }
     <div class="tpl-modal-box">
       <div class="tpl-modal-title" id="tpl-modal-title">新增模板</div>
       <div class="tpl-modal-body">
+        <div class="tpl-img-row">
+          <div class="tpl-img-preview" id="tpl-img-preview">
+            <div class="tpl-img-ph"></div>
+          </div>
+          <div class="tpl-img-ops">
+            <button class="dv-btn" onclick="document.getElementById('tpl-img-file').click()">上传图片</button>
+            <button class="dv-btn" onclick="tplRemoveImg()">移除</button>
+            <div class="tpl-img-tip">建议尺寸 600×800（3:4），jpg/png，控制在 2MB 内<br>移动端模板卡片使用该图片</div>
+            <input type="file" id="tpl-img-file" accept="image/*" style="display:none" onchange="tplImgChosen(this)">
+          </div>
+        </div>
         <div class="tf-row">
           <div class="tf-field">
             <label class="tf-label">模板名称 <span class="req">*</span></label>
@@ -1296,7 +1316,7 @@ table tr { cursor: pointer; }
 
 <!-- ====== 照片详情弹窗（照片管理/上屏展示审核 共用） ====== -->
 <div class="pd-modal" id="pd-modal" style="display:none">
-  <div class="pd-modal-mask" onclick="closePhotoDetail()"></div>
+  <div class="pd-modal-mask" onclick="pdCloseDetail()"></div>
   <div class="pd-modal-box">
     <div class="pd-modal-title">照片详情 <span class="pd-modal-sub" id="pd-no"></span></div>
     <div class="pd-modal-body">
@@ -1307,7 +1327,7 @@ table tr { cursor: pointer; }
       <div class="pd-fields" id="pd-fields"></div>
     </div>
     <div class="pd-modal-footer">
-      <button class="dv-btn" onclick="closePhotoDetail()">关闭</button>
+      <button class="dv-btn" onclick="pdCloseDetail()">关闭</button>
     </div>
   </div>
 </div>
@@ -1443,7 +1463,7 @@ function updateBreadcrumb(title) {
 }
 
 /* ===== 照片详情弹窗（全局，照片管理/上屏展示审核共用） ===== */
-function openPhotoDetail(no) {
+function pdShowDetail(no) {
   if (!window.__PHOTO_DETAILS) window.__PHOTO_DETAILS = {};
   var t = window.__PHOTO_DETAILS[no] || null;
   document.getElementById('pd-no').textContent = t ? t.no : '';
@@ -1468,7 +1488,7 @@ function openPhotoDetail(no) {
   document.getElementById('pd-fields').innerHTML = html;
   document.getElementById('pd-modal').style.display = 'flex';
 }
-function closePhotoDetail() { document.getElementById('pd-modal').style.display = 'none'; }
+function pdCloseDetail() { document.getElementById('pd-modal').style.display = 'none'; }
 
 // ---- ProtoKit 页面路由 ----
 var _protoPages = document.querySelectorAll('.proto-page');
@@ -1670,7 +1690,7 @@ function buildPhotoDetails() {
 }
 function openPhotoDetail(no) {
   if (!window.__PHOTO_DETAILS) buildPhotoDetails();
-  if (typeof window.openPhotoDetail === 'function') window.openPhotoDetail(no);
+  if (typeof window.pdShowDetail === 'function') window.pdShowDetail(no);
 }
 function init_photo_mgmt() { renderStatCards(); renderPhotoTable(); }
   buildPhotoDetails();
@@ -1892,7 +1912,7 @@ function selBuildDetails() {
 }
 function selOpenDetail(no) {
   selBuildDetails();
-  if (typeof window.openPhotoDetail === 'function') window.openPhotoDetail(no);
+  if (typeof window.pdShowDetail === 'function') window.pdShowDetail(no);
 }
 function init_selection_mgmt() { renderSelTable(); }
 init_selection_mgmt();
@@ -1931,7 +1951,9 @@ function renderTplMgmt() {
   var html = '';
   list.forEach(function(t) {
     html += '<tr>' +
-      '<td><span class="tpl-thumb"><span class="pt-bg2 wb-' + tplBgOf(t.id) + '"></span><span class="pt-person2"></span></span></td>' +
+      '<td><span class="tpl-thumb">' + (t.img
+        ? '<img src="' + t.img + '" style="width:100%;height:100%;object-fit:cover;display:block">'
+        : '<span class="pt-bg2 wb-' + tplBgOf(t.id) + '"></span><span class="pt-person2"></span>') + '</span></td>' +
       '<td>' + t.name + (t.uses >= 150 ? ' <span class="tag-hot" style="color:#C0392B;background:#FDE6E4;font-size:12px;padding:1px 6px;border-radius:3px">热门</span>' : '') + '</td>' +
       '<td class="tpl-leaf">' + t.groupName + '</td>' +
       '<td class="tpl-leaf">' + (t.guide || '—') + '</td>' +
@@ -1982,16 +2004,40 @@ function openTplModal(id) {
   document.getElementById('tpl-estTime').value = t ? t.estTime : '约 10 秒';
   document.getElementById('tpl-state').value = t ? t.state : 'on';
   document.getElementById('tpl-guide').value = t ? t.guide : '';
+  tplRenderImg(t ? t.img : null);
   document.getElementById('tpl-modal').style.display = 'flex';
 }
+function tplRenderImg(dataUrl) {
+  var pv = document.getElementById('tpl-img-preview');
+  if (dataUrl) {
+    pv.innerHTML = '<img src="' + dataUrl + '" alt="模板图片">';
+    pv.classList.add('has-img');
+  } else {
+    pv.innerHTML = '<div class="tpl-img-ph"></div>';
+    pv.classList.remove('has-img');
+  }
+}
+function tplImgChosen(inp) {
+  var f = inp.files && inp.files[0];
+  if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function(e) { tplRenderImg(e.target.result); };
+  rd.readAsDataURL(f);
+  inp.value = '';
+}
+function tplRemoveImg() { tplRenderImg(null); }
 function closeTplModal() { document.getElementById('tpl-modal').style.display = 'none'; }
 function saveTplModal() {
   var name = document.getElementById('tpl-name').value.trim();
   var guide = document.getElementById('tpl-guide').value.trim();
   if (!name) { showToast('请填写模板名称', 'warn'); return; }
   if (!guide) { showToast('请填写适用建议', 'warn'); return; }
+  var imgEl = document.getElementById('tpl-img-preview');
+  var hasImg = imgEl.classList.contains('has-img');
+  var img = hasImg ? (imgEl.querySelector('img') ? imgEl.querySelector('img').src : null) : null;
   var data = {
     name: name,
+    img: img,
     group: document.getElementById('tpl-group').value,
     groupName: { classic: '庄重经典', smart: '智能海报', aiguofeng: 'AI 国风', aichuangyi: 'AI 创意' }[document.getElementById('tpl-group').value],
     people: document.getElementById('tpl-people').value,
@@ -2008,6 +2054,7 @@ function saveTplModal() {
   } else {
     TPL_LIST.push({
       id: 'tpl' + (TPL_LIST.length + 1), uses: 0, time: '09-02 现在',
+      img: data.img,
       group: data.group, groupName: data.groupName,
       people: data.people, estTime: data.estTime, state: data.state,
       name: data.name, guide: data.guide
