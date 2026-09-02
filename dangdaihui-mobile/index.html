@@ -1073,20 +1073,6 @@ body {
     <div class="tpl-grid" id="tpl-grid"></div>
   </div>
 
-  <!-- 照片使用说明弹窗（仅首次选择模板时弹出，确认后不再弹） -->
-  <div class="consent-modal" id="consent-modal">
-    <div class="cm-card">
-      <div class="cm-title">照片使用说明</div>
-      <div class="cm-caption">AI 纪念相册 · 现场互动</div>
-      <div class="cm-body">
-        你拍摄/上传的照片仅用于生成本次活动纪念作品。<br><br>
-        未经你主动提交，作品不会进入现场精选展示；提交精选需另行勾选同意。
-      </div>
-      <div class="cm-btns">
-        <button class="btn primary" onclick="agreeNotice()">我已了解</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <div class="page" id="page-photo">
@@ -1325,6 +1311,20 @@ body {
   <div class="status-btns" id="status-btns"></div>
 </div>
       </div>
+      <!-- 照片使用说明弹窗（全局：选模板 / 拍同款 首次提醒，确认后不再弹） -->
+      <div class="consent-modal" id="consent-modal">
+        <div class="cm-card">
+          <div class="cm-title">照片使用说明</div>
+          <div class="cm-caption">AI 纪念相册 · 现场互动</div>
+          <div class="cm-body">
+            你拍摄/上传的照片仅用于生成本次活动纪念作品。<br><br>
+            未经你主动提交，作品不会进入现场精选展示；提交精选需另行勾选同意。
+          </div>
+          <div class="cm-btns">
+            <button class="btn primary" onclick="agreeNotice()">我已了解</button>
+          </div>
+        </div>
+      </div>
       <div class="toast" id="toast"><span class="t-icon" id="toast-icon"></span><span id="toast-text"></span></div>
       <div class="home-indicator"></div>
     </div>
@@ -1474,7 +1474,7 @@ function refreshTabs(id) {
   tabBar.querySelectorAll('.tab-bar-item').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-page') === id); });
 }
 function goHome()   { state.visitFromWall = false; showPage('home'); }
-function goTemplates() { renderTplTabs(); renderTplGrid(); showPage('templates'); }
+function goTemplates() { state.visitFromWall = false; renderTplTabs(); renderTplGrid(); showPage('templates'); }
 function goPhoto()  { showPage('photo'); }
 function goGenerating() { showPage('generating'); }
 function goGallery() { renderWall(); showPage('gallery'); }
@@ -1560,6 +1560,7 @@ function agreeNotice() {
   sessionStorage.setItem('ddh_notice_agreed', '1');
   document.getElementById('consent-modal').classList.remove('show');
   goPhoto();
+  if (state.visitFromWall) toast('已按该作品模板为你跳转，拍个同款吧');
 }
 function closeNotice() {
   document.getElementById('consent-modal').classList.remove('show');
@@ -1826,6 +1827,11 @@ function sameTemplateFromWall() {
   closeWallDetail();
   state.visitFromWall = true;
   state.selectedTpl = p.tpl;
+  /* 首次（未在任何位置点过"我已了解"）→ 先弹照片使用说明，确认后再进拍照页 */
+  if (sessionStorage.getItem('ddh_notice_agreed') !== '1') {
+    document.getElementById('consent-modal').classList.add('show');
+    return;
+  }
   goPhoto();
   toast('已按该作品模板为你跳转，拍个同款吧');
 }
