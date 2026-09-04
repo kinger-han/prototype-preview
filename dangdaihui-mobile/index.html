@@ -1036,9 +1036,9 @@ body {
       <div class="spot-empty" id="spot-empty" style="display:none">成为首批留下纪念的参与者</div>
     </div>
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-num" id="stat-joiner"></div><div class="stat-label">人参与</div></div>
-      <div class="stat-card"><div class="stat-num gold" id="stat-work"></div><div class="stat-label">张纪念作品</div></div>
-      <div class="stat-card"><div class="stat-num" id="stat-archive"></div><div class="stat-label">份纪念档案</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-joiner"></div><div class="stat-label">人留下纪念</div></div>
+      <div class="stat-card"><div class="stat-num gold" id="stat-work"></div><div class="stat-label">张纪念照片</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-archive"></div><div class="stat-label">人分享上屏</div></div>
     </div>
     <div class="home-main">
       <button class="entry-btn primary" onclick="goTemplates()">立即创作纪念照</button>
@@ -1361,7 +1361,8 @@ var ACTIVITY = {
   slogan: '定格奋斗身影 共绘时代华章',
   joinerCount: 328,
   workCount: 612,
-  archiveIndex: 328
+  archiveIndex: 328,
+  shareCount: 28
 };
 
 var CAPABILITIES = {
@@ -1498,7 +1499,7 @@ function renderSpot() {
 /* ================= 初始化 ================= */
 document.getElementById('stat-joiner').textContent = ACTIVITY.joinerCount;
 document.getElementById('stat-work').textContent = ACTIVITY.workCount;
-document.getElementById('stat-archive').textContent = ACTIVITY.archiveIndex;
+document.getElementById('stat-archive').textContent = ACTIVITY.shareCount;
 document.getElementById('home-tip-num').textContent = ACTIVITY.workCount;
 renderSpot();
 
