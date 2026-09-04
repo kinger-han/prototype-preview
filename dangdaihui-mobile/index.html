@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>党代会 · AI 纪念相册（手机端原型）</title>
+  <title>党代会 · 纪念相册（手机端原型）</title>
   <style>
 /* ============================
    base.css - 全局公共样式
@@ -290,7 +290,7 @@ body {
 .stat-num { font-size: 20px; font-weight: 700; color: var(--red); }
 .stat-num.gold { color: var(--gold-deep); }
 .stat-label { font-size: 11px; color: var(--gray); margin-top: 2px; }
-.home-main { padding: 4px 24px 20px; }
+.home-main { padding: 16px 24px 20px; }
 .entry-btn {
   width: 100%; padding: 14px; border-radius: 10px; border: none;
   font-size: 16px; font-weight: 600; cursor: pointer;
@@ -307,8 +307,6 @@ body {
   background: #FAF6ED; border: 1px solid var(--line); border-radius: 8px; padding: 8px 2px;
 }
 .cap-chip b { display: block; font-size: 12px; color: var(--ink); margin-bottom: 2px; }
-.home-tip { margin-top: 16px; text-align: center; font-size: 11px; color: var(--gray); display: flex; align-items: center; justify-content: center; gap: 6px; }
-.home-tip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 1.5s infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 /* ============ 通用页头 ============ */
@@ -1026,7 +1024,7 @@ body {
   <div class="page-body">
     <div class="home-hero">
       <div class="badge-party">★ 中国共产党福建省第十二次代表大会</div>
-      <div class="home-title">AI 纪念相册</div>
+      <div class="home-title">纪念相册</div>
       <div class="home-sub">定格奋斗身影　共绘时代华章</div>
       <div class="home-slogan">扫码拍一张　带走专属纪念</div>
     </div>
@@ -1043,7 +1041,6 @@ body {
     <div class="home-main">
       <button class="entry-btn primary" onclick="goTemplates()">立即创作纪念照</button>
       <button class="entry-btn ghost" onclick="goMine()">我的纪念照</button>
-      <div class="home-tip"><span class="dot"></span> AI 已生成 <b id="home-tip-num"></b> 张现场纪念作品</div>
     </div>
   </div>
 </div>
@@ -1255,11 +1252,11 @@ body {
     <div class="terms-body">
       <div class="terms-sec">
         <h3>活动说明</h3>
-        <p>AI 纪念相册是本次大会现场的互动留影服务。扫码进入后，上传或拍摄照片，选择纪念模板生成专属作品，可保存分享，也可把风采留在大屏上，与现场参会者分享美好。</p>
+        <p>纪念相册是本次大会现场的互动留影服务。扫码进入后，上传或拍摄照片，选择纪念模板生成专属作品，可保存分享，也可把风采留在大屏上，与现场参会者分享美好。</p>
       </div>
       <div class="terms-sec">
         <h3>成像能力说明</h3>
-        <p>三种能力：<b>经典纪念框</b>（原图合成，约 3 秒）、《智能主题海报》（人像抠图融合场景，约 10 秒）、《AI 艺术创作》（生成式风格化，约 30 秒）。AI 生成效果会因照片而异，请使用本人照片。</p>
+        <p>使用人物照片搭配纪念模板，直接合成专属纪念照（约 3 秒）。成像效果会因照片而异，请使用本人照片。</p>
       </div>
       <div class="terms-sec">
         <h3>现场大屏展示规则</h3>
@@ -1278,7 +1275,7 @@ body {
         <ul>
           <li>请使用本人的真实照片，不包含他人隐私信息；</li>
           <li>不上传含政治敏感、广告、联系方式、水印等内容；</li>
-          <li>AI 不支持生成与政治人物同框、军警制服或特定身份形象。</li>
+          <li>不支持生成与政治人物同框、军警制服或特定身份形象。</li>
         </ul>
       </div>
       <div class="terms-sec">
@@ -1292,7 +1289,7 @@ body {
 <div class="page status-page" id="page-status">
   <div class="status-icon" id="status-icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
   <div class="status-title" id="status-title">活动即将开始</div>
-  <div class="status-desc" id="status-desc">敬请期待现场 AI 纪念相册</div>
+  <div class="status-desc" id="status-desc">敬请期待现场纪念相册</div>
   <div class="status-btns" id="status-btns"></div>
 </div>
       </div>
@@ -1300,7 +1297,7 @@ body {
       <div class="consent-modal" id="consent-modal">
         <div class="cm-card">
           <div class="cm-title">照片使用说明</div>
-          <div class="cm-caption">AI 纪念相册 · 现场互动</div>
+          <div class="cm-caption">纪念相册 · 现场互动</div>
           <div class="cm-body">
             你拍摄/上传的照片仅用于生成本次活动纪念作品。<br><br>
             未经你主动提交，作品不会进入现场大屏展示；提交展示需另行勾选同意。
@@ -1357,7 +1354,7 @@ var MOCK = {
 /* ================= 共享数据（PRD 3.2 首期 9 模板 · 全部数据驱动） ================= */
 var ACTIVITY = {
   fullName: '中国共产党福建省第十二次代表大会',
-  productName: 'AI 纪念相册',
+  productName: '纪念相册',
   slogan: '定格奋斗身影 共绘时代华章',
   joinerCount: 328,
   workCount: 612,
@@ -1367,57 +1364,45 @@ var ACTIVITY = {
 
 var CAPABILITIES = {
   A: { name: '经典纪念框', tag: '多人友好 · 约 3 秒', desc: '原片自然呈现 · 快速合成', confirmBtn: '确认合成', genBtn: '立即合成' },
-  B: { name: '智能主题海报', tag: '推荐 · 约 10 秒', desc: '智能识别人像 · 融入大会主题场景', confirmBtn: '确认生成', genBtn: '开始生成' },
-  C: { name: 'AI 艺术创作', tag: '单人正面照 · 约 30 秒', desc: '生成国风或创意形象', confirmBtn: '确认生成', genBtn: '开始生成' }
 };
 
 var TPL_GROUPS = [
   { id: 'classic', name: '庄重经典' },
-  { id: 'smart',   name: '智能海报' },
-  { id: 'aiguofeng', name: 'AI 国风' },
-  { id: 'aichuangyi', name: 'AI 创意' }
 ];
 
 var TEMPLATES = [
   { id: 'shenghui', name: '盛会留念框', group: 'classic', cap: 'A', people: '1-6 人', time: '约 3 秒', guide: '建议多人合照，原图居中，红金边框', prime: true },
   { id: 'fenjin',   name: '奋进新征程', group: 'classic', cap: 'A', people: '1-4 人', time: '约 3 秒', guide: '竖版照片 + 金色题字 + 福建剪影', prime: false },
-  { id: 'dangqi',   name: '党旗礼赞', group: 'smart', cap: 'B', people: '1-2 人', time: '约 10 秒', guide: '建议单人、正面、半身，红色主题场景', prime: true },
-  { id: 'shengshi', name: '盛世华章', group: 'smart', cap: 'B', people: '1-2 人', time: '约 10 秒', guide: '人物居中，金色光影与山河纹理', prime: true },
-  { id: 'gutian',   name: '古田星火', group: 'smart', cap: 'B', people: '1-2 人', time: '约 10 秒', guide: '人物前景 + 红色文化场景', prime: true },
-  { id: 'fujian',   name: '福见山海', group: 'smart', cap: 'B', people: '1-2 人', time: '约 10 秒', guide: '人物前景 + 福建山海与城市意象', prime: false },
-  { id: 'gongbi',   name: '工笔华章', group: 'aiguofeng', cap: 'C', people: '1 人', time: '约 30 秒', guide: '建议单人、正面、半身，光线充足', prime: true },
-  { id: 'shuimo',   name: '水墨山河', group: 'aiguofeng', cap: 'C', people: '1 人', time: '约 30 秒', guide: '建议单人、正面、半身，淡彩水墨', prime: false },
-  { id: 'qban',     name: 'Q版先锋', group: 'aichuangyi', cap: 'C', people: '1 人', time: '约 30 秒', guide: '得体正装半身照，创意风格', prime: false }
 ];
 var TPL_NAMES = {}; TEMPLATES.forEach(function(t){ TPL_NAMES[t.id] = t.name; });
 var findByTpl = function(id) { return TEMPLATES.filter(function(t){ return t.id === id; })[0]; };
 
 /* 我的作品（H10 数据源） */
 var MY_WORKS = [
-  { no: 'FJDH-0328-01', tpl: 'dangqi', status: 'selected', time: '今天 10:21', num: 1 },
-  { no: 'FJDH-0328-02', tpl: 'gongbi', status: 'wait',     time: '今天 10:23', num: 2 },
-  { no: 'FJDH-0328-03', tpl: 'shuimo', status: 'skipped',  time: '今天 10:25', num: 3 }
+  { no: 'FJDH-0328-01', tpl: 'shenghui', status: 'selected', time: '今天 10:21', num: 1 },
+  { no: 'FJDH-0328-02', tpl: 'fenjin', status: 'wait',     time: '今天 10:23', num: 2 },
+  { no: 'FJDH-0328-03', tpl: 'fenjin', status: 'skipped',  time: '今天 10:25', num: 3 }
 ];
 
 /* 精选照片墙（H09，不含姓名/微信信息） */
 var GALLERY = [
-  { num: 'FJDH-0002', tpl: 'dangqi',  bg: 1 },
-  { num: 'FJDH-0009', tpl: 'gongbi',  bg: 4 },
-  { num: 'FJDH-0015', tpl: 'shengshi', bg: 2 },
-  { num: 'FJDH-0021', tpl: 'shuimo',  bg: 5 },
+  { num: 'FJDH-0002', tpl: 'shenghui',  bg: 1 },
+  { num: 'FJDH-0009', tpl: 'fenjin',  bg: 4 },
+  { num: 'FJDH-0015', tpl: 'shenghui', bg: 2 },
+  { num: 'FJDH-0021', tpl: 'fenjin',  bg: 5 },
   { num: 'FJDH-0033', tpl: 'shenghui', bg: 1 },
-  { num: 'FJDH-0040', tpl: 'gutian',  bg: 7 },
-  { num: 'FJDH-0052', tpl: 'fujian',  bg: 8 },
-  { num: 'FJDH-0061', tpl: 'qban',    bg: 6 },
+  { num: 'FJDH-0040', tpl: 'shenghui',  bg: 7 },
+  { num: 'FJDH-0052', tpl: 'fenjin',  bg: 8 },
+  { num: 'FJDH-0061', tpl: 'shenghui',    bg: 6 },
   { num: 'FJDH-0068', tpl: 'fenjin',  bg: 2 },
-  { num: 'FJDH-0077', tpl: 'gongbi',  bg: 4 },
-  { num: 'FJDH-0084', tpl: 'dangqi',  bg: 1 },
-  { num: 'FJDH-0090', tpl: 'shuimo',  bg: 5 }
+  { num: 'FJDH-0077', tpl: 'fenjin',  bg: 4 },
+  { num: 'FJDH-0084', tpl: 'shenghui',  bg: 1 },
+  { num: 'FJDH-0090', tpl: 'fenjin',  bg: 5 }
 ];
 
 var state = {
   curTplGroup: 'classic',
-  selectedTpl: 'dangqi',
+  selectedTpl: 'shenghui',
   sbChecked: false,
   photoTaken: false,
   photoSrc: null,
@@ -1500,7 +1485,6 @@ function renderSpot() {
 document.getElementById('stat-joiner').textContent = ACTIVITY.joinerCount;
 document.getElementById('stat-work').textContent = ACTIVITY.workCount;
 document.getElementById('stat-archive').textContent = ACTIVITY.shareCount;
-document.getElementById('home-tip-num').textContent = ACTIVITY.workCount;
 renderSpot();
 
 /* ================= H03 模板列表 ================= */
@@ -2108,7 +2092,7 @@ function mockRequest(data, delay) {
     });
     function demoStatus(type) {
       var states = {
-        notstart: { icon: `<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`, title: '活动即将开始', desc: '敬请期待现场 AI 纪念相册', btns: '<button class="status-btn plain" onclick="goHome()">返回</button>' },
+        notstart: { icon: `<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`, title: '活动即将开始', desc: '敬请期待现场纪念相册', btns: '<button class="status-btn plain" onclick="goHome()">返回</button>' },
         paused:   { icon: `<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/></svg>`, title: '系统正在准备中', desc: '请稍后再次扫码体验', btns: '<button class="status-btn primary" onclick="demoStatus(\'paused\')">刷新</button>' },
         ended:    { icon: `<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"/></svg>`, title: '本次活动已结束', desc: '感谢参与，共同珍藏这份大会记忆', btns: '<button class="status-btn primary" onclick="goMine()">查看我的纪念</button>' },
         invalid:  { icon: `<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r="0.5" fill="currentColor"/></svg>`, title: '暂时无法进入', desc: '二维码信息无效，请扫描现场正式二维码', btns: '' },
