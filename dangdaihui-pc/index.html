@@ -1193,6 +1193,7 @@ table tr { cursor: pointer; }
         <tr>
           <th class="tpl-thumb-cell">模板图片</th>
           <th>模板名称</th>
+          <th>方向</th>
           <th>适用建议</th>
           <th>状态</th>
           <th>使用次数</th>
@@ -1225,6 +1226,13 @@ table tr { cursor: pointer; }
           <div class="tf-field">
             <label class="tf-label">模板名称 <span class="req">*</span></label>
             <input class="tf-input" id="tpl-name" placeholder="如：党旗礼赞">
+          </div>
+          <div class="tf-field">
+            <label class="tf-label">方向</label>
+            <select class="tf-input" id="tpl-direction">
+              <option value="横版">横版</option>
+              <option value="竖版">竖版</option>
+            </select>
           </div>
           <div class="tf-field">
             <label class="tf-label">状态</label>
@@ -1876,15 +1884,15 @@ init_selection_mgmt();
 
 /* ================= 模板管理（与移动端 TEMPLATES 一致） ================= */
 var TPL_LIST = [
-  { id: 'shenghui', name: '盛会留念框', group: 'classic',    groupName: '庄重经典', people: '1-6 人', guide: '建议多人合照，原图居中，红金边框', estTime: '约 3 秒',  state: 'on',  uses: 158, time: '09-28 14:30' },
-  { id: 'fenjin',   name: '奋进新征程', group: 'classic',    groupName: '庄重经典', people: '1-4 人', guide: '竖版照片 + 金色题字 + 福建剪影',      estTime: '约 3 秒',  state: 'on',  uses: 121, time: '09-28 14:31' },
-  { id: 'dangqi',   name: '党旗礼赞',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '建议单人、正面、半身，红色主题场景', estTime: '约 10 秒', state: 'on',  uses: 203, time: '09-28 14:28' },
-  { id: 'shengshi', name: '盛世华章',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物居中，金色光影与山河纹理',      estTime: '约 10 秒', state: 'on',  uses: 176, time: '09-28 14:28' },
-  { id: 'gutian',   name: '古田星火',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物前景 + 红色文化场景',            estTime: '约 10 秒', state: 'on',  uses: 98,  time: '09-28 14:29' },
-  { id: 'fujian',   name: '福见山海',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物前景 + 福建山海与城市意象',      estTime: '约 10 秒', state: 'on',  uses: 64,  time: '09-28 14:29' },
-  { id: 'gongbi',   name: '工笔华章',   group: 'aiguofeng',  groupName: 'AI 国风', people: '1 人',   guide: '建议单人、正面、半身，光线充足',    estTime: '约 30 秒', state: 'on',  uses: 187, time: '09-28 14:32' },
-  { id: 'shuimo',   name: '水墨山河',   group: 'aiguofeng',  groupName: 'AI 国风', people: '1 人',   guide: '建议单人、正面、半身，淡彩水墨',    estTime: '约 30 秒', state: 'on',  uses: 88,  time: '09-28 14:32' },
-  { id: 'qban',     name: 'Q版先锋',    group: 'aichuangyi', groupName: 'AI 创意', people: '1 人',   guide: '得体正装半身照，创意风格',          estTime: '约 30 秒', state: 'off', uses: 32,  time: '09-28 14:33' }
+  { id: 'shenghui', name: '盛会留念框', direction: '横版', group: 'classic',    groupName: '庄重经典', people: '1-6 人', guide: '建议多人合照，原图居中，红金边框', estTime: '约 3 秒',  state: 'on',  uses: 158, time: '09-28 14:30' },
+  { id: 'fenjin',   name: '奋进新征程', direction: '竖版', group: 'classic',    groupName: '庄重经典', people: '1-4 人', guide: '竖版照片 + 金色题字 + 福建剪影',      estTime: '约 3 秒',  state: 'on',  uses: 121, time: '09-28 14:31' },
+  { id: 'dangqi',   name: '党旗礼赞', direction: '竖版',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '建议单人、正面、半身，红色主题场景', estTime: '约 10 秒', state: 'on',  uses: 203, time: '09-28 14:28' },
+  { id: 'shengshi', name: '盛世华章', direction: '竖版',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物居中，金色光影与山河纹理',      estTime: '约 10 秒', state: 'on',  uses: 176, time: '09-28 14:28' },
+  { id: 'gutian',   name: '古田星火', direction: '竖版',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物前景 + 红色文化场景',            estTime: '约 10 秒', state: 'on',  uses: 98,  time: '09-28 14:29' },
+  { id: 'fujian',   name: '福见山海', direction: '竖版',   group: 'smart',      groupName: '智能海报', people: '1-2 人', guide: '人物前景 + 福建山海与城市意象',      estTime: '约 10 秒', state: 'on',  uses: 64,  time: '09-28 14:29' },
+  { id: 'gongbi',   name: '工笔华章', direction: '竖版',   group: 'aiguofeng',  groupName: 'AI 国风', people: '1 人',   guide: '建议单人、正面、半身，光线充足',    estTime: '约 30 秒', state: 'on',  uses: 187, time: '09-28 14:32' },
+  { id: 'shuimo',   name: '水墨山河', direction: '竖版',   group: 'aiguofeng',  groupName: 'AI 国风', people: '1 人',   guide: '建议单人、正面、半身，淡彩水墨',    estTime: '约 30 秒', state: 'on',  uses: 88,  time: '09-28 14:32' },
+  { id: 'qban',     name: 'Q版先锋', direction: '竖版',    group: 'aichuangyi', groupName: 'AI 创意', people: '1 人',   guide: '得体正装半身照，创意风格',          estTime: '约 30 秒', state: 'off', uses: 32,  time: '09-28 14:33' }
 ];
 function tplBgOf(id) {
   var n = 0; for (var i = 0; i < id.length; i++) n += id.charCodeAt(i);
@@ -1912,6 +1920,7 @@ function renderTplMgmt() {
         ? '<img src="' + t.img + '" style="width:100%;height:100%;object-fit:cover;display:block">'
         : '<span class="pt-bg2 wb-' + tplBgOf(t.id) + '"></span><span class="pt-person2"></span>') + '</span></td>' +
       '<td>' + t.name + (t.uses >= 150 ? ' <span class="tag-hot" style="color:#C0392B;background:#FDE6E4;font-size:12px;padding:1px 6px;border-radius:3px">热门</span>' : '') + '</td>' +
+      '<td>' + (t.direction || '—') + '</td>' +
       '<td class="tpl-leaf">' + (t.guide || '—') + '</td>' +
       '<td>' + (t.state === 'on'
         ? '<span class="tpl-state-tag s-on">启用</span>'
@@ -1926,7 +1935,7 @@ function renderTplMgmt() {
       '</tr>';
   });
   if (!list.length) {
-    html = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
+    html = '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
   }
   tbody.innerHTML = html;
 }
@@ -1954,6 +1963,7 @@ function openTplModal(id) {
   document.getElementById('tpl-modal-title').textContent = id ? '编辑模板' : '新增模板';
   document.getElementById('tpl-name').value = t ? t.name : '';
   document.getElementById('tpl-state').value = t ? t.state : 'on';
+  document.getElementById('tpl-direction').value = t ? (t.direction || '竖版') : '竖版';
   document.getElementById('tpl-guide').value = t ? t.guide : '';
   tplRenderImg(t ? t.img : null);
   document.getElementById('tpl-modal').style.display = 'flex';
@@ -1990,6 +2000,7 @@ function saveTplModal() {
     name: name,
     img: img,
     state: document.getElementById('tpl-state').value,
+    direction: document.getElementById('tpl-direction').value,
     guide: guide,
   };
   if (TPL_MODAL_EDIT_ID) {
@@ -2003,6 +2014,7 @@ function saveTplModal() {
       id: 'tpl' + (TPL_LIST.length + 1), uses: 0, time: '09-02 现在',
       img: data.img,
       state: data.state,
+      direction: data.direction,
       name: data.name, guide: data.guide
     });
     showToast('模板已新增：' + name, 'success');
