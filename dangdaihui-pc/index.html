@@ -1351,6 +1351,7 @@ table tr { cursor: pointer; }
           <th style="width:70px" class="st-num">生成</th>
           <th style="width:70px" class="st-num">采用</th>
           <th style="width:70px" class="st-num">弃用</th>
+          <th style="width:70px" class="st-num">失败</th>
           <th style="width:80px">状态</th>
           <th style="width:120px">操作</th>
         </tr>
@@ -1579,9 +1580,9 @@ function switchDeviceMgmt(element) {
 
 /* 画风全局列表（PC 详情弹窗 / 画风管理页共用；字段含提示词） */
 window.__STYLE_LIST = window.__STYLE_LIST || [
-  { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, prompt: '优化光影氛围，增强画面通透感，保持人物面部特征与原图一致，不发生产物性重绘', gen: 12, keep: 9, drop: 3 },
-  { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, prompt: '背景写意虚化，水墨晕染质感，人物面部区域避开重绘，保持人脸特征不变', gen: 9, keep: 6, drop: 3 },
-  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', gen: 5, keep: 2, drop: 3 }
+  { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, prompt: '优化光影氛围，增强画面通透感，保持人物面部特征与原图一致，不发生产物性重绘', gen: 12, keep: 9, drop: 3, fail: 1 },
+  { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, prompt: '背景写意虚化，水墨晕染质感，人物面部区域避开重绘，保持人脸特征不变', gen: 9, keep: 6, drop: 3, fail: 2 },
+  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', gen: 5, keep: 2, drop: 3, fail: 5 }
 ];
 function pcStyleOf(id) { return (window.__STYLE_LIST || []).filter(function(x){ return x.id === id; })[0]; }
 
@@ -2223,7 +2224,7 @@ function saveTplModal() {
 /* ================= 画风管理（V2.1：启停 + 提示词配置） ================= */
 if (!window.__STYLE_LIST) window.__STYLE_LIST = [];
 function stList() {
-  return (window.__STYLE_LIST || []).map(function(s){ return { id: s.id, name: s.name, time: s.time || '—', enabled: s.enabled !== false, prompt: s.prompt || '', gen: s.gen || 0, keep: s.keep || 0, drop: s.drop || 0 }; });
+  return (window.__STYLE_LIST || []).map(function(s){ return { id: s.id, name: s.name, time: s.time || '—', enabled: s.enabled !== false, prompt: s.prompt || '', gen: s.gen || 0, keep: s.keep || 0, drop: s.drop || 0, fail: s.fail || 0 }; });
 }
 function stBg(id) { var n = 0; for (var i = 0; i < id.length; i++) n += id.charCodeAt(i); return (n % 8) + 1; }
 function stToast(msg) {
@@ -2251,13 +2252,14 @@ function renderStMgmt() {
       '<td style="text-align:center">' + s.gen + '</td>' +
       '<td style="text-align:center;color:#52c41a;font-weight:600">' + s.keep + '</td>' +
       '<td style="text-align:center;color:#999">' + s.drop + '</td>' +
+      '<td style="text-align:center;color:#cf1322">' + s.fail + '</td>' +
       '<td><span class="st-state ' + (s.enabled ? 'on' : 'off') + '">' + (s.enabled ? '启用' : '禁用') + '</span></td>' +
       '<td>' +
         '<a class="action-link" onclick="openStModal(\'' + s.id + '\')">编辑</a>' +
         '<a class="action-link' + (s.enabled ? '" style="color:#fa541c"' : '"') + ' onclick="stToggle(\'' + s.id + '\')">' + (s.enabled ? '禁用' : '启用') + '</a>' +
       '</td></tr>';
   });
-  if (!list.length) html = '<tr><td colspan="9" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的画风</td></tr>';
+  if (!list.length) html = '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的画风</td></tr>';
   tb.innerHTML = html;
 }
 function stToggle(id) {

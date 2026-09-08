@@ -743,6 +743,9 @@ body {
 .mine-pending .mp-card.gen { cursor: default; box-shadow: none; }
 .mine-pending .mp-card.gen .mp-sub { color: var(--red-deep); }
 .mine-pending .mp-go.gen { color: var(--gray); font-weight: 400; display: inline-flex; align-items: center; gap: 5px; }
+.mine-pending .mp-card.fail { cursor: pointer; background: #FDF3F2; border-color: #F0C4BF; }
+.mine-pending .mp-card.fail .mp-sub { color: #C0362C; }
+.mine-pending .mp-go.fail { color: #C0362C; }
 /* 确认卡（待确认风格） */
 .ck-sheet { text-align: center; padding-bottom: 22px; }
 .ck-hero { position: relative; width: 150px; height: 200px; margin: 4px auto 10px; border-radius: 10px; overflow: hidden; background: linear-gradient(140deg,#7A1712,#B42318); box-shadow: 0 8px 24px rgba(0,0,0,0.16); }
@@ -753,6 +756,10 @@ body {
 .ck-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
 .ck-actions .ra-btn { margin: 0; }
 .ck-drop { display: block; text-align: center; font-size: 12px; color: var(--gray); padding: 8px 0 2px; cursor: pointer; }
+/* 生成中状态卡（gs-*） */
+.gs-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: rgba(20,20,24,0.55); color: #fff; font-size: 12px; letter-spacing: 1px; z-index: 3; }
+.gen-spin.big { width: 22px; height: 22px; border-width: 2px; border-color: rgba(255,255,255,0.35); border-top-color: #EAC866; }
+.mine-pending .mp-card.gen { cursor: pointer; }
 .mine-card .mc-style-tag { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 8px; background: #FBEEEB; color: var(--red-deep); font-size: 10px; vertical-align: 2px; }
 .result-actions { padding: 14px 20px 8px; }
 .ra-btn {
@@ -1406,8 +1413,30 @@ body {
             <button class="ra-btn primary" onclick="savePendingStyle()">保存到纪念照</button>
             <button class="ra-btn sub" onclick="regenPendingStyle()">重新生成</button>
             <span class="ck-drop" onclick="dropPendingStyle()">放弃这张风格照</span>
-          </div>
-        </div>
+            </div>
+            </div>
+            <!-- 全局生成中状态卡（点击我的纪念生成中项打开） -->
+            <div class="st-mask" id="gs-mask" style="display:none" onclick="closeGenStatus()"></div>
+            <div class="st-sheet ck-sheet" id="gs-sheet" style="display:none">
+            <div class="st-title">风格生成中</div>
+            <div class="ck-hero" id="gs-hero"><div class="photo-bg"></div><div class="photo-person"></div><div class="gs-overlay"><span class="gen-spin big"></span>生成中…</div></div>
+            <div class="ck-name" id="gs-name">水墨国风</div>
+            <div class="ck-desc" id="gs-desc">正在生成，最快约 1-2 分钟。完成后回到这里会变成「待确认」，你可以确认保存或重新生成。</div>
+            <div class="ck-actions"><button class="ra-btn primary" onclick="closeGenStatus()">知道了</button></div>
+            </div>
+  <!-- 全局生成失败卡（点击我的纪念失败项打开：重新生成 / 放弃） -->
+  <div class="st-mask" id="fs-mask" style="display:none" onclick="closeFailStatus()"></div>
+  <div class="st-sheet ck-sheet" id="fs-sheet" style="display:none">
+    <div class="st-title">风格生成未完成</div>
+    <div class="ck-hero" id="fs-hero"><div class="photo-bg"></div><div class="photo-person"></div><div class="gs-overlay" style="font-size:34px;color:rgba(255,255,255,0.9)">✕</div></div>
+    <div class="ck-name" id="fs-name">水墨国风</div>
+    <div class="ck-desc" id="fs-desc">这张风格照没有生成完成，不会保存到你的纪念。可以重新生成，或放弃。</div>
+    <div class="ck-actions">
+      <button class="ra-btn primary" onclick="retryFailStyle()">重新生成</button>
+      <button class="ra-btn sub" onclick="dropFailStyle()">放弃这张风格照</button>
+      <span class="ck-drop" onclick="closeFailStatus()">暂不处理</span>
+    </div>
+  </div>
     </div>
     <button class="demo-fab" onclick="toggleDemoMenu()">演示</button>
     <div class="demo-menu" id="demo-menu">
@@ -1419,6 +1448,7 @@ body {
       <div class="dm-item" onclick="demoStatus('network')">网络异常</div>
       <div class="dm-item" onclick="demoFail('common')">生成失败</div>
       <div class="dm-item" onclick="demoFail('safety')">生成失败 · 内容安全</div>
+      <div class="dm-item" onclick="demoStyleFail()">风格照生成失败</div>
     </div>
   </div>
 
@@ -1480,7 +1510,7 @@ var findByTpl = function(id) { return TEMPLATES.filter(function(t){ return t.id 
 var STYLES = [
   { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, desc: '提亮光影氛围，画面更通透', prompt: '优化光影氛围，增强画面通透感，保持人物面部特征与原图一致，不发生产物性重绘', count: 6  },
   { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, desc: '背景写意水墨质感，晕染虚化', prompt: '背景写意虚化，水墨晕染质感，人物面部区域避开重绘，保持人脸特征不变', count: 4 },
-  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, desc: '清新水彩插画质感，画面更艺术', prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', count: 2 }
+  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, desc: '清新水彩插画质感，画面更艺术', prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', count: 2, demoFail: true }
 ];
 var findStyle = function(id) { return (STYLES || []).filter(function(s){ return s.id === id; })[0]; };
 
@@ -1523,7 +1553,10 @@ var state = {
   visitFromWall: false,
   /* V2.6 风格异步生成：生成中 + 待确认池（未读 seen 控制提醒红点） */
   genStyleId: '',
-  pendingStyles: [],
+    genTpl: '',
+    genFail: null,
+    genNextFail: false,
+    pendingStyles: [],
   curTabIdx: 0,
     curGroup: []
   };
@@ -1551,6 +1584,83 @@ var state = {
   function refreshMineIfActive() {
     var mine = document.getElementById('page-mine');
     if (mine && mine.classList.contains('active')) renderMine();
+  }
+  /* 生成中状态卡：点击我的纪念「生成中」项打开 */
+  function openGenStatus() {
+    if (!state.genStyleId) return;
+    var g = findStyle(state.genStyleId);
+    var hero = document.getElementById('gs-hero');
+    if (!hero) return;
+    ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
+    hero.classList.add('effect-' + state.genStyleId);
+    hero.querySelector('.photo-bg').setAttribute('data-tpl', state.genTpl || (state.curWork && state.curWork.tpl) || 'shenghui');
+    document.getElementById('gs-name').textContent = (g && g.name) || state.genStyleId;
+    document.getElementById('gs-mask').style.display = '';
+    document.getElementById('gs-sheet').style.display = '';
+  }
+  function closeGenStatus() {
+    document.getElementById('gs-mask').style.display = 'none';
+    document.getElementById('gs-sheet').style.display = 'none';
+  }
+  /* 生成失败卡：重新生成 / 放弃 */
+  function openFailStatus() {
+    var f = state.genFail;
+    if (!f) return;
+    var g = findStyle(f.styleId);
+    var hero = document.getElementById('fs-hero');
+    if (!hero) return;
+    ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
+    hero.classList.add('effect-' + f.styleId);
+    hero.querySelector('.photo-bg').setAttribute('data-tpl', f.tpl);
+    document.getElementById('fs-name').textContent = (g && g.name) || f.styleId;
+    document.getElementById('fs-mask').style.display = '';
+    document.getElementById('fs-sheet').style.display = '';
+  }
+  function closeFailStatus() {
+    document.getElementById('fs-mask').style.display = 'none';
+    document.getElementById('fs-sheet').style.display = 'none';
+  }
+  function retryFailStyle() {
+    var f = state.genFail;
+    if (!f) return;
+    if (state.genStyleId) { toast('当前已有风格生成中，请稍后'); return; }
+    closeFailStatus();
+    state.genFail = null;
+    var s = findStyle(f.styleId);
+    toast((s && s.name ? s.name : '') + ' 重新生成中');
+    state.genStyleId = f.styleId;
+    state.genTpl = f.tpl;
+    updateStyleDots();
+    refreshMineIfActive();
+    setTimeout(function(){
+      if (state.genStyleId !== f.styleId) return;
+      state.genStyleId = '';
+      state.genTpl = '';
+      state.pendingStyles.push({ styleId: f.styleId, tpl: f.tpl, srcNo: f.srcNo || '', seen: false });
+      toast('已生成，请确认保存');
+      updateStyleDots();
+      refreshMineIfActive();
+    }, 10000);
+  }
+  function dropFailStyle() {
+    closeFailStatus();
+    state.genFail = null;
+    toast('已放弃这张风格照');
+    updateStyleDots();
+    refreshMineIfActive();
+  }
+  function demoStyleFail() {
+    if (state.genStyleId) { toast('当前已有风格生成中'); return; }
+    if (state.genFail) { toast('已有失败项，可重新生成或放弃'); return; }
+    if (!state.curWork) { toast('请先打开一张作品详情页再演示'); toggleDemoMenu(); return; }
+    var sid = 'shuimo';
+    var all = window.STYLES || [];
+    if (all.length) sid = all[0].id;
+    var g = findStyle(sid);
+    state.genNextFail = true;
+    toggleDemoMenu();
+    toast('即将模拟「' + ((g && g.name) || sid) + '」生成失败');
+    startStyleGen(sid);
   }
 
 /* ================= 页面切换 ================= */
@@ -1852,19 +1962,31 @@ function startStyleGen(styleId) {
   var rootNo = currentRootNo();
   toast(s.name + ' 生成中，完成后可在「更多风格」或我的纪念查看');
   state.genStyleId = styleId;
+  state.genTpl = state.curWork.tpl;
   updateStyleDots();
-  openStyleSheet(); /* 弹窗保持打开，该项按钮立刻变为“生成中…” */
+  openStyleSheetIfOpen(); /* 弹窗若开着：该项按钮立刻变为“生成中…” */
+  var tpl0 = state.genTpl;
   setTimeout(function(){
     if (state.genStyleId !== styleId) return;
+    var fail = state.genNextFail || ((window.STYLES || []).filter(function(x){ return x.id === styleId; })[0] || {}).demoFail === true;
     state.genStyleId = '';
-    state.pendingStyles.push({ styleId: styleId, tpl: state.curWork.tpl, srcNo: rootNo, seen: false });
+    state.genTpl = '';
+    state.genNextFail = false;
+    if (fail) {
+      state.genFail = { styleId: styleId, tpl: tpl0, srcNo: rootNo };
+      toast(s.name + ' 生成失败，可重新生成或放弃');
+      updateStyleDots();
+      refreshMineIfActive();
+      return;
+    }
+    state.pendingStyles.push({ styleId: styleId, tpl: tpl0, srcNo: rootNo, seen: false });
     toast(s.name + ' 已生成，请确认保存');
     updateStyleDots();
     refreshMineIfActive();
     openStyleSheetIfOpen();
-  }, 3000);
-}
-function openStyleSheetIfOpen() {
+    }, 10000);
+    }
+    function openStyleSheetIfOpen() {
   var sh = document.getElementById('st-sheet');
   if (sh && sh.style.display !== 'none') openStyleSheet();
 }
@@ -1923,6 +2045,7 @@ function regenPendingStyle() {
   CK_IDX = -1;
   toast((s.name || '风格') + ' 重新生成中');
   state.genStyleId = p.styleId;
+  state.genTpl = p.tpl;
   closeStyleConfirm();
   updateStyleDots();
   setTimeout(function(){
@@ -1932,7 +2055,7 @@ function regenPendingStyle() {
     toast((s.name || '风格') + ' 已重新生成，请确认');
     updateStyleDots();
     refreshMineIfActive();
-  }, 3000);
+  }, 10000);
 }
 function dropPendingStyle() {
   var list = state.pendingStyles || [];
@@ -2091,15 +2214,22 @@ function renderMine() {
   var pendHtml = '';
   var pends = state.pendingStyles || [];
   var hasGen = !!state.genStyleId;
-  if (hasGen || pends.length) {
+  if (hasGen || state.genFail || pends.length) {
     var un = pends.filter(function(p){ return !p.seen; }).length;
     pendHtml = '<div class="mine-pending"><div class="mp-title">风格照生成' + (un ? ' <span class="mp-new">' + un + ' 条待确认</span>' : '') + '</div>';
     if (hasGen) {
       var g = _sName(state.genStyleId);
-      pendHtml += '<div class="mp-card gen">' +
-        '<span class="mp-thumb effect-' + state.genStyleId + '"><span class="photo-bg" data-tpl="' + state.curWork.tpl + '"></span><span class="photo-person"></span></span>' +
+      pendHtml += '<div class="mp-card gen" onclick="openGenStatus()">' +
+        '<span class="mp-thumb effect-' + state.genStyleId + '"><span class="photo-bg" data-tpl="' + (state.genTpl || state.curWork.tpl) + '"></span><span class="photo-person"></span></span>' +
         '<span class="mp-info"><span class="mp-name">' + g + '</span><span class="mp-sub">生成中，完成后需确认保存</span></span>' +
         '<span class="mp-go gen"><span class="gen-spin"></span>生成中…</span></div>';
+    }
+    if (state.genFail) {
+      var fg = _sName(state.genFail.styleId);
+      pendHtml += '<div class="mp-card fail" onclick="openFailStatus()">' +
+        '<span class="mp-thumb effect-' + state.genFail.styleId + '"><span class="photo-bg" data-tpl="' + state.genFail.tpl + '"></span><span class="photo-person"></span></span>' +
+        '<span class="mp-info"><span class="mp-name">' + fg + '</span><span class="mp-sub">生成没有完成</span></span>' +
+        '<span class="mp-go fail">生成失败</span></div>';
     }
     pends.forEach(function(p, i) {
       var s = _sName(p.styleId);
@@ -2107,7 +2237,7 @@ function renderMine() {
         '<span class="mp-thumb effect-' + p.styleId + '"><span class="photo-bg" data-tpl="' + p.tpl + '"></span><span class="photo-person"></span></span>' +
         '<span class="mp-info"><span class="mp-name">' + s + '</span><span class="mp-sub">第 ' + ACTIVITY.archiveIndex + ' 号纪念档案</span></span>' +
         (p.seen ? '' : '<i class="mp-unread"></i>') +
-        '<span class="mp-go">查看</span></div>';
+        '<span class="mp-go">待确认</span></div>';
     });
     pendHtml += '</div>';
   }
