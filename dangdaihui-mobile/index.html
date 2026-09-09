@@ -707,6 +707,7 @@ body {
 .st-sheet .st-go { font-size: 13px; color: var(--red); font-weight: 600; flex-shrink: 0; }
 .st-sheet .st-btn2 { height: 28px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--red); background: #fff; color: var(--red); font-size: 12px; cursor: pointer; }
 .st-sheet .st-btn2.view { background: var(--red); color: #fff; border-color: var(--red); }
+.st-sheet .st-btn2.fail { background: #FDF3F2; color: #C0362C; border-color: #E8B4AE; }
 .st-sheet .st-btn2:active { background: #FBEEEB; }
 .st-sheet .st-gen { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--gray); }
 .st-sheet .st-empty { text-align: center; padding: 34px 0; color: var(--gray); font-size: 13px; }
@@ -1944,6 +1945,8 @@ function viewSavedStyle(no) {
 }
 function styleBtnHtml(s) {
   if (state.genStyleId === s.id) return '<span class="st-gen"><span class="gen-spin"></span>生成中…</span>';
+  if (state.genFail && state.genFail.styleId === s.id && state.genFail.srcNo === currentRootNo())
+    return '<button class="st-btn2 fail" onclick="closeStyleSheet();openFailStatus()">生成失败</button>';
   var pf = pendingOf(s.id);
   if (pf >= 0) return '<button class="st-btn2" onclick="openStyleConfirm(' + pf + ')">待确认</button>';
   var saved = savedStyleWork(s.id);

@@ -1770,7 +1770,19 @@ function styleTagsOf(p) {
   return '<span class="tag-c origin">原图</span>';
 }
 function onAction(p) {
-  return '<a class="action-btn" onclick="openPhotoDetail(\'' + p.no + '\')">详情</a>';
+  return '<a class="action-btn" onclick="openPhotoDetail(\'' + p.no + '\')">详情</a>' +
+    '<a class="action-btn danger" onclick="delPhoto(\'' + p.no + '\')">删除</a>';
+}
+/* 单行删除：原图删除时其风格衍生照一并删除（与批量删除一致） */
+function delPhoto(no) {
+  var p = PHOTO_LIST.filter(function(x){ return x.no === no; })[0];
+  if (!p) return;
+  var tip = p.sourceWorkId ? '确定删除风格照 ' + no + ' 吗？' : '确定删除照片 ' + no + ' 吗？其风格衍生照将一并删除。';
+  if (!confirm(tip)) return;
+  PHOTO_LIST = PHOTO_LIST.filter(function(x){ return x.no !== no && x.sourceWorkId !== no; });
+  showToast('已删除 ' + no);
+  renderPhotoTable();
+  renderStatCards();
 }
 function showToast(msg) {
   var ta = document.getElementById('toast-area');
@@ -2128,14 +2140,23 @@ function renderTplMgmt() {
       '<td>' +
         '<a class="action-link" onclick="openTplModal(\'' + t.id + '\')">编辑</a>' +
         (t.state === 'on'
-          ? '<a class="action-link warn" onclick="tplToggle(\'' + t.id + '\')">禁用</a>'
-          : '<a class="action-link" onclick="tplToggle(\'' + t.id + '\')">启用</a>') + '</td>' +
+                  ? '<a class="action-link warn" onclick="tplToggle(\'' + t.id + '\')">禁用</a>'
+                  : '<a class="action-link" onclick="tplToggle(\'' + t.id + '\')">启用</a>') +
+                '<a class="action-link warn" onclick="delTpl(\'' + t.id + '\')">删除</a>' + '</td>' +
       '</tr>';
   });
   if (!list.length) {
     html = '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的模板</td></tr>';
   }
   tbody.innerHTML = html;
+}
+function delTpl(id) {
+  var t = TPL_LIST.filter(function(x){ return x.id === id; })[0];
+  if (!t) return;
+  if (!confirm('确定删除模板「' + t.name + '」吗？删除后不可恢复。')) return;
+  TPL_LIST = TPL_LIST.filter(function(x){ return x.id !== id; });
+  showToast('已删除模板：' + t.name, 'success');
+  renderTplMgmt();
 }
 function tplToggle(id) {
   var t = TPL_LIST.filter(function(x){ return x.id === id; })[0];
@@ -2257,10 +2278,19 @@ function renderStMgmt() {
       '<td>' +
         '<a class="action-link" onclick="openStModal(\'' + s.id + '\')">编辑</a>' +
         '<a class="action-link' + (s.enabled ? '" style="color:#fa541c"' : '"') + ' onclick="stToggle(\'' + s.id + '\')">' + (s.enabled ? '禁用' : '启用') + '</a>' +
+        '<a class="action-link warn" onclick="delStyle(\'' + s.id + '\')">删除</a>' +
       '</td></tr>';
   });
   if (!list.length) html = '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px 0">暂无符合条件的画风</td></tr>';
   tb.innerHTML = html;
+}
+function delStyle(id) {
+  var s = stList().filter(function(x){ return x.id === id; })[0];
+  if (!s) return;
+  if (!confirm('确定删除画风「' + s.name + '」吗？删除后该画风从移动端入口消失。')) return;
+  window.__STYLE_LIST = (window.__STYLE_LIST || []).filter(function(x){ return x.id !== id; });
+  stToast('已删除画风：' + s.name);
+  renderStMgmt();
 }
 function stToggle(id) {
   var s = (window.__STYLE_LIST || []).filter(function(x){ return x.id === id; })[0];
