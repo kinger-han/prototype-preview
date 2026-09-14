@@ -10901,7 +10901,7 @@ if (tagFilterActive.length > 0) {
     <button class="sdl-back-btn" onclick="sdlGoBack()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>添加资源到【XXXX】</button>
     <span class="sdl-topbar-spacer"></span>
     <span class="sdl-selected-text">已选择 <b id="sdlSelectedCount">0</b> 条资源</span>
-    <button class="resmg-btn" id="sdlViewBtn" onclick="sdlToggleView()" title="切换主题/资源视图">主题<span class="resmg-tag-arrow">▾</span></button>
+    <button class="resmg-btn" id="sdlViewBtn" onclick="sdlToggleView()" title="切换主题/资源视图">资源<span class="resmg-tag-arrow">▾</span></button>
     <button class="resmg-btn primary">保存</button>
   </div>
 
@@ -11053,12 +11053,14 @@ if (tagFilterActive.length > 0) {
 
     function sdlSelectPath(path) {
       SDL_SELECTED_PATH = SDL_SELECTED_PATH === path ? '' : path;
+      sdlExitTopicRes();
       renderSdlTree();
       renderSdlCards();
     }
 
     function sdlSelectAll() {
       SDL_SELECTED_PATH = '';
+      sdlExitTopicRes();
       renderSdlTree();
       renderSdlCards();
     }
@@ -11328,6 +11330,7 @@ if (tagFilterActive.length > 0) {
       if (cb.checked && idx < 0) SDL_SELECTED_IDS.push(id);
       if (!cb.checked && idx >= 0) SDL_SELECTED_IDS.splice(idx, 1);
       renderSdlSelectionBar();
+      sdlRefreshTopicChecks();
     }
 
         function renderSdlSelectionBar() {
@@ -11355,8 +11358,7 @@ if (tagFilterActive.length > 0) {
       }
     }
 
-    /* V4.20 主题列表：复用公共资源页 RES_MGMT_TOPICS 数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
-    var SDL_TOPIC_CHECKED = [];
+    /* 主题列表：复用公共资源页 RES_MGMT_TOPICS 数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
 
     function sdlTopicList() {
       var src = (SDL_SCOPE === 'private')
@@ -11383,6 +11385,35 @@ if (tagFilterActive.length > 0) {
       return out;
     }
 
+    /* 主题下的资源 id：以当前筛选可见的卡片数据为准（与主题列表「资源数」同源） */
+    function sdlTopicResIds(t) {
+      var list = sdlCardList(), out = [];
+      for (var i = 0; i < list.length; i++) { if (list[i].theme === t.name) out.push(list[i].id); }
+      return out;
+    }
+
+    function sdlTopicById(id) {
+      var list = sdlTopicList(), s = String(id);
+      for (var i = 0; i < list.length; i++) { if (String(list[i].id) === s) return list[i]; }
+      return null;
+    }
+
+    /* 三态：all 全选 / part 半选 / none 未选 */
+    function sdlTopicState(t) {
+      var ids = sdlTopicResIds(t);
+      if (!ids.length) return 'none';
+      var n = 0;
+      for (var i = 0; i < ids.length; i++) { if (SDL_SELECTED_IDS.indexOf(ids[i]) >= 0) n++; }
+      return n === 0 ? 'none' : (n === ids.length ? 'all' : 'part');
+    }
+
+    /* 卡片区勾选后同步主题表格三态（表格可见时才重绘） */
+    function sdlRefreshTopicChecks() {
+      var tbl = document.getElementById('sdlTopicTable');
+      if (!tbl || tbl.style.display === 'none' || SDL_TOPIC_SEL) return;
+      renderSdlTopicTable();
+    }
+
     function renderSdlTopicTable() {
       var body = document.getElementById('sdlTopicTbody');
       if (!body) return;
@@ -11393,7 +11424,7 @@ if (tagFilterActive.length > 0) {
         var st = (typeof RES_MGMT_TOPIC_STATUS_STYLES !== 'undefined' && RES_MGMT_TOPIC_STATUS_STYLES[t.status]) || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
         var extCls = { '审核通过': 'green', '自动通过': 'green', '待审核': 'orange', '审核退回': 'red' }[t.extStatus] || 'grey';
         var extTip = t.platform && t.auditor ? (' data-tip="' + sdlEsc(t.platform + '　' + t.extStatus + '　审核人：' + t.auditor + '　审核时间：' + t.auditTime) + '"') : '';
-        var checked = SDL_TOPIC_CHECKED.indexOf(t.id) >= 0 ? ' checked' : '';
+        var checked = sdlTopicState(t) === 'all' ? ' checked' : '';
         html += '<tr>'
           + '<td style="text-align:center;"><input type="checkbox" class="sdl-topic-check" data-id="' + t.id + '"' + checked + ' onchange="sdlToggleTopic(' + t.id + ', this)"></td>'
           + '<td><div class="sdl-topic-name" data-t="' + sdlEsc(t.name) + '" onclick="sdlOpenTopicByEl(this)" style="font-weight:500;color:#1677ff;cursor:pointer;font-size:13px;">' + sdlEsc(t.name) + '</div><div style="font-size:12px;color:#999;margin-top:2px;">' + sdlEsc(t.publishTime) + '</div></td>'
@@ -11403,21 +11434,50 @@ if (tagFilterActive.length > 0) {
           + '</tr>';
       }
       body.innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:#bbb;padding:30px 0;">暂无主题</td></tr>';
+      /* 三态：半选主题置 indeterminate；表头复选框跟随有效主题（有资源的） */
+      var boxes = body.querySelectorAll('.sdl-topic-check');
+      for (var k = 0; k < boxes.length; k++) {
+        var tk = sdlTopicById(boxes[k].getAttribute('data-id'));
+        if (tk && sdlTopicState(tk) === 'part') boxes[k].indeterminate = true;
+      }
+      var allCb = document.getElementById('sdlTopicAllCheck');
+      if (allCb) {
+        var tt = sdlTopicList(), eff = 0, full = 0;
+        for (var m = 0; m < tt.length; m++) {
+          if (!sdlTopicResIds(tt[m]).length) continue;
+          eff++;
+          if (sdlTopicState(tt[m]) === 'all') full++;
+        }
+        allCb.checked = eff > 0 && full === eff;
+        allCb.indeterminate = !allCb.checked && full > 0;
+      }
     }
 
-    /* 主题勾选：单选切换 + 全选 */
+    /* 勾选主题 = 选中该主题下全部（当前筛选可见的）资源；三态与卡片勾选共用 SDL_SELECTED_IDS */
     function sdlToggleTopic(id, cb) {
-      var idx = SDL_TOPIC_CHECKED.indexOf(id);
-      if (cb.checked && idx < 0) SDL_TOPIC_CHECKED.push(id);
-      if (!cb.checked && idx >= 0) SDL_TOPIC_CHECKED.splice(idx, 1);
+      var t = sdlTopicById(id);
+      if (!t) return;
+      var ids = sdlTopicResIds(t);
+      if (cb && cb.checked) {
+        for (var i = 0; i < ids.length; i++) { if (SDL_SELECTED_IDS.indexOf(ids[i]) < 0) SDL_SELECTED_IDS.push(ids[i]); }
+      } else {
+        for (var j = 0; j < ids.length; j++) { var k = SDL_SELECTED_IDS.indexOf(ids[j]); if (k >= 0) SDL_SELECTED_IDS.splice(k, 1); }
+      }
+      renderSdlSelectionBar();
+      renderSdlTopicTable();
     }
 
     function sdlToggleAllTopics(cb) {
-      SDL_TOPIC_CHECKED = [];
-      if (cb.checked) {
-        var topics = sdlTopicList();
-        for (var i = 0; i < topics.length; i++) SDL_TOPIC_CHECKED.push(topics[i].id);
+      var topics = sdlTopicList();
+      for (var i = 0; i < topics.length; i++) {
+        var ids = sdlTopicResIds(topics[i]);
+        for (var j = 0; j < ids.length; j++) {
+          var k = SDL_SELECTED_IDS.indexOf(ids[j]);
+          if (cb.checked) { if (k < 0) SDL_SELECTED_IDS.push(ids[j]); }
+          else if (k >= 0) SDL_SELECTED_IDS.splice(k, 1);
+        }
       }
+      renderSdlSelectionBar();
       renderSdlTopicTable();
     }
 
@@ -11455,6 +11515,16 @@ if (tagFilterActive.length > 0) {
       renderSdlTopicTable();
     }
 
+    /* 左树切换分类时退出主题内资源（参照 07：切分类自动退出模式） */
+    function sdlExitTopicRes() {
+      if (!SDL_TOPIC_SEL) return;
+      SDL_TOPIC_SEL = null;
+      var back = document.getElementById('sdlTopicBackBar');
+      if (back) back.style.display = 'none';
+      var btn = document.getElementById('sdlViewBtn');
+      if (btn) btn.style.display = '';
+    }
+
     function init_schedule_select() {
       RES_CURRENT_PAGE = 'schedule-select';
       RES_ACTIVE_SCOPE = 'schedule';
@@ -11476,11 +11546,15 @@ if (tagFilterActive.length > 0) {
       renderSdlSelectionBar();
       renderSdlTree();
       renderSdlCards();
-      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏 */
+      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏，按钮文案回「资源」 */
       var tbl = document.getElementById('sdlTopicTable');
       var back = document.getElementById('sdlTopicBackBar');
+      var vbtn = document.getElementById('sdlViewBtn');
       if (tbl) tbl.style.display = 'none';
       if (back) back.style.display = 'none';
+      if (vbtn) { vbtn.style.display = ''; vbtn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>'; }
+      var cardsBox = document.getElementById('sdlCards');
+      if (cardsBox) cardsBox.style.display = '';
     }
 
   </script>
@@ -11628,6 +11702,15 @@ if (tagFilterActive.length > 0) {
     .spl-added-card.drag-over { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.12); }
 
     .spl-empty { grid-column: 1 / -1; padding: 48px 0; text-align: center; font-size: 13px; color: #bbb; }
+
+    /* 主题/资源视图切换（表格样式对齐 07/12；状态徽章 .status-badge、资源链接 .resmg-res-link 复用 07 公共类） */
+    .spl-topic-backbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .spl-topic-table { width: 100%; border-collapse: collapse; background: #fff; }
+    .spl-topic-table th, .spl-topic-table td { border-bottom: 1px solid #f0f0f0; padding: 10px 8px; text-align: left; font-size: 13px; color: #333; }
+    .spl-topic-table th { background: #fafafa; color: #666; font-weight: 500; }
+    .spl-topic-table tbody tr:hover { background: #fafcff; }
+    .spl-topic-name { font-weight: 500; color: #1677ff; cursor: pointer; font-size: 13px; }
+    .spl-topic-name:hover { text-decoration: underline; }
   </style>
 
   <!-- 顶部（1:1 还原截图样式） -->
@@ -11640,6 +11723,7 @@ if (tagFilterActive.length > 0) {
       <span class="spl-progress-time">00:00</span>
     </div>
     <span class="spl-topbar-spacer"></span>
+    <button class="resmg-btn" id="splTopicViewBtn" onclick="splToggleTopicView()" title="切换主题/资源视图">资源<span class="resmg-tag-arrow">▾</span></button>
   </div>
 
   <div class="spl-tabs">
@@ -11691,6 +11775,27 @@ if (tagFilterActive.length > 0) {
           <button class="resmg-btn primary" onclick="splAddSelected()">添加</button>
         </div>
       </div>
+      <div class="spl-topic-backbar" id="splTopicBackBar" style="display:none;">
+        <button class="resmg-back-btn" onclick="splBackToTopics()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>回到列表页</button>
+      </div>
+
+      <div class="spl-topic-table-wrap" id="splTopicTable" style="display:none;">
+        <div class="table-card">
+          <table class="spl-topic-table">
+            <thead>
+              <tr>
+                <th style="width:40px;"><input type="checkbox" id="splTopicAllCheck" onchange="splToggleAllTopics(this)"></th>
+                <th>名称</th>
+                <th style="width:100px;">内部状态</th>
+                <th style="width:150px;">外部状态</th>
+                <th style="width:70px;">资源</th>
+              </tr>
+            </thead>
+            <tbody id="splTopicTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="spl-cards" id="splCards"></div>
     </section>
   </div>
@@ -11728,6 +11833,8 @@ if (tagFilterActive.length > 0) {
     var SPL_ADDED_SEL = [];
     var SPL_VIEW = 'flat';
     var SPL_FORM = 'slide';
+    var SPL_TOPIC_VIEW = 'card';    /* card(资源卡片) | topic(主题列表) */
+    var SPL_TOPIC_SEL = null;       /* 当前进入的主题名，null=主题列表层 */
 
     /* ===== 树（复用播放列表-选择逻辑） ===== */
     function splBuildTree(nodes, wrapCustomer) {
@@ -11763,9 +11870,16 @@ if (tagFilterActive.length > 0) {
       var inp = document.getElementById('splTreeSearch');
       if (inp) inp.value = '';
       SPL_TREE = splCurrentTree();
+      /* 切换公共/专属时退出主题内资源层，保持当前视图模式 */
+      SPL_TOPIC_SEL = null;
+      var splTb = document.getElementById('splTopicBackBar');
+      if (splTb) splTb.style.display = 'none';
+      var splTvBtn = document.getElementById('splTopicViewBtn');
+      if (splTvBtn) splTvBtn.style.display = '';
       updateSplTagTrigger();
       renderSplTree();
-      renderSplCards();
+      if (SPL_TOPIC_VIEW === 'topic') renderSplTopicTable();
+      else renderSplCards();
     }
 
     function splNodeHtml(node, depth, parentPath) {
@@ -11802,14 +11916,26 @@ if (tagFilterActive.length > 0) {
 
     function splSelectPath(path) {
       SPL_SELECTED_PATH = SPL_SELECTED_PATH === path ? '' : path;
+      splExitTopicRes();
       renderSplTree();
       renderSplCards();
     }
 
     function splSelectAll() {
       SPL_SELECTED_PATH = '';
+      splExitTopicRes();
       renderSplTree();
       renderSplCards();
+    }
+
+    /* 左树切换分类时退出主题内资源（参照 07：切分类自动退出模式） */
+    function splExitTopicRes() {
+      if (!SPL_TOPIC_SEL) return;
+      SPL_TOPIC_SEL = null;
+      var back = document.getElementById('splTopicBackBar');
+      if (back) back.style.display = 'none';
+      var btn = document.getElementById('splTopicViewBtn');
+      if (btn) btn.style.display = (SPL_TAB === 'added') ? 'none' : '';
     }
 
     function onSplTreeSearch(v) {
@@ -11893,6 +12019,7 @@ if (tagFilterActive.length > 0) {
           var sel = SPL_SELECTED_PATH.replace(/\s+/g, ' ').trim();
           if (tp !== sel && tp.indexOf(sel + ' /') !== 0 && c.theme !== SPL_SELECTED_PATH.split(' / ').pop()) return false;
         }
+        if (SPL_TOPIC_SEL && (c.theme || '') !== SPL_TOPIC_SEL) return false;
         if (kw) {
           var hay = (c.title + ' ' + c.theme + ' ' + c.tags.join(' ')).toLowerCase();
           if (hay.indexOf(kw) < 0) return false;
@@ -12059,6 +12186,7 @@ if (tagFilterActive.length > 0) {
       if (cb.checked && idx < 0) SPL_SEL_IDS.push(id);
       if (!cb.checked && idx >= 0) SPL_SEL_IDS.splice(idx, 1);
       renderSplSelBar();
+      splRefreshTopicChecks();
     }
 
     function renderSplSelBar() {
@@ -12089,6 +12217,7 @@ if (tagFilterActive.length > 0) {
         }
       }
       renderSplCards();
+      splRefreshTopicChecks();
     }
 
     /* ===== 添加：选中资源 → 已添加 ===== */
@@ -12128,6 +12257,7 @@ if (tagFilterActive.length > 0) {
       }
       SPL_SEL_IDS = [];
       renderSplCards();
+      splRefreshTopicChecks();
       renderSplAdded();
       resToast('已添加 ' + SPL_ADDED.length + ' 条资源', 'success');
     }
@@ -12141,6 +12271,9 @@ if (tagFilterActive.length > 0) {
       var addedWrap = document.getElementById('splAddedWrap');
       if (selWrap) selWrap.style.display = (tab === 'added') ? 'none' : '';
       if (addedWrap) addedWrap.style.display = (tab === 'added') ? '' : 'none';
+      /* 主题/资源切换按钮只作用于「添加资源」选择区 */
+      var tvBtn = document.getElementById('splTopicViewBtn');
+      if (tvBtn) tvBtn.style.display = (tab === 'added' || SPL_TOPIC_SEL) ? 'none' : '';
       if (tab === 'added') renderSplAdded();
     }
 
@@ -12511,6 +12644,186 @@ if (tagFilterActive.length > 0) {
       else if (typeof protoShowPage === 'function') protoShowPage('topic-mgmt');
     }
 
+    /* ===== 主题/资源视图切换（参照公共资源 07 与播放列表-选择 12） ===== */
+    /* 按钮文案口径同 07：显示当前模式（资源模式「资源」，主题模式「主题」） */
+    function splToggleTopicView() {
+      if (SPL_TOPIC_SEL) { splBackToTopics(); return; }
+      SPL_TOPIC_VIEW = SPL_TOPIC_VIEW === 'topic' ? 'card' : 'topic';
+      var btn = document.getElementById('splTopicViewBtn');
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      if (SPL_TOPIC_VIEW === 'topic') {
+        if (btn) btn.innerHTML = '主题<span class="resmg-tag-arrow">▾</span>';
+        if (tbl) tbl.style.display = '';
+        if (cards) cards.style.display = 'none';
+        renderSplTopicTable();
+      } else {
+        if (btn) btn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>';
+        if (tbl) tbl.style.display = 'none';
+        if (cards) cards.style.display = '';
+        renderSplCards();
+      }
+    }
+
+    /* 主题列表：复用公共资源页主题数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
+    function splTopicList() {
+      var src = (SPL_SCOPE === 'private')
+        ? ((typeof PVT_MGMT_TOPICS !== 'undefined') ? PVT_MGMT_TOPICS : [])
+        : ((typeof RES_MGMT_TOPICS !== 'undefined') ? RES_MGMT_TOPICS : []);
+      var list = splCardList();
+      var hasRes = {};
+      for (var i = 0; i < list.length; i++) hasRes[list[i].theme] = (hasRes[list[i].theme] || 0) + 1;
+      var out = [];
+      for (var j = 0; j < src.length; j++) {
+        var t = src[j];
+        out.push({
+          id: t.id,
+          name: t.name,
+          publishTime: t.publishTime || '',
+          status: t.status || '',
+          extStatus: t.extStatus || '',
+          platform: t.platform || '',
+          auditor: t.auditor || '',
+          auditTime: t.auditTime || '',
+          count: hasRes[t.name] || 0
+        });
+      }
+      return out;
+    }
+
+    /* 主题下的资源 id：以当前筛选可见的卡片数据为准（与主题列表「资源数」同源） */
+    function splTopicResIds(t) {
+      var list = splCardList(), out = [];
+      for (var i = 0; i < list.length; i++) { if (list[i].theme === t.name) out.push(list[i].id); }
+      return out;
+    }
+
+    function splTopicById(id) {
+      var list = splTopicList(), s = String(id);
+      for (var i = 0; i < list.length; i++) { if (String(list[i].id) === s) return list[i]; }
+      return null;
+    }
+
+    /* 三态：all 全选 / part 半选 / none 未选 */
+    function splTopicState(t) {
+      var ids = splTopicResIds(t);
+      if (!ids.length) return 'none';
+      var n = 0;
+      for (var i = 0; i < ids.length; i++) { if (splIdIn(SPL_SEL_IDS, ids[i]) >= 0) n++; }
+      return n === 0 ? 'none' : (n === ids.length ? 'all' : 'part');
+    }
+
+    /* 卡片区勾选/清空后同步主题表格三态（表格可见时才重绘） */
+    function splRefreshTopicChecks() {
+      var tbl = document.getElementById('splTopicTable');
+      if (!tbl || tbl.style.display === 'none' || SPL_TOPIC_SEL) return;
+      renderSplTopicTable();
+    }
+
+    function renderSplTopicTable() {
+      var body = document.getElementById('splTopicTbody');
+      if (!body) return;
+      var topics = splTopicList();
+      var html = '';
+      for (var i = 0; i < topics.length; i++) {
+        var t = topics[i];
+        var st = (typeof RES_MGMT_TOPIC_STATUS_STYLES !== 'undefined' && RES_MGMT_TOPIC_STATUS_STYLES[t.status]) || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
+        var extCls = { '审核通过': 'green', '自动通过': 'green', '待审核': 'orange', '审核退回': 'red' }[t.extStatus] || 'grey';
+        var extTip = t.platform && t.auditor ? (' data-tip="' + splEsc(t.platform + '　' + t.extStatus + '　审核人：' + t.auditor + '　审核时间：' + t.auditTime) + '"') : '';
+        var checked = splTopicState(t) === 'all' ? ' checked' : '';
+        var resCell = t.count > 0
+          ? '<a class="resmg-res-link" data-t="' + splEsc(t.name) + '" onclick="splOpenTopicByEl(this)">📄 ' + t.count + '</a>'
+          : '<span style="color:#bbb;">📄 0</span>';
+        html += '<tr>'
+          + '<td style="text-align:center;"><input type="checkbox" class="spl-topic-check" data-id="' + t.id + '"' + checked + ' onchange="splToggleTopic(' + t.id + ', this)"></td>'
+          + '<td><div class="spl-topic-name" data-t="' + splEsc(t.name) + '" onclick="splOpenTopicByEl(this)">' + splEsc(t.name) + '</div><div style="font-size:12px;color:#999;margin-top:2px;">' + splEsc(t.publishTime) + '</div></td>'
+          + '<td><span class="status-badge" style="color:' + st.color + ';background:' + st.bg + ';border:1px solid ' + st.border + ';">' + splEsc(t.status) + '</span></td>'
+          + '<td><span class="sdl-plat ' + extCls + '"' + extTip + '>' + splEsc(t.platform || '/') + '</span></td>'
+          + '<td style="text-align:center;font-size:13px;">' + resCell + '</td>'
+          + '</tr>';
+      }
+      body.innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:#bbb;padding:30px 0;">暂无主题</td></tr>';
+      /* 三态：半选主题置 indeterminate；表头复选框跟随有效主题（有资源的） */
+      var boxes = body.querySelectorAll('.spl-topic-check');
+      for (var k = 0; k < boxes.length; k++) {
+        var tk = splTopicById(boxes[k].getAttribute('data-id'));
+        if (tk && splTopicState(tk) === 'part') boxes[k].indeterminate = true;
+      }
+      var allCb = document.getElementById('splTopicAllCheck');
+      if (allCb) {
+        var tt = splTopicList(), eff = 0, full = 0;
+        for (var m = 0; m < tt.length; m++) {
+          if (!splTopicResIds(tt[m]).length) continue;
+          eff++;
+          if (splTopicState(tt[m]) === 'all') full++;
+        }
+        allCb.checked = eff > 0 && full === eff;
+        allCb.indeterminate = !allCb.checked && full > 0;
+      }
+    }
+
+    /* 勾选主题 = 选中该主题下全部（当前筛选可见的）资源；三态与卡片勾选共用 SPL_SEL_IDS */
+    function splToggleTopic(id, cb) {
+      var t = splTopicById(id);
+      if (!t) return;
+      var ids = splTopicResIds(t);
+      if (cb && cb.checked) {
+        for (var i = 0; i < ids.length; i++) { if (splIdIn(SPL_SEL_IDS, ids[i]) < 0) SPL_SEL_IDS.push(ids[i]); }
+      } else {
+        for (var j = 0; j < ids.length; j++) { var k = splIdIn(SPL_SEL_IDS, ids[j]); if (k >= 0) SPL_SEL_IDS.splice(k, 1); }
+      }
+      renderSplSelBar();
+      renderSplTopicTable();
+    }
+
+    function splToggleAllTopics(cb) {
+      var topics = splTopicList();
+      for (var i = 0; i < topics.length; i++) {
+        var ids = splTopicResIds(topics[i]);
+        for (var j = 0; j < ids.length; j++) {
+          var k = splIdIn(SPL_SEL_IDS, ids[j]);
+          if (cb.checked) { if (k < 0) SPL_SEL_IDS.push(ids[j]); }
+          else if (k >= 0) SPL_SEL_IDS.splice(k, 1);
+        }
+      }
+      renderSplSelBar();
+      renderSplTopicTable();
+    }
+
+    /* 从元素 data-t 读取主题名进入该主题资源（事件委托，避免 onclick 嵌名转义） */
+    function splOpenTopicByEl(el) {
+      if (!el) return;
+      splOpenTopic(el.getAttribute('data-t'));
+    }
+
+    /* 进入某主题：显示该主题资源卡片 + 返回条，隐藏主题表格与切换按钮 */
+    function splOpenTopic(name) {
+      SPL_TOPIC_SEL = name;
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      var back = document.getElementById('splTopicBackBar');
+      var btn = document.getElementById('splTopicViewBtn');
+      if (tbl) tbl.style.display = 'none';
+      if (cards) cards.style.display = '';
+      if (back) back.style.display = 'flex';
+      if (btn) btn.style.display = 'none';
+      renderSplCards();
+    }
+
+    function splBackToTopics() {
+      SPL_TOPIC_SEL = null;
+      SPL_TOPIC_VIEW = 'topic';
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      var back = document.getElementById('splTopicBackBar');
+      var btn = document.getElementById('splTopicViewBtn');
+      if (tbl) tbl.style.display = '';
+      if (cards) cards.style.display = 'none';
+      if (back) back.style.display = 'none';
+      if (btn) { btn.style.display = ''; btn.innerHTML = '主题<span class="resmg-tag-arrow">▾</span>'; }
+      renderSplTopicTable();
+    }
+
     /* ===== 页面初始化 ===== */
     function init_schedule_plan_select() {
       RES_CURRENT_PAGE = 'schedule-plan-select';
@@ -12527,6 +12840,8 @@ if (tagFilterActive.length > 0) {
       SPL_SEL_IDS = [];
       SPL_VIEW = 'flat';
       SPL_FORM = 'slide';
+      SPL_TOPIC_VIEW = 'card';
+      SPL_TOPIC_SEL = null;
       SPL_TREE = splCurrentTree();
       var platWrap = document.getElementById('splPlatformWrap');
       if (platWrap) platWrap.style.display = '';
@@ -12539,6 +12854,15 @@ if (tagFilterActive.length > 0) {
       renderSplTree();
       renderSplCards();
       renderSplAdded();
+      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏，按钮文案回「资源」 */
+      var topicTbl = document.getElementById('splTopicTable');
+      var topicBack = document.getElementById('splTopicBackBar');
+      var topicBtn = document.getElementById('splTopicViewBtn');
+      if (topicTbl) topicTbl.style.display = 'none';
+      if (topicBack) topicBack.style.display = 'none';
+      if (topicBtn) { topicBtn.style.display = ''; topicBtn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>'; }
+      var cardsBox = document.getElementById('splCards');
+      if (cardsBox) cardsBox.style.display = '';
     }
   </script>
 </div>
@@ -21083,12 +21407,14 @@ var SDL_SCOPE = 'public';
 
     function sdlSelectPath(path) {
       SDL_SELECTED_PATH = SDL_SELECTED_PATH === path ? '' : path;
+      sdlExitTopicRes();
       renderSdlTree();
       renderSdlCards();
     }
 
     function sdlSelectAll() {
       SDL_SELECTED_PATH = '';
+      sdlExitTopicRes();
       renderSdlTree();
       renderSdlCards();
     }
@@ -21358,6 +21684,7 @@ var SDL_SCOPE = 'public';
       if (cb.checked && idx < 0) SDL_SELECTED_IDS.push(id);
       if (!cb.checked && idx >= 0) SDL_SELECTED_IDS.splice(idx, 1);
       renderSdlSelectionBar();
+      sdlRefreshTopicChecks();
     }
 
         function renderSdlSelectionBar() {
@@ -21385,8 +21712,7 @@ var SDL_SCOPE = 'public';
       }
     }
 
-    /* V4.20 主题列表：复用公共资源页 RES_MGMT_TOPICS 数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
-    var SDL_TOPIC_CHECKED = [];
+    /* 主题列表：复用公共资源页 RES_MGMT_TOPICS 数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
 
     function sdlTopicList() {
       var src = (SDL_SCOPE === 'private')
@@ -21413,6 +21739,35 @@ var SDL_SCOPE = 'public';
       return out;
     }
 
+    /* 主题下的资源 id：以当前筛选可见的卡片数据为准（与主题列表「资源数」同源） */
+    function sdlTopicResIds(t) {
+      var list = sdlCardList(), out = [];
+      for (var i = 0; i < list.length; i++) { if (list[i].theme === t.name) out.push(list[i].id); }
+      return out;
+    }
+
+    function sdlTopicById(id) {
+      var list = sdlTopicList(), s = String(id);
+      for (var i = 0; i < list.length; i++) { if (String(list[i].id) === s) return list[i]; }
+      return null;
+    }
+
+    /* 三态：all 全选 / part 半选 / none 未选 */
+    function sdlTopicState(t) {
+      var ids = sdlTopicResIds(t);
+      if (!ids.length) return 'none';
+      var n = 0;
+      for (var i = 0; i < ids.length; i++) { if (SDL_SELECTED_IDS.indexOf(ids[i]) >= 0) n++; }
+      return n === 0 ? 'none' : (n === ids.length ? 'all' : 'part');
+    }
+
+    /* 卡片区勾选后同步主题表格三态（表格可见时才重绘） */
+    function sdlRefreshTopicChecks() {
+      var tbl = document.getElementById('sdlTopicTable');
+      if (!tbl || tbl.style.display === 'none' || SDL_TOPIC_SEL) return;
+      renderSdlTopicTable();
+    }
+
     function renderSdlTopicTable() {
       var body = document.getElementById('sdlTopicTbody');
       if (!body) return;
@@ -21423,7 +21778,7 @@ var SDL_SCOPE = 'public';
         var st = (typeof RES_MGMT_TOPIC_STATUS_STYLES !== 'undefined' && RES_MGMT_TOPIC_STATUS_STYLES[t.status]) || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
         var extCls = { '审核通过': 'green', '自动通过': 'green', '待审核': 'orange', '审核退回': 'red' }[t.extStatus] || 'grey';
         var extTip = t.platform && t.auditor ? (' data-tip="' + sdlEsc(t.platform + '　' + t.extStatus + '　审核人：' + t.auditor + '　审核时间：' + t.auditTime) + '"') : '';
-        var checked = SDL_TOPIC_CHECKED.indexOf(t.id) >= 0 ? ' checked' : '';
+        var checked = sdlTopicState(t) === 'all' ? ' checked' : '';
         html += '<tr>'
           + '<td style="text-align:center;"><input type="checkbox" class="sdl-topic-check" data-id="' + t.id + '"' + checked + ' onchange="sdlToggleTopic(' + t.id + ', this)"></td>'
           + '<td><div class="sdl-topic-name" data-t="' + sdlEsc(t.name) + '" onclick="sdlOpenTopicByEl(this)" style="font-weight:500;color:#1677ff;cursor:pointer;font-size:13px;">' + sdlEsc(t.name) + '</div><div style="font-size:12px;color:#999;margin-top:2px;">' + sdlEsc(t.publishTime) + '</div></td>'
@@ -21433,21 +21788,50 @@ var SDL_SCOPE = 'public';
           + '</tr>';
       }
       body.innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:#bbb;padding:30px 0;">暂无主题</td></tr>';
+      /* 三态：半选主题置 indeterminate；表头复选框跟随有效主题（有资源的） */
+      var boxes = body.querySelectorAll('.sdl-topic-check');
+      for (var k = 0; k < boxes.length; k++) {
+        var tk = sdlTopicById(boxes[k].getAttribute('data-id'));
+        if (tk && sdlTopicState(tk) === 'part') boxes[k].indeterminate = true;
+      }
+      var allCb = document.getElementById('sdlTopicAllCheck');
+      if (allCb) {
+        var tt = sdlTopicList(), eff = 0, full = 0;
+        for (var m = 0; m < tt.length; m++) {
+          if (!sdlTopicResIds(tt[m]).length) continue;
+          eff++;
+          if (sdlTopicState(tt[m]) === 'all') full++;
+        }
+        allCb.checked = eff > 0 && full === eff;
+        allCb.indeterminate = !allCb.checked && full > 0;
+      }
     }
 
-    /* 主题勾选：单选切换 + 全选 */
+    /* 勾选主题 = 选中该主题下全部（当前筛选可见的）资源；三态与卡片勾选共用 SDL_SELECTED_IDS */
     function sdlToggleTopic(id, cb) {
-      var idx = SDL_TOPIC_CHECKED.indexOf(id);
-      if (cb.checked && idx < 0) SDL_TOPIC_CHECKED.push(id);
-      if (!cb.checked && idx >= 0) SDL_TOPIC_CHECKED.splice(idx, 1);
+      var t = sdlTopicById(id);
+      if (!t) return;
+      var ids = sdlTopicResIds(t);
+      if (cb && cb.checked) {
+        for (var i = 0; i < ids.length; i++) { if (SDL_SELECTED_IDS.indexOf(ids[i]) < 0) SDL_SELECTED_IDS.push(ids[i]); }
+      } else {
+        for (var j = 0; j < ids.length; j++) { var k = SDL_SELECTED_IDS.indexOf(ids[j]); if (k >= 0) SDL_SELECTED_IDS.splice(k, 1); }
+      }
+      renderSdlSelectionBar();
+      renderSdlTopicTable();
     }
 
     function sdlToggleAllTopics(cb) {
-      SDL_TOPIC_CHECKED = [];
-      if (cb.checked) {
-        var topics = sdlTopicList();
-        for (var i = 0; i < topics.length; i++) SDL_TOPIC_CHECKED.push(topics[i].id);
+      var topics = sdlTopicList();
+      for (var i = 0; i < topics.length; i++) {
+        var ids = sdlTopicResIds(topics[i]);
+        for (var j = 0; j < ids.length; j++) {
+          var k = SDL_SELECTED_IDS.indexOf(ids[j]);
+          if (cb.checked) { if (k < 0) SDL_SELECTED_IDS.push(ids[j]); }
+          else if (k >= 0) SDL_SELECTED_IDS.splice(k, 1);
+        }
       }
+      renderSdlSelectionBar();
       renderSdlTopicTable();
     }
 
@@ -21485,6 +21869,16 @@ var SDL_SCOPE = 'public';
       renderSdlTopicTable();
     }
 
+    /* 左树切换分类时退出主题内资源（参照 07：切分类自动退出模式） */
+    function sdlExitTopicRes() {
+      if (!SDL_TOPIC_SEL) return;
+      SDL_TOPIC_SEL = null;
+      var back = document.getElementById('sdlTopicBackBar');
+      if (back) back.style.display = 'none';
+      var btn = document.getElementById('sdlViewBtn');
+      if (btn) btn.style.display = '';
+    }
+
     function init_schedule_select() {
       RES_CURRENT_PAGE = 'schedule-select';
       RES_ACTIVE_SCOPE = 'schedule';
@@ -21506,11 +21900,15 @@ var SDL_SCOPE = 'public';
       renderSdlSelectionBar();
       renderSdlTree();
       renderSdlCards();
-      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏 */
+      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏，按钮文案回「资源」 */
       var tbl = document.getElementById('sdlTopicTable');
       var back = document.getElementById('sdlTopicBackBar');
+      var vbtn = document.getElementById('sdlViewBtn');
       if (tbl) tbl.style.display = 'none';
       if (back) back.style.display = 'none';
+      if (vbtn) { vbtn.style.display = ''; vbtn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>'; }
+      var cardsBox = document.getElementById('sdlCards');
+      if (cardsBox) cardsBox.style.display = '';
     }
 
 var SPL_TAB = 'public';
@@ -21526,6 +21924,8 @@ var SPL_TAB = 'public';
     var SPL_ADDED_SEL = [];
     var SPL_VIEW = 'flat';
     var SPL_FORM = 'slide';
+    var SPL_TOPIC_VIEW = 'card';    /* card(资源卡片) | topic(主题列表) */
+    var SPL_TOPIC_SEL = null;       /* 当前进入的主题名，null=主题列表层 */
 
     /* ===== 树（复用播放列表-选择逻辑） ===== */
     function splBuildTree(nodes, wrapCustomer) {
@@ -21561,9 +21961,16 @@ var SPL_TAB = 'public';
       var inp = document.getElementById('splTreeSearch');
       if (inp) inp.value = '';
       SPL_TREE = splCurrentTree();
+      /* 切换公共/专属时退出主题内资源层，保持当前视图模式 */
+      SPL_TOPIC_SEL = null;
+      var splTb = document.getElementById('splTopicBackBar');
+      if (splTb) splTb.style.display = 'none';
+      var splTvBtn = document.getElementById('splTopicViewBtn');
+      if (splTvBtn) splTvBtn.style.display = '';
       updateSplTagTrigger();
       renderSplTree();
-      renderSplCards();
+      if (SPL_TOPIC_VIEW === 'topic') renderSplTopicTable();
+      else renderSplCards();
     }
 
     function splNodeHtml(node, depth, parentPath) {
@@ -21600,14 +22007,26 @@ var SPL_TAB = 'public';
 
     function splSelectPath(path) {
       SPL_SELECTED_PATH = SPL_SELECTED_PATH === path ? '' : path;
+      splExitTopicRes();
       renderSplTree();
       renderSplCards();
     }
 
     function splSelectAll() {
       SPL_SELECTED_PATH = '';
+      splExitTopicRes();
       renderSplTree();
       renderSplCards();
+    }
+
+    /* 左树切换分类时退出主题内资源（参照 07：切分类自动退出模式） */
+    function splExitTopicRes() {
+      if (!SPL_TOPIC_SEL) return;
+      SPL_TOPIC_SEL = null;
+      var back = document.getElementById('splTopicBackBar');
+      if (back) back.style.display = 'none';
+      var btn = document.getElementById('splTopicViewBtn');
+      if (btn) btn.style.display = (SPL_TAB === 'added') ? 'none' : '';
     }
 
     function onSplTreeSearch(v) {
@@ -21691,6 +22110,7 @@ var SPL_TAB = 'public';
           var sel = SPL_SELECTED_PATH.replace(/\s+/g, ' ').trim();
           if (tp !== sel && tp.indexOf(sel + ' /') !== 0 && c.theme !== SPL_SELECTED_PATH.split(' / ').pop()) return false;
         }
+        if (SPL_TOPIC_SEL && (c.theme || '') !== SPL_TOPIC_SEL) return false;
         if (kw) {
           var hay = (c.title + ' ' + c.theme + ' ' + c.tags.join(' ')).toLowerCase();
           if (hay.indexOf(kw) < 0) return false;
@@ -21857,6 +22277,7 @@ var SPL_TAB = 'public';
       if (cb.checked && idx < 0) SPL_SEL_IDS.push(id);
       if (!cb.checked && idx >= 0) SPL_SEL_IDS.splice(idx, 1);
       renderSplSelBar();
+      splRefreshTopicChecks();
     }
 
     function renderSplSelBar() {
@@ -21887,6 +22308,7 @@ var SPL_TAB = 'public';
         }
       }
       renderSplCards();
+      splRefreshTopicChecks();
     }
 
     /* ===== 添加：选中资源 → 已添加 ===== */
@@ -21926,6 +22348,7 @@ var SPL_TAB = 'public';
       }
       SPL_SEL_IDS = [];
       renderSplCards();
+      splRefreshTopicChecks();
       renderSplAdded();
       resToast('已添加 ' + SPL_ADDED.length + ' 条资源', 'success');
     }
@@ -21939,6 +22362,9 @@ var SPL_TAB = 'public';
       var addedWrap = document.getElementById('splAddedWrap');
       if (selWrap) selWrap.style.display = (tab === 'added') ? 'none' : '';
       if (addedWrap) addedWrap.style.display = (tab === 'added') ? '' : 'none';
+      /* 主题/资源切换按钮只作用于「添加资源」选择区 */
+      var tvBtn = document.getElementById('splTopicViewBtn');
+      if (tvBtn) tvBtn.style.display = (tab === 'added' || SPL_TOPIC_SEL) ? 'none' : '';
       if (tab === 'added') renderSplAdded();
     }
 
@@ -22309,6 +22735,186 @@ var SPL_TAB = 'public';
       else if (typeof protoShowPage === 'function') protoShowPage('topic-mgmt');
     }
 
+    /* ===== 主题/资源视图切换（参照公共资源 07 与播放列表-选择 12） ===== */
+    /* 按钮文案口径同 07：显示当前模式（资源模式「资源」，主题模式「主题」） */
+    function splToggleTopicView() {
+      if (SPL_TOPIC_SEL) { splBackToTopics(); return; }
+      SPL_TOPIC_VIEW = SPL_TOPIC_VIEW === 'topic' ? 'card' : 'topic';
+      var btn = document.getElementById('splTopicViewBtn');
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      if (SPL_TOPIC_VIEW === 'topic') {
+        if (btn) btn.innerHTML = '主题<span class="resmg-tag-arrow">▾</span>';
+        if (tbl) tbl.style.display = '';
+        if (cards) cards.style.display = 'none';
+        renderSplTopicTable();
+      } else {
+        if (btn) btn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>';
+        if (tbl) tbl.style.display = 'none';
+        if (cards) cards.style.display = '';
+        renderSplCards();
+      }
+    }
+
+    /* 主题列表：复用公共资源页主题数据，列=复选框/名称+发布时间/内部状态/外部状态/资源数 */
+    function splTopicList() {
+      var src = (SPL_SCOPE === 'private')
+        ? ((typeof PVT_MGMT_TOPICS !== 'undefined') ? PVT_MGMT_TOPICS : [])
+        : ((typeof RES_MGMT_TOPICS !== 'undefined') ? RES_MGMT_TOPICS : []);
+      var list = splCardList();
+      var hasRes = {};
+      for (var i = 0; i < list.length; i++) hasRes[list[i].theme] = (hasRes[list[i].theme] || 0) + 1;
+      var out = [];
+      for (var j = 0; j < src.length; j++) {
+        var t = src[j];
+        out.push({
+          id: t.id,
+          name: t.name,
+          publishTime: t.publishTime || '',
+          status: t.status || '',
+          extStatus: t.extStatus || '',
+          platform: t.platform || '',
+          auditor: t.auditor || '',
+          auditTime: t.auditTime || '',
+          count: hasRes[t.name] || 0
+        });
+      }
+      return out;
+    }
+
+    /* 主题下的资源 id：以当前筛选可见的卡片数据为准（与主题列表「资源数」同源） */
+    function splTopicResIds(t) {
+      var list = splCardList(), out = [];
+      for (var i = 0; i < list.length; i++) { if (list[i].theme === t.name) out.push(list[i].id); }
+      return out;
+    }
+
+    function splTopicById(id) {
+      var list = splTopicList(), s = String(id);
+      for (var i = 0; i < list.length; i++) { if (String(list[i].id) === s) return list[i]; }
+      return null;
+    }
+
+    /* 三态：all 全选 / part 半选 / none 未选 */
+    function splTopicState(t) {
+      var ids = splTopicResIds(t);
+      if (!ids.length) return 'none';
+      var n = 0;
+      for (var i = 0; i < ids.length; i++) { if (splIdIn(SPL_SEL_IDS, ids[i]) >= 0) n++; }
+      return n === 0 ? 'none' : (n === ids.length ? 'all' : 'part');
+    }
+
+    /* 卡片区勾选/清空后同步主题表格三态（表格可见时才重绘） */
+    function splRefreshTopicChecks() {
+      var tbl = document.getElementById('splTopicTable');
+      if (!tbl || tbl.style.display === 'none' || SPL_TOPIC_SEL) return;
+      renderSplTopicTable();
+    }
+
+    function renderSplTopicTable() {
+      var body = document.getElementById('splTopicTbody');
+      if (!body) return;
+      var topics = splTopicList();
+      var html = '';
+      for (var i = 0; i < topics.length; i++) {
+        var t = topics[i];
+        var st = (typeof RES_MGMT_TOPIC_STATUS_STYLES !== 'undefined' && RES_MGMT_TOPIC_STATUS_STYLES[t.status]) || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
+        var extCls = { '审核通过': 'green', '自动通过': 'green', '待审核': 'orange', '审核退回': 'red' }[t.extStatus] || 'grey';
+        var extTip = t.platform && t.auditor ? (' data-tip="' + splEsc(t.platform + '　' + t.extStatus + '　审核人：' + t.auditor + '　审核时间：' + t.auditTime) + '"') : '';
+        var checked = splTopicState(t) === 'all' ? ' checked' : '';
+        var resCell = t.count > 0
+          ? '<a class="resmg-res-link" data-t="' + splEsc(t.name) + '" onclick="splOpenTopicByEl(this)">📄 ' + t.count + '</a>'
+          : '<span style="color:#bbb;">📄 0</span>';
+        html += '<tr>'
+          + '<td style="text-align:center;"><input type="checkbox" class="spl-topic-check" data-id="' + t.id + '"' + checked + ' onchange="splToggleTopic(' + t.id + ', this)"></td>'
+          + '<td><div class="spl-topic-name" data-t="' + splEsc(t.name) + '" onclick="splOpenTopicByEl(this)">' + splEsc(t.name) + '</div><div style="font-size:12px;color:#999;margin-top:2px;">' + splEsc(t.publishTime) + '</div></td>'
+          + '<td><span class="status-badge" style="color:' + st.color + ';background:' + st.bg + ';border:1px solid ' + st.border + ';">' + splEsc(t.status) + '</span></td>'
+          + '<td><span class="sdl-plat ' + extCls + '"' + extTip + '>' + splEsc(t.platform || '/') + '</span></td>'
+          + '<td style="text-align:center;font-size:13px;">' + resCell + '</td>'
+          + '</tr>';
+      }
+      body.innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:#bbb;padding:30px 0;">暂无主题</td></tr>';
+      /* 三态：半选主题置 indeterminate；表头复选框跟随有效主题（有资源的） */
+      var boxes = body.querySelectorAll('.spl-topic-check');
+      for (var k = 0; k < boxes.length; k++) {
+        var tk = splTopicById(boxes[k].getAttribute('data-id'));
+        if (tk && splTopicState(tk) === 'part') boxes[k].indeterminate = true;
+      }
+      var allCb = document.getElementById('splTopicAllCheck');
+      if (allCb) {
+        var tt = splTopicList(), eff = 0, full = 0;
+        for (var m = 0; m < tt.length; m++) {
+          if (!splTopicResIds(tt[m]).length) continue;
+          eff++;
+          if (splTopicState(tt[m]) === 'all') full++;
+        }
+        allCb.checked = eff > 0 && full === eff;
+        allCb.indeterminate = !allCb.checked && full > 0;
+      }
+    }
+
+    /* 勾选主题 = 选中该主题下全部（当前筛选可见的）资源；三态与卡片勾选共用 SPL_SEL_IDS */
+    function splToggleTopic(id, cb) {
+      var t = splTopicById(id);
+      if (!t) return;
+      var ids = splTopicResIds(t);
+      if (cb && cb.checked) {
+        for (var i = 0; i < ids.length; i++) { if (splIdIn(SPL_SEL_IDS, ids[i]) < 0) SPL_SEL_IDS.push(ids[i]); }
+      } else {
+        for (var j = 0; j < ids.length; j++) { var k = splIdIn(SPL_SEL_IDS, ids[j]); if (k >= 0) SPL_SEL_IDS.splice(k, 1); }
+      }
+      renderSplSelBar();
+      renderSplTopicTable();
+    }
+
+    function splToggleAllTopics(cb) {
+      var topics = splTopicList();
+      for (var i = 0; i < topics.length; i++) {
+        var ids = splTopicResIds(topics[i]);
+        for (var j = 0; j < ids.length; j++) {
+          var k = splIdIn(SPL_SEL_IDS, ids[j]);
+          if (cb.checked) { if (k < 0) SPL_SEL_IDS.push(ids[j]); }
+          else if (k >= 0) SPL_SEL_IDS.splice(k, 1);
+        }
+      }
+      renderSplSelBar();
+      renderSplTopicTable();
+    }
+
+    /* 从元素 data-t 读取主题名进入该主题资源（事件委托，避免 onclick 嵌名转义） */
+    function splOpenTopicByEl(el) {
+      if (!el) return;
+      splOpenTopic(el.getAttribute('data-t'));
+    }
+
+    /* 进入某主题：显示该主题资源卡片 + 返回条，隐藏主题表格与切换按钮 */
+    function splOpenTopic(name) {
+      SPL_TOPIC_SEL = name;
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      var back = document.getElementById('splTopicBackBar');
+      var btn = document.getElementById('splTopicViewBtn');
+      if (tbl) tbl.style.display = 'none';
+      if (cards) cards.style.display = '';
+      if (back) back.style.display = 'flex';
+      if (btn) btn.style.display = 'none';
+      renderSplCards();
+    }
+
+    function splBackToTopics() {
+      SPL_TOPIC_SEL = null;
+      SPL_TOPIC_VIEW = 'topic';
+      var tbl = document.getElementById('splTopicTable');
+      var cards = document.getElementById('splCards');
+      var back = document.getElementById('splTopicBackBar');
+      var btn = document.getElementById('splTopicViewBtn');
+      if (tbl) tbl.style.display = '';
+      if (cards) cards.style.display = 'none';
+      if (back) back.style.display = 'none';
+      if (btn) { btn.style.display = ''; btn.innerHTML = '主题<span class="resmg-tag-arrow">▾</span>'; }
+      renderSplTopicTable();
+    }
+
     /* ===== 页面初始化 ===== */
     function init_schedule_plan_select() {
       RES_CURRENT_PAGE = 'schedule-plan-select';
@@ -22325,6 +22931,8 @@ var SPL_TAB = 'public';
       SPL_SEL_IDS = [];
       SPL_VIEW = 'flat';
       SPL_FORM = 'slide';
+      SPL_TOPIC_VIEW = 'card';
+      SPL_TOPIC_SEL = null;
       SPL_TREE = splCurrentTree();
       var platWrap = document.getElementById('splPlatformWrap');
       if (platWrap) platWrap.style.display = '';
@@ -22337,6 +22945,15 @@ var SPL_TAB = 'public';
       renderSplTree();
       renderSplCards();
       renderSplAdded();
+      /* 复位视图容器：资源卡片显示，主题表格与返回条隐藏，按钮文案回「资源」 */
+      var topicTbl = document.getElementById('splTopicTable');
+      var topicBack = document.getElementById('splTopicBackBar');
+      var topicBtn = document.getElementById('splTopicViewBtn');
+      if (topicTbl) topicTbl.style.display = 'none';
+      if (topicBack) topicBack.style.display = 'none';
+      if (topicBtn) { topicBtn.style.display = ''; topicBtn.innerHTML = '资源<span class="resmg-tag-arrow">▾</span>'; }
+      var cardsBox = document.getElementById('splCards');
+      if (cardsBox) cardsBox.style.display = '';
     }
 </script>
 </body>
