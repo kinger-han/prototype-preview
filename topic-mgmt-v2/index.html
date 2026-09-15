@@ -11723,7 +11723,6 @@ if (tagFilterActive.length > 0) {
       <span class="spl-progress-time">00:00</span>
     </div>
     <span class="spl-topbar-spacer"></span>
-    <button class="resmg-btn" id="splTopicViewBtn" onclick="splToggleTopicView()" title="切换主题/资源视图">资源<span class="resmg-tag-arrow">▾</span></button>
   </div>
 
   <div class="spl-tabs">
@@ -11772,6 +11771,7 @@ if (tagFilterActive.length > 0) {
         <div class="filter-item spl-sel-actions">
           <label class="spl-all-check"><input type="checkbox" id="splSelAllCb" onchange="splToggleSelectAll(this)">全选</label>
           <span class="sdl-selected-text">已选 <b id="splSelCount">0</b> 条资源</span>
+          <button class="resmg-btn" id="splTopicViewBtn" onclick="splToggleTopicView()" title="切换主题/资源视图">资源<span class="resmg-tag-arrow">▾</span></button>
           <button class="resmg-btn primary" onclick="splAddSelected()">添加</button>
         </div>
       </div>
