@@ -768,6 +768,7 @@ table tr { cursor: pointer; }
     .pd-img.effect-guangying .photo-bg, .pd-img.effect-guangying .photo-person { filter: brightness(1.08) contrast(1.06); }
     .pd-img.effect-shuimo    .photo-bg, .pd-img.effect-shuimo    .photo-person { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
     .pd-img.effect-shouhui  .photo-bg, .pd-img.effect-shouhui  .photo-person { filter: saturate(0.45) contrast(1.12); }
+    .pd-img.effect-hongchou  .photo-bg, .pd-img.effect-hongchou  .photo-person { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
     .pd-field-row .pd-label.pd-style { color: #8a641e; }
   </style></style>
 </head>
@@ -843,12 +844,14 @@ table tr { cursor: pointer; }
     .photo-thumb.effect-guangying .pt-bg, .photo-thumb.effect-guangying .pt-person { filter: brightness(1.08) contrast(1.06); }
     .photo-thumb.effect-shuimo    .pt-bg, .photo-thumb.effect-shuimo    .pt-person { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
     .photo-thumb.effect-shouhui  .pt-bg, .photo-thumb.effect-shouhui  .pt-person { filter: saturate(0.45) contrast(1.12); }
+    .photo-thumb.effect-hongchou  .pt-bg, .photo-thumb.effect-hongchou  .pt-person { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
     .tag-c { display: inline-block; margin: 2px 4px 2px 0; padding: 1px 8px; font-size: 11px; border-radius: 3px; line-height: 1.5; }
     .tag-c.origin { color: #1677ff; background: #e6f4ff; border: 1px solid #91caff; }
     .tag-c.style { color: #8a641e; background: #fdf6e3; border: 1px solid #eadfc4; }
     .pv-img.effect-guangying .photo-bg, .pv-img.effect-guangying .photo-person { filter: brightness(1.08) contrast(1.06); }
     .pv-img.effect-shuimo    .photo-bg, .pv-img.effect-shuimo    .photo-person { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
     .pv-img.effect-shouhui  .photo-bg, .pv-img.effect-shouhui  .photo-person { filter: saturate(0.45) contrast(1.12); }
+    .pv-img.effect-hongchou  .photo-bg, .pv-img.effect-hongchou  .photo-person { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
 
     .td-check { width: 36px; }
     .selection-cell .badge-status { margin-right: 4px; }
@@ -993,6 +996,7 @@ table tr { cursor: pointer; }
     .sel-thumb.effect-guangying .pt-bg, .sel-thumb.effect-guangying .pt-person { filter: brightness(1.08) contrast(1.06); }
     .sel-thumb.effect-shuimo    .pt-bg, .sel-thumb.effect-shuimo    .pt-person { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
     .sel-thumb.effect-shouhui  .pt-bg, .sel-thumb.effect-shouhui  .pt-person { filter: saturate(0.45) contrast(1.12); }
+    .sel-thumb.effect-hongchou  .pt-bg, .sel-thumb.effect-hongchou  .pt-person { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
     .td-check { width: 36px; }
     /* 选中行高亮蓝色底 */
     .sel-tbl tbody tr.row-selected { background: #e6f4ff; }
@@ -1304,6 +1308,7 @@ table tr { cursor: pointer; }
     .st-thumb.effect-guangying { filter: brightness(1.08) contrast(1.06); }
     .st-thumb.effect-shuimo { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
     .st-thumb.effect-shouhui { filter: saturate(0.45) contrast(1.12); }
+    .st-thumb.effect-hongchou { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
     .st-state { display: inline-block; padding: 2px 10px; border-radius: 3px; font-size: 12px; }
     .st-state.on { background: #f6ffed; color: #52c41a; }
     .st-state.off { background: #f5f5f5; color: #999; }
@@ -1582,7 +1587,8 @@ function switchDeviceMgmt(element) {
 window.__STYLE_LIST = window.__STYLE_LIST || [
   { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, prompt: '优化光影氛围，增强画面通透感，保持人物面部特征与原图一致，不发生产物性重绘', gen: 12, keep: 9, drop: 3, fail: 1 },
   { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, prompt: '背景写意虚化，水墨晕染质感，人物面部区域避开重绘，保持人脸特征不变', gen: 9, keep: 6, drop: 3, fail: 2 },
-  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', gen: 5, keep: 2, drop: 3, fail: 5 }
+  { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', gen: 5, keep: 2, drop: 3, fail: 5 },
+  { id: 'hongchou',  name: '红绸环绕', time: '约30秒', enabled: true, prompt: '浅红丝绸飘带局部环绕，画面要素与相框保持不变，人物清晰不被遮挡', gen: 7, keep: 5, drop: 2, fail: 0 }
 ];
 function pcStyleOf(id) { return (window.__STYLE_LIST || []).filter(function(x){ return x.id === id; })[0]; }
 
@@ -1670,7 +1676,8 @@ if (!window.__STYLE_LIST) {
   window.__STYLE_LIST = [
     { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, prompt: '', count: 6 },
     { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, prompt: '', count: 4 },
-    { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '', count: 2 }
+    { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '', count: 2 },
+    { id: 'hongchou',  name: '红绸环绕', time: '约30秒', enabled: true, prompt: '', count: 3 }
   ];
 }
 function _pStyleName(id) { var s = (window.__STYLE_LIST || []).filter(function(x){ return x.id === id; })[0]; return s ? s.name : id; }
@@ -1863,7 +1870,8 @@ if (!window.__STYLE_LIST) {
   window.__STYLE_LIST = [
     { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, prompt: '', count: 6 },
     { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, prompt: '', count: 4 },
-    { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '', count: 2 }
+    { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, prompt: '', count: 2 },
+    { id: 'hongchou',  name: '红绸环绕', time: '约30秒', enabled: true, prompt: '', count: 3 }
   ];
 }
 function _sSelName(id) { var s = (window.__STYLE_LIST || []).filter(function(x){ return x.id === id; })[0]; return s ? s.name : id; }

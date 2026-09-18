@@ -683,6 +683,7 @@ body {
 .effect-guangying .photo-bg, .effect-guangying .photo-person { filter: brightness(1.08) contrast(1.06); }
 .effect-shuimo    .photo-bg, .effect-shuimo    .photo-person { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
 .effect-shouhui  .photo-bg, .effect-shouhui  .photo-person { filter: saturate(0.45) contrast(1.12); }
+.effect-hongchou  .photo-bg, .effect-hongchou  .photo-person { filter: sepia(0.22) saturate(1.12) contrast(1.04); }
 /* 双主按钮并列 */
 .ra-actions { display: flex; gap: 10px; padding: 14px 20px 4px; }
 .ra-actions .ra-btn { flex: 1; margin-bottom: 0; }
@@ -692,14 +693,23 @@ body {
 .st-mask { position: absolute; inset: 0; z-index: 96; background: rgba(0,0,0,0.35); }
 .st-sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 97; background: #fff; border-radius: 14px 14px 0 0; box-shadow: 0 -6px 30px rgba(0,0,0,0.18); padding: 18px 18px 26px; }
 .st-sheet .st-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+/* 更多风格弹层专属：头部固定 + 列表内滚（用 .st-style-sheet 隔离，不与其他 st-sheet 弹层共用布局） */
+.st-sheet.st-style-sheet { max-height: 76%; display: flex; flex-direction: column; padding-bottom: calc(26px + env(safe-area-inset-bottom)); }
+.st-sheet.st-style-sheet .st-head { flex-shrink: 0; position: relative; padding-right: 30px; }
+.st-sheet.st-style-sheet .st-title { margin-bottom: 0; }
+.st-sheet.st-style-sheet .st-sub { font-size: 12px; color: var(--gray); margin-top: 4px; line-height: 1.5; }
+.st-sheet.st-style-sheet .st-close { position: absolute; top: -2px; right: 0; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: #9A9A9A; cursor: pointer; }
+.st-sheet.st-style-sheet .st-close svg { width: 16px; height: 16px; display: block; }
+.st-sheet.st-style-sheet .st-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; margin-top: 12px; }
 .st-sheet .st-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; background: #fff; cursor: pointer; }
 .st-sheet .st-item:last-child { margin-bottom: 0; }
-.st-sheet .st-thumb { width: 52px; height: 68px; border-radius: 6px; overflow: hidden; position: relative; flex-shrink: 0; background: linear-gradient(140deg,#7A1712,#B42318); }
+.st-sheet .st-thumb { width: 52px; height: 68px; border-radius: 6px; overflow: hidden; position: relative; flex-shrink: 0; background: #EDEDE8; }
 .st-sheet .st-thumb .photo-bg { position: absolute; inset: 0; }
 .st-sheet .st-thumb .photo-person { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 55%; aspect-ratio: 3/4; border-radius: 4px; z-index: 2; background: linear-gradient(135deg,#F5D0A9,#D9A066); border: 1px solid rgba(255,255,255,0.7); }
-.st-sheet .st-thumb.effect-guangying { filter: brightness(1.08) contrast(1.06); }
-.st-sheet .st-thumb.effect-shuimo { filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
-.st-sheet .st-thumb.effect-shouhui { filter: saturate(0.45) contrast(1.12); }
+.st-sheet .st-thumb.effect-guangying { background: linear-gradient(140deg,#8E1A12,#C0392B); filter: brightness(1.08) contrast(1.06); }
+.st-sheet .st-thumb.effect-shuimo { background: linear-gradient(160deg,#F8F8F4,#CDCEC7); filter: grayscale(0.55) sepia(0.35) contrast(0.98); }
+.st-sheet .st-thumb.effect-shouhui { background: linear-gradient(150deg,#FFF4E6,#F3D2B8); filter: saturate(0.45) contrast(1.12); }
+.st-sheet .st-thumb.effect-hongchou { background: linear-gradient(150deg,#FBE9E2,#E3A18F); filter: sepia(0.22) saturate(1.12) contrast(1.04); }
 .st-sheet .st-info { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .st-sheet .st-name { font-size: 14px; color: var(--ink); font-weight: 600; }
 .st-sheet .st-time { font-size: 11px; color: var(--gold-deep); margin-top: 2px; }
@@ -1274,9 +1284,13 @@ body {
 
   <!-- 更多风格弹层（生成 / 生成中 / 查看待确认） -->
   <div class="st-mask" id="st-mask" style="display:none" onclick="closeStyleSheet()"></div>
-  <div class="st-sheet" id="st-sheet" style="display:none">
-    <div class="st-title">更多风格</div>
-    <div id="st-list"></div>
+  <div class="st-sheet st-style-sheet" id="st-sheet" style="display:none">
+    <div class="st-head">
+      <div class="st-title">更多风格</div>
+      <div class="st-sub">用这张纪念照再创作不同风格的版本</div>
+      <span class="st-close" onclick="closeStyleSheet()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+    </div>
+    <div id="st-list" class="st-body"></div>
   </div>
 
   <!-- 沉浸预览 -->
@@ -1351,15 +1365,16 @@ body {
       </div>
       <div class="terms-sec">
         <h3>成像能力说明</h3>
-        <p>使用人物照片搭配纪念模板，直接合成专属纪念照（约 3 秒）。成像效果会因照片而异，请使用本人照片。</p>
+        <p>使用人物照片搭配纪念模板，直接合成专属纪念照（约 3 秒）。</p>
+        <p>已生成的纪念照还可以再创作，生成不同风格的创意纪念照（如水墨国风、红绸环绕），约需 1~2 分钟，生成效果具有随机性，不满意可以重新生成，满意后可以保存到纪念相册以及下载到本地。</p>
       </div>
       <div class="terms-sec">
         <h3>现场大屏展示规则</h3>
-        <p>勾选同意后，作品经工作人员确认即可在现场大屏展示。未展示不代表照片有问题。提交后如需停止展示，请联系现场工作人员。</p>
+        <p>勾选同意后，作品经工作人员确认后，即可在现场大屏轮播展示。</p>
       </div>
       <div class="terms-sec">
         <h3>隐私说明</h3>
-        <p>你上传的照片仅用于生成本次活动纪念作品与现场展示（需你主动授权）。作品与本浏览器关联。正式版本上线前将公示完整隐私政策、数据保存期限与删除渠道。</p>
+        <p>你上传的照片仅用于生成本次活动纪念作品与现场展示（需你主动授权）。</p>
       </div>
       <div class="terms-sec">
         <h3>肖像授权说明</h3>
@@ -1367,15 +1382,7 @@ body {
       </div>
       <div class="terms-sec">
         <h3>内容规范</h3>
-        <ul>
-          <li>请使用本人的真实照片，不包含他人隐私信息；</li>
-          <li>不上传含政治敏感、广告、联系方式、水印等内容；</li>
-          <li>不支持生成与政治人物同框、军警制服或特定身份形象。</li>
-        </ul>
-      </div>
-      <div class="terms-sec">
-        <h3>联系我们</h3>
-        <p>如需帮助或撤回展示，请联系现场工作人员。</p>
+        <p>请使用本人的真实照片，不包含他人隐私信息，不上传含政治敏感、广告、联系方式、水印等内容。</p>
       </div>
     </div>
   </div>
@@ -1511,6 +1518,7 @@ var findByTpl = function(id) { return TEMPLATES.filter(function(t){ return t.id 
 /* 画风列表（V2.1 风格化：照片详情页选择画风，字段含提示词/生成数量，PC 画风管理页数据源） */
 var STYLES = [
   { id: 'guangying', name: '光影焕新', time: '约10秒', enabled: true, desc: '提亮光影氛围，画面更通透', prompt: '优化光影氛围，增强画面通透感，保持人物面部特征与原图一致，不发生产物性重绘', count: 6  },
+  { id: 'hongchou',  name: '红绸环绕', time: '约30秒', enabled: true, desc: '红丝绸飘带环绕，喜庆有仪式感', prompt: '浅红丝绸飘带局部环绕，画面要素与相框保持不变，人物清晰不被遮挡', count: 3 },
   { id: 'shuimo',    name: '水墨国风', time: '约20秒', enabled: true, desc: '背景写意水墨质感，晕染虚化', prompt: '背景写意虚化，水墨晕染质感，人物面部区域避开重绘，保持人脸特征不变', count: 4 },
   { id: 'shouhui',   name: '手绘插画', time: '约25秒', enabled: true, desc: '清新水彩插画质感，画面更艺术', prompt: '限定水彩/清新插画/厚涂质感，禁用动漫二次元风格，人脸区域保持识别一致', count: 2, demoFail: true }
 ];
@@ -1593,7 +1601,7 @@ var state = {
     var g = findStyle(state.genStyleId);
     var hero = document.getElementById('gs-hero');
     if (!hero) return;
-    ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
+    ['effect-guangying','effect-hongchou','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
     hero.classList.add('effect-' + state.genStyleId);
     hero.querySelector('.photo-bg').setAttribute('data-tpl', state.genTpl || (state.curWork && state.curWork.tpl) || 'shenghui');
     document.getElementById('gs-name').textContent = (g && g.name) || state.genStyleId;
@@ -1611,7 +1619,7 @@ var state = {
     var g = findStyle(f.styleId);
     var hero = document.getElementById('fs-hero');
     if (!hero) return;
-    ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
+    ['effect-guangying','effect-hongchou','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
     hero.classList.add('effect-' + f.styleId);
     hero.querySelector('.photo-bg').setAttribute('data-tpl', f.tpl);
     document.getElementById('fs-name').textContent = (g && g.name) || f.styleId;
@@ -1957,7 +1965,7 @@ function openStyleSheet() {
   var list = availableStyles();
   var html = '';
   list.forEach(function(s){
-    html += '<div class="st-item"><span class="st-thumb effect-' + s.id + '"><span class="photo-bg" data-tpl="' + state.curWork.tpl + '"></span><span class="photo-person"></span></span>' +
+    html += '<div class="st-item"><span class="st-thumb effect-' + s.id + '"><span class="photo-bg"></span><span class="photo-person"></span></span>' +
       '<span class="st-info"><span class="st-name">' + s.name + '</span><span class="st-time">' + s.time + '</span>' +
         (s.desc ? '<span class="st-desc">' + s.desc + '</span>' : '') + '</span>' +
       '<span class="st-go">' + styleBtnHtml(s) + '</span></div>';
@@ -2018,7 +2026,7 @@ function openStyleConfirm(idx) {
   updateStyleDots();
   var s = findStyle(p.styleId) || {};
   var hero = document.getElementById('ck-hero');
-  ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
+  ['effect-guangying','effect-hongchou','effect-shuimo','effect-shouhui'].forEach(function(c){ hero.classList.remove(c); });
   hero.classList.add('effect-' + p.styleId);
   hero.querySelector('.photo-bg').setAttribute('data-tpl', p.tpl);
   document.getElementById('ck-name').textContent = s.name || p.styleId;
@@ -2089,7 +2097,7 @@ function renderWork() {
   if (!w) return;
   var t = findByTpl(w.tpl);
   var photo = document.getElementById('result-photo');
-  ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ photo.classList.remove(c); });
+  ['effect-guangying','effect-hongchou','effect-shuimo','effect-shouhui'].forEach(function(c){ photo.classList.remove(c); });
   if (w.styleId) photo.classList.add('effect-' + w.styleId);
   photo.querySelector('.photo-bg').setAttribute('data-tpl', t.id);
   var numEl = document.getElementById('result-number');
@@ -2154,7 +2162,7 @@ function goMineFromResult() { showPage('mine'); renderMine(); }
 function openFullPhoto() {
   var t = findByTpl(state.curWork.tpl);
   var fp = document.getElementById('fp-img');
-  ['effect-guangying','effect-shuimo','effect-shouhui'].forEach(function(c){ fp.classList.remove(c); });
+  ['effect-guangying','effect-hongchou','effect-shuimo','effect-shouhui'].forEach(function(c){ fp.classList.remove(c); });
   if (state.curWork.styleId) fp.classList.add('effect-' + state.curWork.styleId);
   fp.querySelector('.photo-bg').setAttribute('data-tpl', t.id);
   document.getElementById('full-photo').classList.add('show');
