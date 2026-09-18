@@ -627,6 +627,225 @@ body {
     .banner-spirit { background-image: url('assets/banner-spirit.jpg'); }
     .banner-campus { background-image: url('assets/banner-campus.jpg'); }
     .banner-innov  { background-image: url('assets/banner-innov.jpg'); }
+    .timeline-1970s { background-image: url('assets/timeline-1970s.jpg'); }
+    .era-1997-gate  { background-image: url('assets/era-1997-gate.jpg'); }
+    .era-1980s-yard { background-image: url('assets/era-1980s-yard.jpg'); }
+    .today-humanity { background-image: url('assets/today-humanity.jpg'); }
+    .today-facility { background-image: url('assets/today-facility.jpg'); }
+    .today-campus2  { background-image: url('assets/today-campus2.jpg'); }
+    .story-festival { background-image: url('assets/story-festival.jpg'); }
+    .story-club     { background-image: url('assets/story-club.jpg'); }
+    .story-sports   { background-image: url('assets/story-sports.jpg'); }
+    .story-alumni   { background-image: url('assets/story-alumni.jpg'); }
+
+    /* ---------- S01 首页：三大专题卡 ---------- */
+    .exp-list { display: flex; flex-direction: column; gap: 12px; }
+    .exp-card {
+      background: #fff; border: 1px solid var(--c-line-soft); border-radius: 10px;
+      overflow: hidden; cursor: pointer; box-shadow: 0 1px 2px rgba(20,48,79,0.04);
+    }
+    .exp-card:active { background: #FAF8F5; }
+    .exp-cover {
+      height: 104px; position: relative; background-size: cover; background-position: center;
+      background-color: var(--c-primary-deep);
+    }
+    .exp-card.primary .exp-cover { height: 128px; }
+    .exp-cover:after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(16,26,40,0.04) 0%, rgba(16,26,40,0.5) 100%);
+    }
+    .exp-badge {
+      position: absolute; left: 10px; top: 10px; z-index: 1;
+      font-size: 10px; color: #fff; background: rgba(16,26,40,0.5);
+      border: 1px solid rgba(255,255,255,0.28); padding: 3px 7px; border-radius: 4px;
+      backdrop-filter: blur(2px);
+    }
+    .exp-num {
+      position: absolute; right: 12px; bottom: 6px; z-index: 1;
+      font-family: Georgia, "Times New Roman", serif; font-size: 30px; font-weight: 700;
+      color: rgba(255,255,255,0.35); line-height: 1;
+    }
+    .exp-body { padding: 12px 13px 14px; }
+    .exp-name {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 16px; font-weight: 600; color: var(--c-text);
+    }
+    .exp-arrow { width: 15px; height: 15px; color: var(--c-accent); margin-left: auto; }
+    .exp-line { font-size: 12px; color: var(--c-primary); font-weight: 500; margin-top: 5px; font-family: Georgia, "Times New Roman", serif; letter-spacing: 0.4px; }
+    .exp-desc { font-size: 11.5px; color: var(--c-text-2); line-height: 1.6; margin-top: 5px; }
+
+    /* ---------- 专题：认识七宝 ---------- */
+    .ex-hero {
+      position: relative; overflow: hidden; padding: 22px 16px 20px; color: #fff;
+      background-color: var(--c-primary-deep);
+      background-image: linear-gradient(160deg, rgba(22,50,86,0.92), rgba(14,36,56,0.96)), url('assets/timeline-1970s.jpg');
+      background-size: cover, cover; background-position: center, center 30%;
+    }
+    .ex-hero-year {
+      position: absolute; right: -6px; top: -8px; font-family: Georgia, serif; font-size: 96px;
+      font-weight: 700; color: rgba(255,255,255,0.07); letter-spacing: -3px; line-height: 1; pointer-events: none;
+    }
+    .ex-hero-inner { position: relative; z-index: 1; }
+    .ex-hero-kicker { font-size: 11px; letter-spacing: 2px; color: #EBDCB8; }
+    .ex-hero-title { font-size: 22px; font-weight: 700; line-height: 1.4; margin-top: 8px; letter-spacing: 0.5px; }
+    .ex-hero-sub { font-size: 12.5px; line-height: 1.75; color: rgba(255,255,255,0.82); margin-top: 10px; }
+    .ex-hero-stat { display: flex; gap: 22px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.14); }
+    .ex-hero-stat span { display: flex; flex-direction: column; gap: 3px; }
+    .ex-hero-stat b { font-family: Georgia, serif; font-size: 19px; font-weight: 700; color: #EBDCB8; }
+    .ex-hero-stat i { font-style: normal; font-size: 10px; color: rgba(255,255,255,0.6); }
+    .ex-tl { padding: 20px 16px 0; }
+    .ex-node { display: flex; gap: 0; position: relative; }
+    .ex-rail { width: 22px; flex-shrink: 0; display: flex; justify-content: center; position: relative; }
+    .ex-rail:before {
+      content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px;
+      background: var(--c-line); transform: translateX(-50%);
+    }
+    .ex-node.last .ex-rail:before { bottom: 50%; }
+    .ex-dot {
+      position: relative; z-index: 1; width: 9px; height: 9px; border-radius: 50%;
+      background: #fff; border: 2px solid var(--c-primary); margin-top: 7px; flex-shrink: 0;
+    }
+    .ex-node.last .ex-dot { background: var(--c-accent); border-color: var(--c-accent); }
+    .ex-card { flex: 1; min-width: 0; padding-bottom: 22px; }
+    .ex-card-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .ex-year { font-family: Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 700; color: var(--c-primary); letter-spacing: 0.5px; }
+    .ex-year i { font-style: normal; font-size: 11px; font-weight: 400; color: var(--c-text-3); margin-left: 6px; }
+    .ex-tag {
+      margin-left: auto; font-size: 10px; color: var(--c-accent); background: var(--c-accent-soft);
+      padding: 2px 7px; border-radius: 3px; flex-shrink: 0;
+    }
+    .ex-card-media {
+      height: 120px; border-radius: 7px; margin-bottom: 10px;
+      background-size: cover; background-position: center; background-color: #EFEDE9;
+    }
+    .ex-card-body h3 { font-size: 14.5px; font-weight: 600; line-height: 1.5; margin-bottom: 7px; }
+    .ex-card-body p { font-size: 13px; line-height: 1.78; color: #3F3F3F; }
+    .ex-foot-cta { margin: 22px 16px 0; padding: 18px 16px; background: #fff; border: 1px solid var(--c-line-soft); border-radius: 10px; }
+    .ex-foot-t { font-size: 14px; font-weight: 600; }
+    .ex-foot-s { font-size: 11.5px; color: var(--c-text-2); line-height: 1.65; margin: 6px 0 14px; }
+
+    /* ---------- 专题：时间实验室 ---------- */
+    .lab-hero { padding: 22px 16px 6px; }
+    .lab-hero-kicker { font-size: 11px; letter-spacing: 1.5px; color: var(--c-accent); }
+    .lab-hero-title { font-size: 21px; font-weight: 700; line-height: 1.45; margin-top: 9px; letter-spacing: 0.3px; }
+    .lab-hero-sub { font-size: 12.5px; color: var(--c-text-2); line-height: 1.7; margin-top: 9px; }
+    .lab-tabs { display: flex; gap: 0; margin: 18px 16px 0; background: #EFEDE9; border-radius: 8px; padding: 3px; }
+    .lab-tab {
+      flex: 1; height: 34px; border: none; background: transparent; border-radius: 6px;
+      font-size: 13px; color: var(--c-text-2); cursor: pointer; font-family: inherit; font-weight: 500;
+    }
+    .lab-tab.on { background: #fff; color: var(--c-primary); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+    .lab-track { padding: 16px 16px 0; }
+    .lab-card { border-radius: 10px; padding: 14px; margin-bottom: 0; position: relative; border: 1px solid transparent; }
+    .lab-card.tone-old { background: #FAF6EC; border-color: #EDE0C8; }
+    .lab-card.tone-mid { background: #F3F6F8; border-color: #DDE5EB; }
+    .lab-card.tone-now { background: #fff; border-color: var(--c-primary-soft); }
+    .lab-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+    .lab-era { font-family: Georgia, "Times New Roman", serif; font-size: 24px; font-weight: 700; letter-spacing: 0.5px; }
+    .tone-old .lab-era { color: #8A6A32; }
+    .tone-mid .lab-era { color: #4A6076; }
+    .tone-now .lab-era { color: var(--c-primary); }
+    .lab-label {
+      margin-left: auto; font-size: 11px; padding: 3px 9px; border-radius: 4px;
+      background: rgba(255,255,255,0.75); color: var(--c-text-2);
+    }
+    .lab-media { height: 124px; border-radius: 7px; background-size: cover; background-position: center; background-color: #E6E3DD; }
+    .lab-media-none {
+      display: flex; align-items: center; justify-content: center;
+      background: repeating-linear-gradient(135deg, #F1EEE8 0 6px, #EAE6DF 6px 12px);
+    }
+    .lab-media-none span { font-size: 11px; color: #A9A296; text-align: center; white-space: pre-line; line-height: 1.6; }
+    .lab-facts { list-style: none; margin: 12px 0 0; padding: 0; }
+    .lab-facts li {
+      position: relative; padding-left: 14px; font-size: 13px; line-height: 1.72;
+      color: #3A3A3A; margin-bottom: 7px;
+    }
+    .lab-facts li:before {
+      content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px;
+      border-radius: 50%; background: var(--c-line); border: 1px solid #C9C3B8;
+    }
+    .tone-now .lab-facts li:before { background: var(--c-primary); border-color: var(--c-primary); }
+    .lab-metric {
+      display: flex; align-items: baseline; gap: 8px; margin-top: 12px; padding-top: 11px;
+      border-top: 1px dashed rgba(0,0,0,0.09);
+    }
+    .lab-metric span { font-size: 11px; color: var(--c-text-3); }
+    .lab-metric b { margin-left: auto; font-family: Georgia, serif; font-size: 16px; color: var(--c-text); }
+    .tone-now .lab-metric b { color: var(--c-primary); }
+    .lab-gap { display: flex; justify-content: center; padding: 6px 0 6px; }
+    .lab-gap span {
+      width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--c-line);
+      display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--c-text-3);
+    }
+    .lab-insight {
+      margin: 20px 16px 0; padding: 15px 16px; background: var(--c-primary-soft);
+      border-radius: 10px; border-left: 3px solid var(--c-primary);
+    }
+    .lab-insight-h { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; color: var(--c-primary); margin-bottom: 8px; }
+    .lab-insight-h .bar { width: 3px; height: 13px; border-radius: 2px; background: var(--c-primary); }
+    .lab-insight p { font-size: 13px; line-height: 1.78; color: #35506C; }
+
+    /* ---------- 专题：校园故事 ---------- */
+    .st-hero { padding: 22px 16px 4px; }
+    .st-hero-kicker { font-size: 11px; letter-spacing: 1.5px; color: var(--c-accent); }
+    .st-hero-title { font-size: 24px; font-weight: 700; margin-top: 8px; letter-spacing: 1px; }
+    .st-hero-sub { font-size: 12.5px; color: var(--c-text-2); line-height: 1.75; margin-top: 10px; }
+    .st-list { padding: 18px 16px 0; display: flex; flex-direction: column; gap: 11px; }
+    .st-card {
+      display: flex; align-items: stretch; gap: 0; background: #fff;
+      border: 1px solid var(--c-line-soft); border-radius: 10px; overflow: hidden; cursor: pointer;
+    }
+    .st-card:active { background: #FAF8F5; }
+    .st-card-media { width: 92px; flex-shrink: 0; background-size: cover; background-position: center; background-color: #EFEDE9; }
+    .st-media-none {
+      display: flex; align-items: center; justify-content: center;
+      background: repeating-linear-gradient(135deg, #F1EEE8 0 6px, #EAE6DF 6px 12px);
+    }
+    .st-media-none span { font-size: 10px; color: #A9A296; letter-spacing: 1px; }
+    .st-card-body { flex: 1; min-width: 0; padding: 12px 12px 13px; }
+    .st-card-top { display: flex; align-items: center; gap: 7px; }
+    .st-no { font-family: Georgia, serif; font-size: 11px; color: #C2BCB1; }
+    .st-tag { font-size: 10px; color: var(--c-accent); background: var(--c-accent-soft); padding: 2px 6px; border-radius: 3px; }
+    .st-card-body h3 { font-size: 14px; font-weight: 600; margin-top: 7px; line-height: 1.4; }
+    .st-card-body p { font-size: 11.5px; color: var(--c-text-2); line-height: 1.6; margin-top: 5px; }
+    .st-card-arrow { display: flex; align-items: center; padding-right: 10px; color: #D5CFC4; }
+    .st-card-arrow svg { width: 15px; height: 15px; }
+    .st-mask {
+      position: absolute; inset: 0; background: rgba(20,24,30,0.42); z-index: 60;
+      opacity: 0; pointer-events: none; transition: opacity 0.22s;
+    }
+    .st-mask.show { opacity: 1; pointer-events: auto; }
+    .st-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 70; background: #fff;
+      border-radius: var(--r-sheet) var(--r-sheet) 0 0; max-height: 88%;
+      display: flex; flex-direction: column; transform: translateY(102%);
+      transition: transform 0.28s cubic-bezier(0.32,0.72,0,1); box-shadow: 0 -6px 24px rgba(0,0,0,0.12);
+    }
+    .st-sheet.show { transform: translateY(0); }
+    .st-sheet-grab { width: 36px; height: 4px; border-radius: 2px; background: #E4E1DC; margin: 9px auto 0; flex-shrink: 0; }
+    .st-sheet-close {
+      position: absolute; top: 12px; right: 10px; width: 32px; height: 32px; border: none;
+      background: transparent; color: var(--c-text-3); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .st-sheet-close svg { width: 18px; height: 18px; }
+    .st-sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 12px 18px 18px; }
+    .st-sheet-body::-webkit-scrollbar { display: none; }
+    .st-detail-media { height: 150px; border-radius: 8px; margin-bottom: 14px; background-size: cover; background-position: center; background-color: #EFEDE9; }
+    .st-detail-tag { display: inline-block; font-size: 10px; color: var(--c-accent); background: var(--c-accent-soft); padding: 3px 8px; border-radius: 3px; }
+    .st-sheet-body h2 { font-size: 19px; font-weight: 700; line-height: 1.45; margin: 10px 0 0; }
+    .st-detail-lead { font-size: 12.5px; color: var(--c-text-2); line-height: 1.72; margin-top: 10px; padding-left: 11px; border-left: 2px solid var(--c-accent); }
+    .st-detail-p { font-size: 14px; line-height: 1.82; color: #3A3A3A; margin-top: 12px; }
+    .st-sheet-foot { flex-shrink: 0; padding: 10px 18px 16px; border-top: 1px solid var(--c-line-soft); }
+
+    /* 对话页空态推荐 */
+    .ce-sg { display: flex; flex-direction: column; gap: 7px; margin-top: 18px; }
+    .ce-sg-item {
+      padding: 10px 12px; background: #fff; border: 1px solid var(--c-line-soft);
+      border-radius: 7px; font-size: 12.5px; color: var(--c-primary); text-align: left;
+      cursor: pointer; font-family: inherit; line-height: 1.5;
+    }
+    .ce-sg-item:active { background: var(--c-primary-soft); }
 
     /* ---------- S02 对话页 ---------- */
     .chat-list { padding: 14px 12px 0; }
@@ -901,7 +1120,7 @@ body {
     </div>
   </div>
 
-  <div class="page-body">
+  <div class="page-body" id="home-body">
     <!-- 2. 场景头部 -->
     <div class="home-hero">
       <div class="hh-watermark">1947</div>
@@ -920,7 +1139,7 @@ body {
       </div>
     </div>
 
-    <!-- 3. 主输入框 -->
+    <!-- 3. 常驻主输入框 -->
     <div class="ask-wrap">
       <div class="ask-bar">
         <input id="ask-input" type="text" maxlength="520" placeholder="问问学校的故事"
@@ -933,25 +1152,19 @@ body {
       <div class="ask-tip" id="ask-tip" style="display:none">最多 500 字，请精简后再发送</div>
     </div>
 
-    <!-- 4. 推荐问题 -->
-    <div class="blk" id="blk-suggest">
-      <div class="blk-title"><span class="bar"></span>可以这样问</div>
-      <div class="sg-list" id="sg-list"></div>
+    <!-- 4. 三大专题（V2 首屏主体） -->
+    <div class="blk" id="blk-explore">
+      <div class="blk-title"><span class="bar"></span>专题<span class="more">内容为主，AI 随时可问</span></div>
+      <div class="exp-list" id="exp-list"></div>
     </div>
 
-    <!-- 5. 主题入口 -->
-    <div class="blk" id="blk-topics">
-      <div class="blk-title"><span class="bar"></span>校史主题<span class="more" onclick="toast('Demo 演示：主题列表页可在后续版本扩展')">全部 ›</span></div>
-      <div class="tp-grid" id="tp-grid"></div>
-    </div>
-
-    <!-- 6. 今日内容 -->
+    <!-- 5. 历史上的今天 -->
     <div class="blk" id="blk-today">
       <div class="blk-title"><span class="bar"></span>历史上的今天</div>
       <div class="today-card" id="today-card" onclick="openTopic('topic_campus')"></div>
     </div>
 
-    <!-- 7. 可信说明 -->
+    <!-- 6. 可信说明 -->
     <div class="home-foot" id="home-foot"></div>
   </div>
 </div>
@@ -1081,6 +1294,123 @@ body {
     </div>
 
     <div class="pf-logout" id="pf-logout" style="display:none" onclick="doLogout()">退出登录</div>
+  </div>
+</div>
+
+<div class="page" id="page-explore">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name">认识七宝</div>
+      <div class="m-nav-sub">1947 → 今天</div>
+    </div>
+    <button class="m-nav-btn" onclick="shareTopic()" aria-label="分享">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M12 16V3M8 7l4-4 4 4"/></svg>
+    </button>
+  </div>
+
+  <div class="page-body" id="explore-body">
+    <div class="ex-hero">
+      <div class="ex-hero-year">1947</div>
+      <div class="ex-hero-inner">
+        <div class="ex-hero-kicker">认识七宝</div>
+        <h1 class="ex-hero-title">一条线，走完七十九年</h1>
+        <p class="ex-hero-sub">从七宝古镇庙堂里的两所学校，到今天农南路 22 号的 146.7 亩校园。往下滑，按时间走一遍。</p>
+        <div class="ex-hero-stat">
+          <span><b id="ex-count">12</b><i>个节点</i></span>
+          <span><b>79</b><i>年跨度</i></span>
+          <span><b>1947</b><i>建校</i></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ex-tl" id="ex-tl"></div>
+
+    <div class="ex-foot-cta">
+      <div class="ex-foot-t">看完还有想知道的？</div>
+      <div class="ex-foot-s">可以直接问 AI 校史助手，比如"为什么要合并两所学校"</div>
+      <button class="m-btn" onclick="askFromTopic('认识七宝')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" style="width:18px;height:18px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        继续问 AI
+      </button>
+    </div>
+    <div class="topic-bottom-pad"></div>
+  </div>
+</div>
+
+<div class="page" id="page-lab">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name">时间实验室</div>
+      <div class="m-nav-sub">三个年代，三个答案</div>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="page-body" id="lab-body">
+    <div class="lab-hero">
+      <div class="lab-hero-kicker">同一个问题，不同年代的回答</div>
+      <h1 class="lab-hero-title">七宝的「以前」和「现在」，<br>到底差在哪？</h1>
+      <p class="lab-hero-sub">选一个维度，看 1947、1997 和今天各是什么样子。</p>
+    </div>
+
+    <div class="lab-tabs" id="lab-tabs"></div>
+
+    <div class="lab-track" id="lab-track"></div>
+
+    <div class="lab-insight" id="lab-insight"></div>
+
+    <div class="ex-foot-cta">
+      <div class="ex-foot-t">想追问某个变化？</div>
+      <div class="ex-foot-s">比如"1998 年的课程改革是怎么开始的"</div>
+      <button class="m-btn" onclick="askFromTopic('时间实验室')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" style="width:18px;height:18px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        继续问 AI
+      </button>
+    </div>
+    <div class="topic-bottom-pad"></div>
+  </div>
+</div>
+
+<div class="page" id="page-stories">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name">校园故事</div>
+      <div class="m-nav-sub" id="st-nav-sub">10 个小故事</div>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="page-body" id="stories-body">
+    <div class="st-hero">
+      <div class="st-hero-kicker">校史馆里没有展板的那部分</div>
+      <h1 class="st-hero-title">校园故事</h1>
+      <p class="st-hero-sub">教室设在城隍庙里、南京路上最有名的校友、每周五下午不排课、寝室评分表上的两位楼管……都是一些具体的小事。</p>
+    </div>
+
+    <div class="st-list" id="st-list"></div>
+    <div class="topic-bottom-pad"></div>
+  </div>
+
+  <!-- 故事详情（本页内弹层） -->
+  <div class="st-mask" id="st-mask" onclick="closeStory()"></div>
+  <div class="st-sheet" id="st-sheet">
+    <div class="st-sheet-grab"></div>
+    <button class="st-sheet-close" onclick="closeStory()" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="st-sheet-body" id="st-sheet-body"></div>
+    <div class="st-sheet-foot">
+      <button class="m-btn ghost" onclick="askAboutStory()">就这个故事问问 AI</button>
+    </div>
   </div>
 </div>
       </div>
@@ -1369,6 +1699,168 @@ var TOPIC_DOCS = {
 };
 
 /* =========================================================================
+   V2 专题层数据：认识七宝 / 时间实验室 / 校园故事
+   事实来源：七宝中学官网（校史大事记、学校简介）、南模中学校史、文汇报 2017 专题、
+   澎湃/搜狐/今曰闵行 校友回忆文章。均为公开资料整理，对外演示前须学校核定。
+   ========================================================================= */
+
+/* ---------- 首页三大专题 ---------- */
+var EXPLORE_MODULES = [
+  { id: 'explore', name: '认识七宝', badge: '第一次来先看这个',
+    line: '一条线走完 1947 到今天', desc: '从古镇庙堂里的两所学校，到今天的 146.7 亩校园',
+    cover: 'cover-origin', page: 'explore' },
+  { id: 'lab', name: '时间实验室', badge: '可以对比着看',
+    line: '1947 · 1997 · 今天', desc: '校园空间、课程、学生生活，三个年代并排比一比',
+    cover: 'cover-campus', page: 'lab' },
+  { id: 'stories', name: '校园故事', badge: '轻松看',
+    line: '10 个小故事', desc: '庙堂里的教室、校园里的烈士墓、每周五下午的留白',
+    cover: 'cover-spirit', page: 'stories' }
+];
+
+/* ---------- 认识七宝 · 线性时间轴 ---------- */
+var TIMELINE = [
+  { year: '1947', cn: '', title: '两所学校，同一年在古镇开学',
+    img: '', tag: '起点',
+    text: '1947 年 4 月，上海市立七宝农业职业学校在七宝镇城隍庙开办，当地士绅捐建十二间平房，慈善机构"三善堂"捐地二百亩作教学实验田，首届招 100 名初中毕业生，分农艺、畜牧两个专业。同年 9 月，私立南洋模范中学七宝分校在大庙废址与莲涌堂开办，先修莲涌堂作办公室，辟一间教室招了 20 多个孩子办补习班。' },
+  { year: '1948', cn: '', title: '第一栋教学楼落成，来了四百名住宿生',
+    img: 'timeline-1970s', tag: '校舍',
+    text: '七宝分校的二层教学楼"叔逵楼"当年竣工（为纪念沈叔逵先生命名）。同年 9 月初中一、二年级迁入，住宿学生四百余人。校园里一曲池水、古柏参天、桃柳成行。也是这一年，教务会议通过：作文可以用白话文写作。' },
+  { year: '1953', cn: '', title: '农校改为普通中学，定名"七宝中学"',
+    img: '', tag: '定名',
+    text: '上海市七宝农业学校经调整改为普通完全中学，正式定名为七宝中学。三年后的 1956 年 8 月，它与由南模七宝分校更名而来的上海市第二十初级中学合并，成立新的上海市七宝中学——1947 年创办的两条源流，在这一年汇成一校。' },
+  { year: '1961', cn: '', title: '被定为上海市重点中学，校址民主路 121 号',
+    img: 'era-1980s-yard', tag: '市重点',
+    text: '学校被列为上海市重点中学，校址在七宝镇民主路 121 号。1978 年恢复市重点中学；1985 年停办初中、高中每届扩至 8 个班，成为一所高级中学。' },
+  { year: '1994', cn: '', title: '投资二亿元，决定易地重建',
+    img: '', tag: '重建',
+    text: '闵行区委、区政府决定投资二亿元易地重建新校舍，学校获得新的发展空间；同年正式创建文来中学。' },
+  { year: '1996', cn: '', title: '仇忠海校长提出"全面发展，人文见长"',
+    img: '', tag: '办学理念',
+    text: '这一办学理念此后成为学校校训，也确立了七宝中学的人文底色。2007 年，学校进一步提出"平民本色，精英气质"的育人目标。' },
+  { year: '1997', cn: '', title: '迁入农南路 22 号，成为首批现代化寄宿制高中',
+    img: 'era-1997-gate', tag: '新校址',
+    text: '9 月起学校由民主路校址迁入农南路新址，成为上海市首批 11 所高标准现代化寄宿制高级中学之一。今天学校占地 146.7 亩，建筑面积超过 70000 平方米。' },
+  { year: '1998', cn: '', title: '开放性主题活动课程，开全国先河',
+    img: '', tag: '研究性学习',
+    text: '学校在全国率先以必修课形式开设"开放性主题活动课程"，以"文艺与人生、人与自然、上海的今天和明天、走向社会"为核心内容，被教育部肯定为"研究性学习最有推广价值的模式之一"。' },
+  { year: '2005', cn: '', title: '首批上海市实验性示范性高中，教育集团成立',
+    img: 'today-humanity', tag: '集团化',
+    text: '学校被命名为首批"上海市实验性示范性高中"与"上海市名校长培养基地"，同年成立七宝中学教育集团。今天集团拥有成员校 17 所，涵盖小学、初中、高中三个学段。' },
+  { year: '2007', cn: '', title: '"平民本色，精英气质"与学生科学研究院',
+    img: 'today-facility', tag: '育人目标',
+    text: '学校提出"平民本色，精英气质"的育人目标；学生科学研究院开馆，为学生的课题研究提供固定场所与平台。2010 年学子人文书院投入使用，被评为"上海市校园十大景观"之一。' },
+  { year: '2015', cn: '', title: '正式提出创建研究型高中',
+    img: 'today-campus2', tag: '研究型',
+    text: '学校在多年研究性学习基础上正式提出并全面启动研究型高中建设，先后成立学生科学研究院、学子人文书院、学生工程院、青年成长学院，联动复旦大学、上海交通大学、同济大学、中科院等高校与科研机构。' },
+  { year: '今天', cn: '2025—', title: '100% 学生有课题，AI 实验校',
+    img: 'cover-innov', tag: '现在',
+    text: '目前实现 100% 学生有课题研究项目，曾获上海市青少年科技创新大赛一等奖总数十二连冠。2024 年获评全国首批科学教育实验校，2025 年入选上海市首批人工智能实验校。' }
+];
+
+/* ---------- 时间实验室 · 三个年代 × 三个维度 ---------- */
+var LAB_DIMS = [
+  { id: 'space',  name: '校园空间' },
+  { id: 'course', name: '课程' },
+  { id: 'life',   name: '学生生活' }
+];
+
+var LAB_DATA = {
+  space: [
+    { era: '1947', tone: 'old', img: '',
+      label: '借庙办学',
+      facts: ['农职校设在七宝镇城隍庙，士绅捐建十二间平房', '慈善机构"三善堂"捐地二百亩作教学实验田', '南模分校修莲涌堂作办公室，辟一间教室开补习班', '校园里一曲池水、古柏参天、桃柳成行'],
+      metric: { k: '校舍来源', v: '庙产 + 捐建' } },
+    { era: '1997', tone: 'mid', img: 'era-1997-gate',
+      label: '易地新建',
+      facts: ['9 月迁入农南路 22 号新校址', '上海市首批 11 所高标准现代化寄宿制高级中学之一', '教学、住宿、运动分区，闭环管理', '结束了民主路 121 号的老校址时期'],
+      metric: { k: '占地面积', v: '146.7 亩' } },
+    { era: '今天', tone: 'now', img: 'today-humanity',
+      label: '一院一馆多院',
+      facts: ['建筑面积超过 70000 平方米', '学生科学研究院 19 个创新实验室', '学子人文书院被评为"上海市校园十大景观"之一', '另有学生工程院、青年成长学院、资优生培育中心'],
+      metric: { k: '建筑面积', v: '70000+ ㎡' } }
+  ],
+  course: [
+    { era: '1947', tone: 'old', img: '',
+      label: '农学为本，兼办初中',
+      facts: ['农职校开设农艺、畜牧两专业，次年增设园艺', '国文、英语、代数、物理、现代农学同堂开课', '1948 年教务会议通过：作文可以用白话文写作', '附设初中班，吸收当地小学毕业生入学'],
+      metric: { k: '专业数', v: '2 → 3 个' } },
+    { era: '1997', tone: 'mid', img: 'era-1980s-yard',
+      label: '把课题变成必修课',
+      facts: ['1998 年开设"开放性主题活动课程"，开全国先河', '四大主题：文艺与人生、人与自然、上海的今天和明天、走向社会', '每周五下午留白：自选主题、跑社会、出论文', '被教育部肯定为"研究性学习最有推广价值的模式之一"'],
+      metric: { k: '学生课题', v: '全员参与' } },
+    { era: '今天', tone: 'now', img: 'today-facility',
+      label: '金字塔型课程体系',
+      facts: ['"综合 + 特需"创新素养培育特色课程，跨学科进阶', '学科竞赛课程、强基课程、大学先修课程', '八大校园主题文化节日课程', '100% 学生有课题研究项目，科技创新大赛一等奖十二连冠'],
+      metric: { k: '学生课题', v: '100%' } }
+  ],
+  life: [
+    { era: '1947', tone: 'old', img: '',
+      label: '从二十几个孩子开始',
+      facts: ['南模分校补习班起步时只有 20 余名学生', '1948 年住宿学生四百余人', '校园里有烈士墓地，清明师生组队祭扫', '校门内外就是古镇，学生常钻进碉堡群玩耍'],
+      metric: { k: '住宿学生', v: '400 余人' } },
+    { era: '1997', tone: 'mid', img: 'story-sports',
+      label: '寄宿制的规矩与热闹',
+      facts: ['寝室卫生评分：地板、书架、被褥、窗帘逐项检查', '10 点熄灯，卧谈会被通报', '交换磁带、追电台节目、校刊《种子文学》', '三月狂欢节、各类社团、每周五下午的课题时间'],
+      metric: { k: '办学形式', v: '寄宿制' } },
+    { era: '今天', tone: 'now', img: 'story-festival',
+      label: '八大主题文化节日',
+      facts: ['感恩季·狂欢日、运动嘉年华、体育节等贯穿全年', '社团涵盖陶艺、舞蹈、天文、环保、领导力等方向', '名家讲座常态化，邀请作家、教授、创业者分享', '心理健康教育中心、生涯导航教育全覆盖'],
+      metric: { k: '校园节日', v: '8 个' } }
+  ]
+};
+
+/* 时间实验室 · 变化小结（跨年代对比结论） */
+var LAB_INSIGHTS = {
+  space:  '从借庙办学的十二间平房、二百亩实验田，到 146.7 亩、70000 平方米的现代化校园——空间的变化背后，是学校从"有一处能上课的地方"到"一整套育人场景"的转变。',
+  course: '课程的主线一直在变，但有一条没断：1948 年允许用白话文写作文，1998 年把课题研究变成必修课，今天是 100% 学生有课题。学校始终在把"学生自己想研究什么"放进正式课程里。',
+  life:   '学生生活从"二十几个孩子跟着老师读书"，到寄宿制下的寝室评分与磁带交换，再到今天八大主题文化节日——规矩和热闹一直都在，只是载体从一盒磁带变成了一整个节日季。'
+};
+
+/* ---------- 校园故事 ---------- */
+var STORIES = [
+  { id: 'st1', tag: '起点', title: '在大庙里开学',
+    hook: '1947 年，两所学校的教室，一间在城隍庙，一间在大庙废址。',
+    img: '',
+    body: '七宝农职校的校址是七宝镇城隍庙，当地士绅捐建了十二间平房，把庙宇改造成校舍；慈善机构"三善堂"又捐出二百亩地作教学实验田。南模七宝分校那边，用的是大庙废址和残存的一部分偏屋，先把莲涌堂修葺出来当办公室和职员宿舍，腾出一间教室办了补习班。\n\n那时候，穿西装的老师和穿中装的先生在同一座院子里进出，国文、英语、代数、物理、现代农学一起开课。古镇的南边和北边，同时有了读书声。' },
+  { id: 'st2', tag: '校规', title: '作文可以用白话文写了',
+    hook: '1948 年的一场教务会议，改了一件今天看来理所当然的事。',
+    img: 'timeline-1970s',
+    body: '1948 年 9 月，七宝分校的教务会议通过：作文可以用白话文写作。\n\n在当时，这不是小事。文言文写作仍是主流训练方式，改用白话文意味着允许学生用自己的语言表达真实的想法。同一年，第一栋教学楼"叔逵楼"竣工，初中一、二年级迁入，四百多名学生住了进来。' },
+  { id: 'st3', tag: '记忆', title: '校园里的烈士墓',
+    hook: '解放七宝战役牺牲的三十多位将士，曾经就安葬在校园内。',
+    img: '',
+    body: '1949 年解放七宝的战役十分壮烈，牺牲的解放军将士数百人，其中三十多位就地安葬在学校校园里，包括一位团长和数名无名烈士。\n\n每逢清明，师生组队前往瞻仰祭扫、献上鲜花，这是当年学校最隆重的纪念活动，也是一堂生动的爱国主义教育课。后来按全市统一规划，烈士遗骸迁移至烈士陵园。' },
+  { id: 'st4', tag: '玩', title: '钻进碉堡群的孩子',
+    hook: '学校周边曾有连片的碉堡群，那是学生的"军事游戏场"。',
+    img: '',
+    body: '上海刚解放时，七宝一带还留着战争痕迹——大批钢筋水泥碉堡和野战工事，七号桥那座三层主堡尤其醒目。\n\n几个同学放学后常钻进碉堡群，最喜欢登上主堡顶上眺望四周，互相冲冲杀杀玩军事游戏，还学着电影里的样子高喊"向大上海，前进"。六十年后，当年的碉堡大多踪影全无。' },
+  { id: 'st5', tag: '课程', title: '每周五下午的留白',
+    hook: '没有课，只有课题。你可以研究金庸，也可以研究行道树。',
+    img: '',
+    body: '1998 年起，七宝中学开设"开放性主题活动课程"，作为必修课进入课表。围绕文艺与人生、人与自然、上海的今天和明天、走向社会四大主题，每周五下午不排课，学生自己定课题、跑社会、报材料、出论文。\n\n有男生研究金庸，也有小组研究行道树的种群分布。有校友回忆："随便大家定主题"——正是这份"随便"，被教育部肯定为研究性学习最有推广价值的模式之一。' },
+  { id: 'st6', tag: '刊物', title: '《种子文学》',
+    hook: '校刊上发过一篇文章，让一个高中生突然明白自己还不会写作。',
+    img: 'story-club',
+    body: '学校的校刊叫《种子文学》。一位校友回忆，高一那年自己的作文在校刊上发表，颇为得意；读到别人的佳作后却"突然就不会写文章了"，才发现原来写的那些自以为老练的文章，都没什么意思和灵魂。\n\n比起妙笔生花，他更憧憬独特的生活。校园里还有常态化的名家讲座，作家陈丹燕也来讲过一次——有同学因此读起了《悲惨世界》。' },
+  { id: 'st7', tag: '生活', title: '一盒磁带的班级共鸣',
+    hook: '交换磁带的年代，班级的共同记忆是一首一首歌传出来的。',
+    img: 'story-sports',
+    body: '春游的巴士上，有人把磁带放进车载音响，全车合唱；题海做到深夜，有人打开电台听歌，或是追深夜剧场的恐怖故事。\n\n班级里真正的共同爱好很少，更多时候是各戴各的耳机。但只要有人激动地说"第几首、第几首你一定要听"，共鸣就发生了。' },
+  { id: 'st8', tag: '规矩', title: '寝室评分表上的两位楼管',
+    hook: '地板、书架、被褥、窗帘——住校生的自理能力是被"扣分"扣出来的。',
+    img: 'era-1997-gate',
+    body: '寄宿制生活的规矩从寝室开始：地板必须拖干净，书架上的书严格按高低摆放，窗帘要扎起来，垃圾袋必须清空，被子和枕头不能有褶皱——做不到就扣分，严重时通报到年级组。\n\n10 点准时熄灯，查岗发现卧谈会被敲门警告，第二天黑板上通报。楼里两位宿管被学生们起了绰号，一个叫"泰森"，一个被叫作别的名字。多年后校友说：正是那套评分表，让所有人学会了自理。' },
+  { id: 'st9', tag: '人物', title: '两位院士校友',
+    hook: '一位让汉字走进了计算机，一位把稀土研究做到了极致。',
+    img: 'story-alumni',
+    body: '从七宝中学走出去的校友里，有计算机文字信息处理专家、计算机汉字激光照排技术创始人王选，也有中国工程院院士、稀土专家王震西。\n\n王选主持研制的汉字激光照排系统，让中国印刷业告别了铅与火，被称为当代中国印刷业革命的先行者。这些名字后来也出现在校园的校友纪念标识上，成为学弟学妹们路过时会多看一眼的坐标。' },
+  { id: 'st10', tag: '热闹', title: '三月的狂欢节',
+    hook: '平日斯斯文文的男生，在开幕式上唱起了 RAP。',
+    img: 'story-festival',
+    body: '学校的艺术活动不只集中在艺术节，而是融进校园八大主题文化节日里。三月狂欢节的开幕式上，平日里斯斯文文的男生唱起 RAP，啦啦队的动作干脆利落。\n\n社团是另一片天地：陶艺社、楼兰舞蹈队、斯诺克社、领导力开发社、七中华尔街社、绿色种子环保社、天文社……还有每年都打得火热的篮球赛。' }
+];
+
+/* =========================================================================
    S00 场景解析与协议
    ========================================================================= */
 var SCENE_LOADING_STEPS = ['正在校验入口…', '正在加载场景配置…', '正在准备校史资料…'];
@@ -1451,10 +1943,9 @@ function resetSceneDemo() {
   init_scene();
 }
 
-/* ================= S01 校史问答首页 ================= */
+/* ================= S01 校史首页（V2 专题首页） ================= */
 
 function init_home() {
-  /* 场景头部 */
   document.getElementById('home-nav-name').textContent = TENANT.name.replace('上海市', '') + ' · ' + SCENE.name;
   document.getElementById('home-logo').textContent = SCENE.theme.logoText;
   document.getElementById('home-school').textContent = TENANT.name;
@@ -1465,40 +1956,28 @@ function init_home() {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
     '<span>' + SCENE.disclaimer + '</span>';
 
-  /* 能力开关（UI-14：关闭后入口完全隐藏，布局自然重排） */
   var cap = SCENE.capability;
   document.getElementById('ask-voice').style.display = cap.voice ? 'flex' : 'none';
-  document.getElementById('blk-topics').style.display = cap.topic ? 'block' : 'none';
 
-  /* 推荐问题 */
-  var sgBox = document.getElementById('sg-list');
-  if (SUGGESTIONS && SUGGESTIONS.length) {
-    document.getElementById('blk-suggest').style.display = 'block';
-    sgBox.innerHTML = SUGGESTIONS.map(function(s) {
-      return '<div class="sg-item" onclick="askFromHome(\'' + s.key + '\')">' +
-             '<svg class="sg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' +
-             '<span>' + s.text + '</span>' +
-             '<svg class="sg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>' +
-             '</div>';
+  /* 三大专题 */
+  var box = document.getElementById('exp-list');
+  if (cap.topic && EXPLORE_MODULES.length) {
+    document.getElementById('blk-explore').style.display = 'block';
+    box.innerHTML = EXPLORE_MODULES.map(function(m, i) {
+      return '<div class="exp-card' + (i === 0 ? ' primary' : '') + '" onclick="openModule(\'' + m.page + '\')">' +
+        '<div class="exp-cover ' + m.cover + '">' +
+          '<span class="exp-badge">' + m.badge + '</span>' +
+          '<span class="exp-num">' + ('0' + (i + 1)).slice(-2) + '</span>' +
+        '</div>' +
+        '<div class="exp-body">' +
+          '<div class="exp-name">' + m.name + '<svg class="exp-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></div>' +
+          '<div class="exp-line">' + m.line + '</div>' +
+          '<div class="exp-desc">' + m.desc + '</div>' +
+        '</div>' +
+        '</div>';
     }).join('');
   } else {
-    document.getElementById('blk-suggest').style.display = 'none';
-  }
-
-  /* 主题入口 */
-  var tpBox = document.getElementById('tp-grid');
-  if (cap.topic && TOPICS && TOPICS.length) {
-    tpBox.innerHTML = TOPICS.map(function(t) {
-      return '<div class="tp-card" onclick="openTopic(\'' + t.id + '\')">' +
-             '<div class="tp-cover ' + t.media + '"></div>' +
-             '<div class="tp-txt">' +
-               '<div class="tp-name">' + t.name + '</div>' +
-               '<div class="tp-brief">' + t.brief + '</div>' +
-               '<div class="tp-span">' + t.span + '</div>' +
-             '</div></div>';
-    }).join('');
-  } else {
-    document.getElementById('blk-topics').style.display = 'none';
+    document.getElementById('blk-explore').style.display = 'none';
   }
 
   /* 今日内容 */
@@ -1514,6 +1993,11 @@ function init_home() {
   }
 
   onAskInput();
+}
+
+/* ---------- 专题入口 ---------- */
+function openModule(pageId) {
+  showPage(pageId, { fresh: true });
 }
 
 /* ---------- 输入框 ---------- */
@@ -1912,7 +2396,10 @@ function renderChat() {
   if (!CONV || !CONV.messages.length) {
     list.innerHTML = '<div class="chat-empty">' +
       '<div class="ce-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>' +
-      '<div class="ce-t">还没有提问</div><div class="ce-s">可以问学校沿革、人物故事或校园空间</div></div>';
+      '<div class="ce-t">还没有提问</div><div class="ce-s">可以问学校沿革、人物故事或校园空间</div>' +
+      '<div class="ce-sg">' + (SUGGESTIONS || []).map(function(s) {
+        return '<button class="ce-sg-item" onclick="askFromHome(\'' + s.key + '\')">' + s.text + '</button>';
+      }).join('') + '</div></div>';
     return;
   }
   list.innerHTML = CONV.messages.map(function(m) {
@@ -2252,6 +2739,132 @@ function clearHistory() {
   renderSidePanel();
   init_profile();
   toast('已清除本机历史会话');
+}
+
+/* ================= 专题：认识七宝 ================= */
+function init_explore() {
+  var box = document.getElementById('ex-tl');
+  document.getElementById('ex-count').textContent = TIMELINE.length;
+  box.innerHTML = TIMELINE.map(function(n, i) {
+    var last = i === TIMELINE.length - 1;
+    var media = n.img
+      ? '<div class="ex-card-media ' + n.img + '"></div>'
+      : '';
+    return '<div class="ex-node' + (last ? ' last' : '') + '">' +
+      '<div class="ex-rail"><span class="ex-dot"></span></div>' +
+      '<div class="ex-card">' +
+        '<div class="ex-card-head">' +
+          '<div class="ex-year">' + n.year + (n.cn ? '<i>' + n.cn + '</i>' : '') + '</div>' +
+          '<span class="ex-tag">' + n.tag + '</span>' +
+        '</div>' +
+        media +
+        '<div class="ex-card-body">' +
+          '<h3>' + n.title + '</h3>' +
+          '<p>' + n.text + '</p>' +
+        '</div>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+  document.getElementById('explore-body').scrollTop = 0;
+}
+function askFromTopic(name) {
+  resetStack('home'); PAGE_STACK.push('chat');
+  showPage('chat', { noPush: true });
+  ensureConversation();
+  toast('已带上「' + name + '」上下文，直接提问即可');
+}
+
+/* ================= 专题：时间实验室 ================= */
+var LAB_CUR_DIM = 'space';
+
+function init_lab() {
+  renderLabTabs();
+  renderLabTrack();
+}
+
+function renderLabTabs() {
+  document.getElementById('lab-tabs').innerHTML = LAB_DIMS.map(function(d) {
+    return '<button class="lab-tab' + (d.id === LAB_CUR_DIM ? ' on' : '') + '" onclick="switchLabDim(\'' + d.id + '\')">' + d.name + '</button>';
+  }).join('');
+}
+
+function switchLabDim(id) {
+  LAB_CUR_DIM = id;
+  renderLabTabs();
+  renderLabTrack();
+  document.getElementById('lab-body').scrollTop = 220;
+}
+
+function renderLabTrack() {
+  var rows = LAB_DATA[LAB_CUR_DIM] || [];
+  document.getElementById('lab-track').innerHTML = rows.map(function(r, i) {
+    var media = r.img ? '<div class="lab-media ' + r.img + '"></div>' : '<div class="lab-media lab-media-none"><span>那个年代\n没有留下照片</span></div>';
+    var facts = r.facts.map(function(f) { return '<li>' + f + '</li>'; }).join('');
+    return '<div class="lab-card tone-' + r.tone + '">' +
+      '<div class="lab-card-head">' +
+        '<div class="lab-era">' + r.era + '</div>' +
+        '<div class="lab-label">' + r.label + '</div>' +
+      '</div>' +
+      media +
+      '<ul class="lab-facts">' + facts + '</ul>' +
+      '<div class="lab-metric"><span>' + r.metric.k + '</span><b>' + r.metric.v + '</b></div>' +
+      (i < rows.length - 1 ? '<div class="lab-gap"><span>↓</span></div>' : '') +
+      '</div>';
+  }).join('');
+  var ins = LAB_INSIGHTS[LAB_CUR_DIM] || '';
+  var dimName = (LAB_DIMS.filter(function(d) { return d.id === LAB_CUR_DIM; })[0] || {}).name || '';
+  document.getElementById('lab-insight').innerHTML =
+    '<div class="lab-insight-h"><span class="bar"></span>这 79 年，' + dimName + '变了什么</div>' +
+    '<p>' + ins + '</p>';
+}
+
+/* ================= 专题：校园故事 ================= */
+var CUR_STORY = null;
+
+function init_stories() {
+  document.getElementById('st-nav-sub').textContent = STORIES.length + ' 个小故事';
+  document.getElementById('st-list').innerHTML = STORIES.map(function(s, i) {
+    var media = s.img
+      ? '<div class="st-card-media ' + s.img + '"></div>'
+      : '<div class="st-card-media st-media-none"><span>' + s.tag + '</span></div>';
+    return '<div class="st-card" onclick="openStory(\'' + s.id + '\')">' +
+      media +
+      '<div class="st-card-body">' +
+        '<div class="st-card-top"><span class="st-no">' + ('0' + (i + 1)).slice(-2) + '</span><span class="st-tag">' + s.tag + '</span></div>' +
+        '<h3>' + s.title + '</h3>' +
+        '<p>' + s.hook + '</p>' +
+      '</div>' +
+      '<div class="st-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></div>' +
+      '</div>';
+  }).join('');
+  document.getElementById('stories-body').scrollTop = 0;
+}
+
+function openStory(id) {
+  var s = STORIES.filter(function(x) { return x.id === id; })[0];
+  if (!s) return;
+  CUR_STORY = s;
+  var media = s.img ? '<div class="st-detail-media ' + s.img + '"></div>' : '';
+  document.getElementById('st-sheet-body').innerHTML =
+    media +
+    '<div class="st-detail-tag">' + s.tag + '</div>' +
+    '<h2>' + s.title + '</h2>' +
+    '<p class="st-detail-lead">' + s.hook + '</p>' +
+    s.body.split('\n\n').map(function(p) { return '<p class="st-detail-p">' + p + '</p>'; }).join('');
+  document.getElementById('st-mask').classList.add('show');
+  document.getElementById('st-sheet').classList.add('show');
+}
+function closeStory() {
+  document.getElementById('st-mask').classList.remove('show');
+  document.getElementById('st-sheet').classList.remove('show');
+}
+function askAboutStory() {
+  var s = CUR_STORY;
+  closeStory();
+  resetStack('home'); PAGE_STACK.push('chat');
+  showPage('chat', { noPush: true });
+  ensureConversation();
+  toast('已带上「' + (s ? s.title : '校园故事') + '」上下文');
 }
   </script>
   <script>
