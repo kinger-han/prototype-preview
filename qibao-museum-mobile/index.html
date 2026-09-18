@@ -847,6 +847,123 @@ body {
     }
     .ce-sg-item:active { background: var(--c-primary-soft); }
 
+    /* ---------- 形式样张页 ---------- */
+    .fmt-intro { margin: 16px 16px 0; padding: 14px 15px; background: #fff; border: 1px solid var(--c-line-soft); border-radius: 10px; }
+    .fmt-intro-t { font-size: 13.5px; font-weight: 600; color: var(--c-primary); }
+    .fmt-intro p { font-size: 12px; line-height: 1.7; color: var(--c-text-2); margin-top: 7px; }
+    .fmt-sec { margin: 24px 16px 0; }
+    .fmt-head { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .fmt-no { font-family: Georgia, serif; font-size: 13px; font-weight: 700; color: #fff; background: var(--c-primary); border-radius: 5px; padding: 3px 7px; line-height: 1.2; flex-shrink: 0; }
+    .fmt-name { font-size: 15.5px; font-weight: 600; }
+    .fmt-role { font-size: 11.5px; color: var(--c-text-2); line-height: 1.6; margin-top: 4px; }
+    .fmt-hint { text-align: center; font-size: 11.5px; color: var(--c-text-3); margin-top: 9px; }
+    .fmt-note { margin-top: 13px; padding: 13px 14px; background: #fff; border: 1px solid var(--c-line-soft); border-radius: 9px; }
+    .fmt-note-t { font-size: 11px; letter-spacing: 1px; color: var(--c-accent); margin-bottom: 6px; }
+    .fmt-note-b { font-size: 12.5px; line-height: 1.75; color: #3F3F3F; }
+    .fmt-note-b.warn { color: #8A5A1E; }
+    .fmt-note-b.ok { color: #2F6B4F; }
+    .fmt-note-t + .fmt-note-b + .fmt-note-t { margin-top: 12px; }
+    .fmt-foot { margin: 26px 16px 0; padding: 16px; background: var(--c-primary-soft); border-radius: 10px; }
+    .fmt-foot-t { font-size: 14px; font-weight: 600; color: var(--c-primary); }
+    .fmt-foot-b { font-size: 12.5px; line-height: 1.75; color: #35506C; margin-top: 8px; }
+
+    /* 01 时光对比滑块 */
+    .cmp-wrap { position: relative; height: 196px; border-radius: 10px; overflow: hidden; background: #E6E3DD; }
+    .cmp-layer { position: absolute; inset: 0; background-size: cover; background-position: center; }
+    .cmp-top { clip-path: inset(0 0 0 50%); }
+    .cmp-line {
+      position: absolute; top: 0; bottom: 0; width: 2px; left: 50%; background: #fff; z-index: 4;
+      pointer-events: none; box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+    .cmp-line i {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 32px; height: 32px; border-radius: 50%; background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.28);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cmp-line i:before { content: '↔'; font-size: 15px; color: var(--c-primary); line-height: 1; }
+    .cmp-range {
+      position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0;
+      z-index: 5; cursor: ew-resize; -webkit-appearance: none; appearance: none; background: transparent;
+    }
+    .cmp-range::-webkit-slider-thumb { -webkit-appearance: none; width: 46px; height: 196px; }
+    .cmp-tag {
+      position: absolute; top: 10px; z-index: 3; font-size: 10px; color: #fff;
+      background: rgba(16,26,40,0.55); border: 1px solid rgba(255,255,255,0.3);
+      padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(2px);
+    }
+    .cmp-tag-l { left: 10px; }
+    .cmp-tag-r { right: 10px; }
+
+    /* 02 校史地图 */
+    .map-wrap {
+      position: relative; height: 206px; border-radius: 10px; overflow: hidden;
+      background: #F5F2EC; border: 1px solid var(--c-line-soft);
+    }
+    .map-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .map-road { position: absolute; background: #E7E2D7; }
+    .map-road-h { left: 0; right: 0; top: 45%; height: 15px; }
+    .map-road-v { top: 0; bottom: 0; left: 47%; width: 15px; }
+    .map-spot {
+      position: absolute; width: 27px; height: 27px; margin: -13px 0 0 -13px; border-radius: 50%;
+      background: #fff; border: 2px solid var(--c-primary); color: var(--c-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: Georgia, serif; font-size: 12px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.13); z-index: 2;
+    }
+    .map-spot.on { background: var(--c-accent); border-color: var(--c-accent); color: #fff; transform: scale(1.12); }
+    .map-info { margin-top: 10px; padding: 13px 14px; background: #fff; border: 1px solid var(--c-line-soft); border-left: 3px solid var(--c-primary); border-radius: 9px; }
+    .map-info-t { font-size: 13.5px; font-weight: 600; }
+    .map-info-b { font-size: 12.5px; line-height: 1.75; color: #3F3F3F; margin-top: 6px; }
+
+    /* 03 我的七宝年份 */
+    .yr-pick { display: flex; gap: 7px; flex-wrap: wrap; }
+    .yr-btn {
+      flex: 1; min-width: 58px; height: 36px; border-radius: 7px; border: 1px solid var(--c-line);
+      background: #fff; color: var(--c-text-2); font-family: Georgia, serif; font-size: 14px;
+      cursor: pointer;
+    }
+    .yr-btn.on { background: var(--c-primary); border-color: var(--c-primary); color: #fff; font-weight: 700; }
+    .yr-result { margin-top: 12px; padding: 14px; background: #fff; border: 1px solid var(--c-line-soft); border-radius: 9px; }
+    .yr-head { font-size: 12.5px; font-weight: 600; color: var(--c-primary); padding-bottom: 10px; border-bottom: 1px dashed var(--c-line); }
+    .yr-item { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px dashed #F0EEEA; }
+    .yr-item:last-child { border-bottom: none; padding-bottom: 2px; }
+    .yr-y { font-family: Georgia, serif; font-size: 13px; font-weight: 700; color: var(--c-accent); flex-shrink: 0; width: 34px; }
+    .yr-tx b { font-size: 13px; font-weight: 600; display: block; line-height: 1.5; }
+    .yr-tx i { font-style: normal; font-size: 11.5px; color: var(--c-text-2); line-height: 1.6; display: block; margin-top: 4px; }
+    .yr-empty { font-size: 12.5px; color: var(--c-text-3); line-height: 1.7; padding: 10px 0 2px; }
+
+    /* 04 AI 纪念合影 */
+    .photo-stage {
+      height: 170px; border-radius: 10px; background-color: #EFEDE9; background-size: cover;
+      background-position: center; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; border: 1px solid var(--c-line-soft);
+    }
+    .photo-ph { font-size: 12px; color: var(--c-text-3); }
+    .photo-loading { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--c-primary); }
+    .photo-loading i {
+      width: 14px; height: 14px; border: 2px solid var(--c-primary-soft);
+      border-top-color: var(--c-primary); border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .photo-done { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; }
+    .photo-badge {
+      align-self: flex-start; font-size: 10px; color: #fff; background: rgba(16,26,40,0.6);
+      border: 1px solid rgba(255,255,255,0.3); padding: 3px 8px; border-radius: 4px; backdrop-filter: blur(2px);
+    }
+    .photo-cap { font-size: 13px; color: #fff; font-weight: 600; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+    .photo-opts { display: flex; gap: 7px; margin: 11px 0; flex-wrap: wrap; }
+    .photo-opt {
+      flex: 1; min-width: 46%; padding: 9px 8px; border-radius: 7px; border: 1px solid var(--c-line);
+      background: #fff; font-size: 11.5px; color: var(--c-text-2); cursor: pointer; font-family: inherit;
+    }
+    .photo-opt.on { border-color: var(--c-primary); color: var(--c-primary); background: var(--c-primary-soft); font-weight: 600; }
+
     /* ---------- S02 对话页 ---------- */
     .chat-list { padding: 14px 12px 0; }
     .chat-empty { padding: 68px 30px; text-align: center; }
@@ -1413,6 +1530,141 @@ body {
     </div>
   </div>
 </div>
+
+<div class="page" id="page-formats">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name">形式样张</div>
+      <div class="m-nav-sub">4 种可选的呈现形式</div>
+    </div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="page-body" id="fmt-body">
+    <div class="fmt-intro">
+      <div class="fmt-intro-t">这一页不是正式功能</div>
+      <p>把 4 种候选形式做成能上手点的小样，你试完说要哪个，我再按正式规格做进专题里。每个样张下面写了它解决什么问题、做正式版还需要什么素材。</p>
+    </div>
+
+    <!-- ============ 样张 1：时光对比滑块 ============ -->
+    <div class="fmt-sec">
+      <div class="fmt-head">
+        <span class="fmt-no">01</span>
+        <div>
+          <div class="fmt-name">时光对比滑块</div>
+          <div class="fmt-role">把"年代对比"从并列卡片变成一根手指能拖的动作</div>
+        </div>
+      </div>
+
+      <div class="cmp-wrap" id="cmp-wrap">
+        <div class="cmp-layer era-1980s-yard"></div>
+        <div class="cmp-layer cmp-top today-humanity" id="cmp-top"></div>
+        <div class="cmp-tag cmp-tag-l">1980 年代</div>
+        <div class="cmp-tag cmp-tag-r">今天</div>
+        <div class="cmp-line" id="cmp-line"><i></i></div>
+        <input class="cmp-range" id="cmp-range" type="range" min="4" max="96" value="50"
+               oninput="onCompare(this.value)">
+      </div>
+      <div class="fmt-hint">👆 拖动中间的白线（左右滑动）</div>
+
+      <div class="fmt-note">
+        <div class="fmt-note-t">解决什么</div>
+        <div class="fmt-note-b">现在时间实验室是"三张卡上下排列"，用户只能读。改成滑块后，变化是**手指拉出来的**——同一个位置，一边是过去一边是现在，冲击力完全不一样。</div>
+        <div class="fmt-note-t">正式版还需要</div>
+        <div class="fmt-note-b warn">⚠️ <b>同机位的新老照片</b>。这一版样张用的是示意配对（80 年代庭院 vs 今天书院），严格讲不算同一视角。要做真的对比，得请学校按同一机位翻拍，或从档案里找同角度老照片。</div>
+      </div>
+    </div>
+
+    <!-- ============ 样张 2：校史地图 ============ -->
+    <div class="fmt-sec">
+      <div class="fmt-head">
+        <span class="fmt-no">02</span>
+        <div>
+          <div class="fmt-name">校史地图</div>
+          <div class="fmt-role">在空间上叠加时间——实体展馆做不到的那件事</div>
+        </div>
+      </div>
+
+      <div class="map-wrap" id="map-wrap">
+        <div class="map-grid"></div>
+        <div class="map-road map-road-h"></div>
+        <div class="map-road map-road-v"></div>
+        <div class="map-spot" style="left:22%;top:26%" onclick="mapSpot('m1')"><span>1</span></div>
+        <div class="map-spot" style="left:64%;top:20%" onclick="mapSpot('m2')"><span>2</span></div>
+        <div class="map-spot" style="left:36%;top:62%" onclick="mapSpot('m3')"><span>3</span></div>
+        <div class="map-spot" style="left:72%;top:66%" onclick="mapSpot('m4')"><span>4</span></div>
+        <div class="map-spot" style="left:50%;top:43%" onclick="mapSpot('m5')"><span>5</span></div>
+      </div>
+      <div class="map-info" id="map-info">
+        <div class="map-info-t">点上面的圆点</div>
+        <div class="map-info-b">每个位置会告诉你：这里以前是什么、现在是什么。</div>
+      </div>
+
+      <div class="fmt-note">
+        <div class="fmt-note-t">解决什么</div>
+        <div class="fmt-note-b">展板上只能按时间陈列，做不到"同一个位置叠加不同年代"。地图能让校友一眼找到"我当年住的那栋楼现在是什么"。</div>
+        <div class="fmt-note-t">正式版还需要</div>
+        <div class="fmt-note-b warn">⚠️ <b>真实校园平面图 + 各建筑年代对应关系</b>。这一版是手画的示意布局，正常演示前要换成学校提供的平面图。</div>
+      </div>
+    </div>
+
+    <!-- ============ 样张 3：我的七宝年份 ============ -->
+    <div class="fmt-sec">
+      <div class="fmt-head">
+        <span class="fmt-no">03</span>
+        <div>
+          <div class="fmt-name">我的七宝年份</div>
+          <div class="fmt-role">同一个校史，对每个人是一条不同的线</div>
+        </div>
+      </div>
+
+      <div class="yr-pick" id="yr-pick"></div>
+      <div class="yr-result" id="yr-result"></div>
+
+      <div class="fmt-note">
+        <div class="fmt-note-t">解决什么</div>
+        <div class="fmt-note-b">同一个校史故事，对每个人入耳的位置不一样。输入入学年份，就能把"学校的历史"变成"我在校那几年学校发生了什么"——这是最轻的一种个性化，数据我全都有。</div>
+        <div class="fmt-note-t">正式版还需要</div>
+        <div class="fmt-note-b ok">✅ 现有校史数据就够做，不需要新素材。</div>
+      </div>
+    </div>
+
+    <!-- ============ 样张 4：AI 纪念合影 ============ -->
+    <div class="fmt-sec">
+      <div class="fmt-head">
+        <span class="fmt-no">04</span>
+        <div>
+          <div class="fmt-name">AI 纪念合影</div>
+          <div class="fmt-role">把"看校史"变成"进校史"</div>
+        </div>
+      </div>
+
+      <div class="photo-wrap" id="photo-wrap">
+        <div class="photo-stage" id="photo-stage">
+          <div class="photo-ph">选择一张老照片，把自己合进去</div>
+        </div>
+        <div class="photo-opts" id="photo-opts"></div>
+        <button class="m-btn" id="photo-go" onclick="runPhoto()">开始合成（Demo 模拟）</button>
+      </div>
+
+      <div class="fmt-note">
+        <div class="fmt-note-t">解决什么</div>
+        <div class="fmt-note-b">参与感最强、最容易在朋友圈传播的一种形式。学生从"参观者"变成"故事里的人"。</div>
+        <div class="fmt-note-t">正式版还需要</div>
+        <div class="fmt-note-b warn">⚠️ <b>人脸素材 + 图像合成能力</b>（拍一张 → 合成到历史场景）。这一版是纯流程模拟，点"开始合成"只是走一遍界面，不产生真实图片。另有隐私合规问题：需要明示"照片仅本地处理、不存储"。</div>
+      </div>
+    </div>
+
+    <div class="fmt-foot">
+      <div class="fmt-foot-t">看完告诉我要哪几个</div>
+      <div class="fmt-foot-b">可以全要，也可以只要一个。我的建议顺序：时光对比 → 我的七宝年份 → 校史地图 → AI 合影（前两个不需要新素材，后两个要等学校给平面图和人像授权）。</div>
+    </div>
+    <div class="topic-bottom-pad"></div>
+  </div>
+</div>
       </div>
 
       <div class="home-indicator"></div>
@@ -1730,7 +1982,10 @@ var TIMELINE = [
     text: '上海市七宝农业学校经调整改为普通完全中学，正式定名为七宝中学。三年后的 1956 年 8 月，它与由南模七宝分校更名而来的上海市第二十初级中学合并，成立新的上海市七宝中学——1947 年创办的两条源流，在这一年汇成一校。' },
   { year: '1961', cn: '', title: '被定为上海市重点中学，校址民主路 121 号',
     img: 'era-1980s-yard', tag: '市重点',
-    text: '学校被列为上海市重点中学，校址在七宝镇民主路 121 号。1978 年恢复市重点中学；1985 年停办初中、高中每届扩至 8 个班，成为一所高级中学。' },
+    text: '学校被列为上海市重点中学，校址在七宝镇民主路 121 号——此后三十多年，这里一直是七宝中学的所在地。' },
+  { year: '1985', cn: '', title: '停办初中，成为一所高级中学',
+    img: '', tag: '学制',
+    text: '1978 年学校恢复为重点中学；到 1985 年停办初中，高中每届扩至 8 个班，正式成为一所高级中学。' },
   { year: '1994', cn: '', title: '投资二亿元，决定易地重建',
     img: '', tag: '重建',
     text: '闵行区委、区政府决定投资二亿元易地重建新校舍，学校获得新的发展空间；同年正式创建文来中学。' },
@@ -1752,7 +2007,10 @@ var TIMELINE = [
   { year: '2015', cn: '', title: '正式提出创建研究型高中',
     img: 'today-campus2', tag: '研究型',
     text: '学校在多年研究性学习基础上正式提出并全面启动研究型高中建设，先后成立学生科学研究院、学子人文书院、学生工程院、青年成长学院，联动复旦大学、上海交通大学、同济大学、中科院等高校与科研机构。' },
-  { year: '今天', cn: '2025—', title: '100% 学生有课题，AI 实验校',
+  { year: '2017', cn: '', title: '"研究型育人模式"获上海市教学成果特等奖',
+    img: '', tag: '成果',
+    text: '学校"研究型育人模式"的研究与实践获上海市教学成果特等奖，研究型高中建设的路径得到系统总结与肯定。' },
+  { year: '今天', cn: '2024—', num: 2024, title: '全国首批科学教育实验校、上海首批 AI 实验校',
     img: 'cover-innov', tag: '现在',
     text: '目前实现 100% 学生有课题研究项目，曾获上海市青少年科技创新大赛一等奖总数十二连冠。2024 年获评全国首批科学教育实验校，2025 年入选上海市首批人工智能实验校。' }
 ];
@@ -2866,6 +3124,112 @@ function askAboutStory() {
   ensureConversation();
   toast('已带上「' + (s ? s.title : '校园故事') + '」上下文');
 }
+
+/* ================= 形式样张 ================= */
+
+function init_formats() {
+  onCompare(50);
+  renderYearPick();
+  renderPhotoOpts();
+  document.getElementById('fmt-body').scrollTop = 0;
+}
+
+/* ---- 01 时光对比滑块 ---- */
+function onCompare(v) {
+  v = Number(v);
+  var top = document.getElementById('cmp-top');
+  var line = document.getElementById('cmp-line');
+  if (!top || !line) return;
+  top.style.clipPath = 'inset(0 0 0 ' + v + '%)';
+  line.style.left = v + '%';
+}
+
+/* ---- 02 校史地图 ---- */
+var MAP_SPOTS = {
+  m1: { t: '城隍庙原址', b: '1947 年七宝农职校在此开办，当地士绅捐建十二间平房当教室，庙宇改造成校舍。今天这里是七宝老街的一部分。' },
+  m2: { t: '大庙废址 · 莲涌堂', b: '1947 年南模七宝分校修莲涌堂作办公室和职员宿舍，腾一间教室办了 20 多人的补习班——七宝中学的另一条源流从这里开始。' },
+  m3: { t: '叔逵楼（旧址）', b: '1948 年落成的第一栋二层教学楼，为纪念沈叔逵先生命名。当年初中一、二年级迁入，住宿学生四百余人。' },
+  m4: { t: '学生科学研究院', b: '2007 年开馆，今天已有 19 个创新实验室。100% 学生有课题研究项目，从这里走出去的课题拿过科技创新大赛一等奖十二连冠。' },
+  m5: { t: '学子人文书院', b: '2010 年投入使用，被评为"上海市校园十大景观"之一。与科学研究院一理一文，构成今天七宝中学的育人双翼。' }
+};
+function mapSpot(id) {
+  var s = MAP_SPOTS[id];
+  if (!s) return;
+  document.querySelectorAll('.map-spot').forEach(function(e) { e.classList.remove('on'); });
+  var el = document.querySelector('.map-spot[onclick*="' + id + '"]');
+  if (el) el.classList.add('on');
+  document.getElementById('map-info').innerHTML =
+    '<div class="map-info-t">' + s.t + '</div><div class="map-info-b">' + s.b + '</div>';
+}
+
+/* ---- 03 我的七宝年份 ---- */
+var YEAR_OPTS = [1980, 1990, 2000, 2010, 2020];
+var CUR_YEAR = 2000;
+
+function renderYearPick() {
+  document.getElementById('yr-pick').innerHTML = YEAR_OPTS.map(function(y) {
+    return '<button class="yr-btn' + (y === CUR_YEAR ? ' on' : '') + '" onclick="pickYear(' + y + ')">' + y + '</button>';
+  }).join('');
+  renderYearResult();
+}
+function pickYear(y) {
+  CUR_YEAR = y;
+  renderYearPick();
+}
+function renderYearResult() {
+  /* 取该校友在校年限内（入学年起 4 年，再往后 4 年为毕业初期）的校史节点 */
+  var from = CUR_YEAR, to = CUR_YEAR + 8;
+  var hits = TIMELINE.filter(function(n) {
+    var y = n.num || parseInt(n.year, 10);
+    return !isNaN(y) && y >= from && y <= to;
+  });
+  var head = '<div class="yr-head">' + CUR_YEAR + ' 年入学，你在校期间学校发生了什么</div>';
+  var body;
+  if (!hits.length) {
+    body = '<div class="yr-empty">这几年没有已整理的校史节点。<br>正式版会补上这段时间的大事记。</div>';
+  } else {
+    body = hits.map(function(n) {
+      return '<div class="yr-item">' +
+        '<span class="yr-y">' + n.year + '</span>' +
+        '<div class="yr-tx"><b>' + n.title + '</b><i>' + n.text.slice(0, 54) + '…</i></div>' +
+        '</div>';
+    }).join('');
+  }
+  document.getElementById('yr-result').innerHTML = head + body;
+}
+
+/* ---- 04 AI 纪念合影 ---- */
+var PHOTO_SCENES = [
+  { id: 'p1', name: '1948 · 叔逵楼前', cls: 'timeline-1970s' },
+  { id: 'p2', name: '1980 · 校园庭院', cls: 'era-1980s-yard' },
+  { id: 'p3', name: '1997 · 老校门口', cls: 'era-1997-gate' }
+];
+var PHOTO_PICK = 'p1';
+
+function renderPhotoOpts() {
+  document.getElementById('photo-opts').innerHTML = PHOTO_SCENES.map(function(s) {
+    return '<button class="photo-opt' + (s.id === PHOTO_PICK ? ' on' : '') + '" onclick="pickPhoto(\'' + s.id + '\')">' + s.name + '</button>';
+  }).join('');
+}
+function pickPhoto(id) { PHOTO_PICK = id; renderPhotoOpts(); }
+
+function runPhoto() {
+  var stage = document.getElementById('photo-stage');
+  var btn = document.getElementById('photo-go');
+  var s = PHOTO_SCENES.filter(function(x) { return x.id === PHOTO_PICK; })[0];
+  btn.disabled = true;
+  stage.className = 'photo-stage';
+  stage.innerHTML = '<div class="photo-loading"><i></i>正在合成到「' + s.name + '」…</div>';
+  setTimeout(function() {
+    stage.className = 'photo-stage ' + s.cls;
+    stage.innerHTML =
+      '<div class="photo-done">' +
+        '<span class="photo-badge">Demo 模拟 · 未生成真实图片</span>' +
+        '<div class="photo-cap">' + s.name + '</div>' +
+      '</div>';
+    btn.disabled = false;
+  }, 1600);
+}
   </script>
   <script>
 /* ============================
@@ -3185,7 +3549,14 @@ function mockRequest(data, delay) {
                e.label + '<span class="k">' + e.key + '</span></div>';
       }).join('');
       html += '<div class="dm-item" onclick="resetSceneDemo()">重置协议同意状态<span class="k">UI-03</span></div>';
+      html += '<div class="dm-title" style="border-top:1px solid #F0EEEA;margin-top:5px;padding-top:9px">形式样张（待选）</div>';
+      html += '<div class="dm-item" onclick="openFormats()">4 种候选形式 → 看样张<span class="k">待选</span></div>';
       box.innerHTML = html;
+    }
+    function openFormats() {
+      document.getElementById('demo-menu').classList.remove('show');
+      resetStack('home');
+      showPage('formats');
     }
     function demoSetEntry(id) {
       window.DEMO_ENTRY = id;
