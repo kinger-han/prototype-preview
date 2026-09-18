@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 校史馆 · 移动端</title>
+  <style>
+/* ============================
+   base.css - 全局公共样式
+   ============================ */
+
+/* Reset */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px; color: #333; background: #f0f2f5;
+  line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+.page { display: none; height: 100%; }
+.page.active { display: block; }
+
+/* ---- PC端布局 ---- */
+.pc-layout { display: flex; height: 100vh; overflow: hidden; }
+.pc-sider {
+  width: 200px; background: #fff; border-right: 1px solid #f0f0f0;
+  flex-shrink: 0; display: flex; flex-direction: column; overflow-y: auto;
+}
+.pc-logo {
+  height: 60px; display: flex; align-items: center; padding: 0 24px;
+  font-size: 18px; font-weight: 700; color: #000;
+  border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
+}
+.pc-logo-icon {
+  width: 28px; height: 28px; background: #1890ff; border-radius: 6px;
+  margin-right: 10px; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 700;
+}
+.pc-menu { flex: 1; padding: 8px 0; }
+.pc-menu-group { padding: 8px 24px 4px; font-size: 12px; color: #999; }
+.pc-menu-item {
+  display: flex; align-items: center; height: 44px; padding: 0 24px;
+  cursor: pointer; transition: all 0.15s; text-decoration: none;
+  color: #333; font-size: 14px;
+}
+.pc-menu-item:hover { background: #f5f7fa; }
+.pc-menu-item.active { background: #e6f7ff; color: #1890ff; border-right: 3px solid #1890ff; }
+.pc-menu-icon { width: 20px; margin-right: 12px; text-align: center; font-size: 16px; }
+
+.pc-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.pc-header {
+  height: 48px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; flex-shrink: 0;
+}
+.pc-breadcrumb { font-size: 14px; color: #999; }
+.pc-breadcrumb a { color: #1890ff; text-decoration: none; }
+.pc-breadcrumb .sep { margin: 0 6px; color: #ccc; }
+.pc-breadcrumb .current { color: #333; }
+.pc-header-right { display: flex; align-items: center; gap: 12px; }
+.pc-user-name { font-size: 14px; color: #666; }
+.pc-user-avatar {
+  width: 32px; height: 32px; border-radius: 50%; background: #e6f7ff;
+  display: flex; align-items: center; justify-content: center; font-size: 14px; color: #1890ff;
+}
+.pc-content { flex: 1; padding: 24px; overflow-y: auto; background: #f0f2f5; }
+
+/* ---- 标注角标 ---- */
+.anno-badge {
+  position: absolute; top: -8px; right: -8px;
+  background: #ff4d4f; color: #fff; font-size: 10px;
+  min-width: 18px; height: 18px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; cursor: pointer; z-index: 10;
+  font-weight: 600; line-height: 1;
+}
+.anno-badge:hover { background: #cf1322; }
+[data-anno-id] { position: relative; }
+
+/* ---- 通用组件 ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 0 16px; height: 32px; border-radius: 4px;
+  border: 1px solid #d9d9d9; font-size: 14px; cursor: pointer;
+  transition: all 0.15s; text-decoration: none; white-space: nowrap;
+}
+.btn-primary { background: #1890ff; color: #fff; border-color: #1890ff; }
+.btn-primary:hover { background: #40a9ff; border-color: #40a9ff; }
+.btn-default { background: #fff; color: #333; }
+.btn-default:hover { border-color: #1890ff; color: #1890ff; }
+.btn-link { background: none; border: none; color: #1890ff; padding: 0 4px; height: auto; font-size: 14px; cursor: pointer; }
+.btn-link.danger { color: #f5222d; }
+.btn-link.success { color: #52c41a; }
+.btn-sm { height: 28px; padding: 0 12px; font-size: 13px; }
+
+.table-wrap { background: #fff; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); overflow: hidden; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+.table th { background: #fafafa; font-weight: 600; color: #333; }
+.table tbody tr:hover { background: #f5f7fa; }
+
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+.tag-blue   { background: #e6f7ff; color: #1890ff; border: 1px solid #91d5ff; }
+.tag-green  { background: #f6ffed; color: #52c41a; border: 1px solid #b7eb8f; }
+.tag-red    { background: #fff2f0; color: #f5222d; border: 1px solid #ffa39e; }
+
+.filter-bar {
+  background: #fff; border-radius: 4px; padding: 20px 24px;
+  display: flex; align-items: center; gap: 24px; margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.filter-item { display: flex; align-items: center; gap: 8px; }
+.filter-label { font-size: 14px; color: #666; white-space: nowrap; }
+.filter-select {
+  height: 32px; padding: 0 12px; border: 1px solid #d9d9d9;
+  border-radius: 4px; font-size: 14px; color: #333; background: #fff; min-width: 120px;
+}
+.filter-date { height: 32px; padding: 0 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; width: 150px; }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 12px; }
+.search-box { display: flex; }
+.search-input {
+  height: 32px; padding: 0 12px; border: 1px solid #d9d9d9;
+  border-radius: 4px 0 0 4px; font-size: 14px; width: 250px; outline: none;
+}
+.search-input:focus { border-color: #1890ff; }
+
+.page-header { margin-bottom: 16px; }
+.page-title { font-size: 18px; font-weight: 700; color: #333; }
+.page-desc { font-size: 14px; color: #999; margin-top: 4px; }
+
+.pagination {
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 16px 0; gap: 8px; font-size: 14px; color: #666;
+}
+.pagination .page-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid #d9d9d9; border-radius: 4px; background: #fff; cursor: pointer;
+}
+.pagination .page-btn.active { background: #1890ff; color: #fff; border-color: #1890ff; }
+
+.form-item { margin-bottom: 16px; }
+.form-label { display: block; margin-bottom: 6px; font-size: 14px; color: #333; font-weight: 500; }
+.input {
+  width: 100%; height: 36px; padding: 0 12px; border: 1px solid #d9d9d9;
+  border-radius: 4px; font-size: 14px; outline: none;
+}
+.input:focus { border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24,144,255,0.1); }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: #fff; border-radius: 8px; padding: 24px;
+  min-width: 420px; max-width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; color: #333; }
+.modal-footer {
+  display: flex; justify-content: flex-end; gap: 8px;
+  margin-top: 24px; padding-top: 16px; border-top: 1px solid #f0f0f0;
+}
+
+.toast {
+  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  background: #333; color: #fff; padding: 8px 20px; border-radius: 6px;
+  font-size: 13px; z-index: 9999; transition: opacity 0.3s;
+}
+
+/* ---- 移动端通用 ---- */
+.m-header {
+  height: 44px; display: flex; align-items: center; justify-content: center;
+  font-size: 17px; font-weight: 600; color: #000;
+  position: sticky; top: 0; z-index: 100; background: #fff;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #d9d9d9; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+  </style>
+  <style>
+    /* ============================================================
+       AI 校史馆 · 移动端壳（全面屏 · 居中展示）
+       视觉定位：校史馆 / 档案感 —— 深靛蓝主色 + 暖金强调 + 档案米白底
+       主色来自 SceneTheme 配置，页面不得写死七宝专属色名
+       ============================================================ */
+    :root {
+      --c-primary: #1C3F6E;
+      --c-primary-deep: #14304F;
+      --c-primary-soft: #E8EEF6;
+      --c-accent: #C8A05A;
+      --c-accent-soft: #F6EFDF;
+      --c-page: #F6F4F0;
+      --c-card: #FFFFFF;
+      --c-text: #262626;
+      --c-text-2: #666666;
+      --c-text-3: #999999;
+      --c-line: #E8E8E8;
+      --c-line-soft: #F0EEEA;
+      --c-danger: #C0392B;
+      --r-input: 22px;
+      --r-card: 8px;
+      --r-sheet: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #E7E2D8;
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px; min-height: 100vh;
+      color: var(--c-text);
+    }
+    /* 手机壳：小米17比例 2656:1220 ≈ 1:2.177（360 × 783.6） */
+    .mobile-shell {
+      width: 360px; height: 783.6px;
+      background: #1C1C1E; border-radius: 44px; padding: 8px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      display: flex; flex-direction: column; position: relative;
+      transform-origin: center center;
+    }
+    .mobile-screen {
+      flex: 1; min-height: 0; background: #fff; border-radius: 36px; overflow: hidden;
+      display: flex; flex-direction: column; position: relative;
+    }
+    @media (max-height: 830px) { .mobile-shell { zoom: 0.9; } }
+    @media (max-height: 750px) { .mobile-shell { zoom: 0.82; } }
+    @media (max-height: 680px) { .mobile-shell { zoom: 0.72; } }
+    /* 状态栏（全面屏 · 仿真信号区） */
+    .status-bar {
+      height: 46px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; flex-shrink: 0; z-index: 5; background: transparent;
+    }
+    .status-bar .sb-left { font-size: 15px; font-weight: 600; color: #1a1a1a; letter-spacing: 0.5px; }
+    .status-bar .sb-right { display: flex; align-items: center; gap: 7px; }
+    .status-bar svg { display: block; }
+    .app-root { flex: 1; min-height: 0; overflow-y: auto; position: relative; background: var(--c-page); }
+    .app-root::-webkit-scrollbar { display: none; }
+    .home-indicator {
+      height: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: transparent;
+    }
+    .home-indicator::after {
+      content: ''; width: 110px; height: 4px; border-radius: 4px; background: rgba(0,0,0,0.22);
+    }
+    /* 页面容器 */
+    .page { display: none; height: 100%; background: var(--c-page); }
+    .page.active { display: flex; flex-direction: column; }
+    .page-body { flex: 1; overflow-y: auto; min-height: 0; }
+    .page-body::-webkit-scrollbar { display: none; }
+
+    /* ---------- 通用：品牌导航栏 ---------- */
+    .m-nav {
+      display: flex; align-items: center; gap: 4px; height: 52px; flex-shrink: 0;
+      padding: 0 8px; background: #fff; border-bottom: 1px solid var(--c-line-soft); position: relative; z-index: 20;
+    }
+    .m-nav-btn {
+      width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+      border: none; background: transparent; cursor: pointer; border-radius: 50%; color: var(--c-text-2); flex-shrink: 0;
+    }
+    .m-nav-btn:active { background: #F2F2F2; }
+    .m-nav-btn svg { width: 20px; height: 20px; }
+    .m-nav-center { flex: 1; min-width: 0; text-align: center; padding: 0 4px; }
+    .m-nav-name {
+      font-size: 15px; font-weight: 600; color: var(--c-text); line-height: 1.2;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .m-nav-sub { font-size: 10px; color: var(--c-text-3); line-height: 1.3; }
+    /* 微信小程序胶囊 */
+    .m-capsule {
+      display: flex; align-items: center; gap: 0; height: 30px; width: 78px; flex-shrink: 0;
+      border: 1px solid #E4E4E4; border-radius: 15px; background: rgba(255,255,255,0.7);
+    }
+    .m-capsule i {
+      flex: 1; display: flex; align-items: center; justify-content: center; font-style: normal;
+    }
+    .m-capsule i svg { width: 15px; height: 15px; color: #4A4A4A; }
+    .m-capsule i:first-child { border-right: 1px solid #E4E4E4; }
+    .m-capsule .dots { position: relative; }
+    .m-capsule .dots b { width: 3px; height: 3px; border-radius: 50%; background: #4A4A4A; display: block; }
+    .m-capsule .dots { display: flex !important; gap: 2.5px; }
+
+    /* ---------- 通用：内容块 / 卡片 ---------- */
+    .blk { padding: 0 16px; }
+    .blk-title {
+      display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 600; color: var(--c-text);
+      margin: 22px 0 10px;
+    }
+    .blk-title .bar { width: 3px; height: 14px; border-radius: 2px; background: var(--c-primary); flex-shrink: 0; }
+    .blk-title .more { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--c-text-3); }
+    .m-card {
+      background: var(--c-card); border: 1px solid var(--c-line-soft); border-radius: var(--r-card);
+      overflow: hidden;
+    }
+
+    /* ---------- 通用：按钮 ---------- */
+    .m-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+      height: 46px; border: none; border-radius: var(--r-card); font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: inherit; background: var(--c-primary); color: #fff;
+    }
+    .m-btn:active { filter: brightness(0.94); }
+    .m-btn.ghost { background: #fff; color: var(--c-primary); border: 1px solid var(--c-primary); }
+    .m-btn[disabled] { background: #D9D5CE; color: #fff; cursor: not-allowed; }
+
+    /* ---------- 通用：标签 ---------- */
+    .m-tag {
+      display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px;
+      font-size: 11px; line-height: 1; white-space: nowrap;
+    }
+    .m-tag.year { background: var(--c-primary-soft); color: var(--c-primary); font-weight: 600; letter-spacing: 0.3px; }
+    .m-tag.place, .m-tag.person { background: #F2F0EC; color: var(--c-text-2); }
+    .m-tag.accent { background: var(--c-accent-soft); color: #96702C; }
+
+    /* ---------- 通用：骨架屏 / 空态 ---------- */
+    .sk { background: linear-gradient(90deg, #EFEDE9 25%, #F7F5F1 37%, #EFEDE9 63%); background-size: 400% 100%; animation: skm 1.4s ease infinite; border-radius: 4px; }
+    @keyframes skm { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+    /* ============================================================
+       全局浮层区（必须位于 .mobile-screen 内、.app-root 之外）
+       所有业务弹层 position:absolute —— 相对手机屏，不是浏览器视口
+       ============================================================ */
+    .ov-mask {
+      position: absolute; inset: 0; background: rgba(20, 24, 30, 0.42); z-index: 60;
+      opacity: 0; pointer-events: none; transition: opacity 0.22s;
+    }
+    .ov-mask.show { opacity: 1; pointer-events: auto; }
+
+    /* D03 会话与个人侧栏（左侧抽屉） */
+    .side-panel {
+      position: absolute; top: 0; bottom: 0; left: 0; width: 292px; background: #FBF9F6; z-index: 70;
+      display: flex; flex-direction: column; transform: translateX(-102%); transition: transform 0.26s cubic-bezier(0.32,0.72,0,1);
+      box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+    }
+    .side-panel.show { transform: translateX(0); }
+    .sp-head { padding: 52px 16px 12px; background: #fff; border-bottom: 1px solid var(--c-line-soft); flex-shrink: 0; }
+    .sp-scene { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .sp-scene .logo {
+      width: 28px; height: 28px; border-radius: 6px; background: var(--c-primary); color: #fff;
+      font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background-size: cover; background-position: center;
+    }
+    .sp-scene .txt { min-width: 0; }
+    .sp-scene .txt b { display: block; font-size: 13px; font-weight: 600; }
+    .sp-scene .txt span { font-size: 10px; color: var(--c-text-3); }
+    .sp-new {
+      display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 38px;
+      border: 1px solid var(--c-primary); background: #fff; color: var(--c-primary); border-radius: 6px;
+      font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit;
+    }
+    .sp-new svg { width: 15px; height: 15px; }
+    .sp-list { flex: 1; overflow-y: auto; padding: 8px 0 12px; min-height: 0; }
+    .sp-list::-webkit-scrollbar { display: none; }
+    .sp-group { padding: 10px 16px 4px; font-size: 11px; color: var(--c-text-3); }
+    .sp-item {
+      padding: 9px 16px; cursor: pointer; border-left: 3px solid transparent;
+    }
+    .sp-item:hover { background: #F4F1EC; }
+    .sp-item.active { background: #fff; border-left-color: var(--c-primary); }
+    .sp-item .t {
+      font-size: 13px; color: var(--c-text); line-height: 1.4;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sp-item .m { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+    .sp-item .m span { font-size: 10px; color: var(--c-text-3); }
+    .sp-item .scene-tag {
+      display: inline-flex; align-items: center; height: 16px; padding: 0 5px; border-radius: 3px;
+      font-size: 9px; background: #EFEDE9; color: var(--c-text-2);
+    }
+    .sp-item .scene-tag.cur { background: var(--c-primary-soft); color: var(--c-primary); }
+    .sp-other-fold { padding: 8px 16px; font-size: 12px; color: var(--c-text-3); cursor: pointer; display: flex; align-items: center; gap: 5px; }
+    .sp-guest {
+      margin: 4px 12px 12px; padding: 12px; background: var(--c-accent-soft); border-radius: var(--r-card);
+      font-size: 11px; color: #7A5B23; line-height: 1.6;
+    }
+    .sp-guest button {
+      margin-top: 8px; width: 100%; height: 32px; border: none; border-radius: 5px; background: var(--c-primary);
+      color: #fff; font-size: 12px; cursor: pointer; font-family: inherit;
+    }
+    .sp-foot {
+      border-top: 1px solid var(--c-line-soft); padding: 10px 16px 18px; background: #fff; flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+    }
+    .sp-foot .av {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--c-primary-soft); color: var(--c-primary);
+      display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0;
+    }
+    .sp-foot .info { flex: 1; min-width: 0; }
+    .sp-foot .info b { display: block; font-size: 13px; }
+    .sp-foot .info span { font-size: 10px; color: var(--c-text-3); }
+    .sp-foot svg { width: 16px; height: 16px; color: var(--c-text-3); }
+
+    /* 底部抽屉基类（D01 来源 / D02 反馈 共用） */
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; background: #fff; z-index: 75;
+      border-radius: var(--r-sheet) var(--r-sheet) 0 0; display: flex; flex-direction: column;
+      max-height: 85%; transform: translateY(102%); transition: transform 0.26s cubic-bezier(0.32,0.72,0,1);
+      box-shadow: 0 -6px 24px rgba(0,0,0,0.1);
+    }
+    .sheet.show { transform: translateY(0); }
+    .sheet-head {
+      flex-shrink: 0; padding: 14px 16px 10px; border-bottom: 1px solid var(--c-line-soft); position: relative;
+    }
+    .sheet-head .grab { width: 36px; height: 4px; border-radius: 2px; background: #E4E1DC; margin: -4px auto 10px; }
+    .sheet-head h3 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .sheet-head h3 em { font-style: normal; font-size: 12px; font-weight: 400; color: var(--c-text-3); }
+    .sheet-close {
+      position: absolute; top: 14px; right: 12px; width: 32px; height: 32px; border: none; background: transparent;
+      cursor: pointer; color: var(--c-text-3); display: flex; align-items: center; justify-content: center;
+    }
+    .sheet-close svg { width: 18px; height: 18px; }
+    .sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 12px 16px 16px; }
+    .sheet-body::-webkit-scrollbar { display: none; }
+    .sheet-foot {
+      flex-shrink: 0; padding: 10px 16px 18px; border-top: 1px solid var(--c-line-soft); background: #fff;
+    }
+
+    /* D01 来源证据 */
+    .cite-item { padding: 12px 0; border-bottom: 1px solid var(--c-line-soft); }
+    .cite-item:last-child { border-bottom: none; }
+    .cite-item .ct { display: flex; align-items: flex-start; gap: 8px; }
+    .cite-item .idx {
+      width: 18px; height: 18px; border-radius: 4px; background: var(--c-primary-soft); color: var(--c-primary);
+      font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .cite-item .ct b { font-size: 13px; font-weight: 600; line-height: 1.5; flex: 1; }
+    .cite-item .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0 0 26px; font-size: 10px; color: var(--c-text-3); }
+    .trust {
+      display: inline-flex; align-items: center; height: 17px; padding: 0 5px; border-radius: 3px; font-size: 9px;
+    }
+    .trust.official { background: #E8F3EC; color: #2E7D52; }
+    .trust.verified { background: var(--c-primary-soft); color: var(--c-primary); }
+    .trust.reference { background: #F2F0EC; color: var(--c-text-2); }
+    .cite-quote {
+      margin: 8px 0 0 26px; padding: 9px 10px; background: #FAF8F5; border-left: 2px solid var(--c-accent);
+      font-size: 12px; color: #4A4A4A; line-height: 1.7; border-radius: 0 4px 4px 0;
+    }
+    .cite-disclaimer { margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--c-line); font-size: 10px; color: var(--c-text-3); line-height: 1.6; }
+
+    /* D02 反馈 */
+    .fb-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .fb-opt {
+      padding: 8px 11px; border: 1px solid var(--c-line); border-radius: 6px; font-size: 12px;
+      color: var(--c-text-2); cursor: pointer; background: #fff; user-select: none;
+    }
+    .fb-opt.on { border-color: var(--c-primary); background: var(--c-primary-soft); color: var(--c-primary); font-weight: 500; }
+    .fb-note {
+      width: 100%; margin-top: 12px; min-height: 66px; resize: none; border: 1px solid var(--c-line);
+      border-radius: 6px; padding: 9px 10px; font-size: 12px; font-family: inherit; color: var(--c-text); line-height: 1.6;
+    }
+    .fb-note:focus { outline: none; border-color: var(--c-primary); }
+    .fb-count { text-align: right; font-size: 10px; color: var(--c-text-3); margin-top: 4px; }
+    .fb-line { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; font-size: 11px; color: var(--c-text-2); line-height: 1.6; }
+    .fb-line input { margin-top: 2px; flex-shrink: 0; }
+
+    /* 提示弹窗（toast） */
+    .m-toast {
+      position: absolute; left: 50%; bottom: 96px; transform: translate(-50%, 8px); z-index: 95;
+      background: rgba(28, 32, 38, 0.9); color: #fff; font-size: 12.5px; padding: 10px 16px; border-radius: 6px;
+      max-width: 268px; text-align: center; line-height: 1.5; opacity: 0; pointer-events: none; transition: all 0.22s;
+    }
+    .m-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* 浏览器级演示工具（本应浮在手机壳外，保留 fixed） */
+    .demo-fab {
+      position: fixed; right: 22px; bottom: 22px; z-index: 200; height: 38px; padding: 0 16px;
+      border: none; border-radius: 19px; background: #2F3B4C; color: #fff; font-size: 13px; cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25); font-family: inherit;
+    }
+    .demo-menu {
+      position: fixed; right: 22px; bottom: 68px; z-index: 200; background: #fff; border-radius: 8px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.2); padding: 6px; display: none; width: 260px;
+    }
+    .demo-menu.show { display: block; }
+    .demo-menu .dm-title { padding: 6px 10px 4px; font-size: 11px; color: var(--c-text-3); }
+    .demo-menu .dm-item {
+      padding: 8px 10px; font-size: 13px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    }
+    .demo-menu .dm-item:hover { background: #F4F1EC; }
+    .demo-menu .dm-item.on { background: var(--c-primary-soft); color: var(--c-primary); font-weight: 500; }
+    .demo-menu .dm-item .k {
+      font-size: 10px; color: var(--c-text-3); margin-left: auto;
+    }
+
+    /* ============================================================
+       页面样式（页面组件仅写 DOM + JS，样式统一在此维护）
+       ============================================================ */
+    .page { position: relative; }
+
+    /* ---------- S00 场景解析与协议 ---------- */
+    #page-scene { background: linear-gradient(168deg, var(--c-primary) 0%, var(--c-primary-deep) 58%, #0E2438 100%); }
+    .scene-wrap { display: flex; flex-direction: column; align-items: center; height: 100%; padding: 0 26px; position: relative; }
+    .scene-wrap:before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 4px);
+    }
+    .scene-top { padding-top: 78px; text-align: center; z-index: 1; }
+    .scene-logo {
+      width: 68px; height: 68px; margin: 0 auto 16px; border-radius: 16px;
+      background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.30);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 21px; font-weight: 700; color: #fff; letter-spacing: 1px;
+    }
+    .scene-name { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 2px; }
+    .scene-tenant { font-size: 12.5px; color: rgba(255,255,255,0.62); margin-top: 8px; letter-spacing: 0.5px; }
+    .scene-code { font-size: 10.5px; color: rgba(255,255,255,0.34); margin-top: 5px; font-family: Consolas, monospace; }
+    .scene-mid { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; }
+    .scene-loading { display: flex; align-items: center; gap: 9px; font-size: 13px; color: rgba(255,255,255,0.78); }
+    .scene-loading .spinner { border-color: rgba(255,255,255,0.25); border-top-color: #fff; }
+    .scene-agree { width: 100%; }
+    .sa-box { background: rgba(255,255,255,0.97); border-radius: 10px; padding: 18px 16px 16px; }
+    .sa-h { font-size: 15px; font-weight: 600; text-align: center; margin-bottom: 12px; }
+    .sa-p { font-size: 12px; color: var(--c-text-2); line-height: 1.78; }
+    .sa-check { display: flex; gap: 8px; align-items: flex-start; margin: 14px 0 14px; font-size: 11.5px; color: var(--c-text-2); line-height: 1.65; }
+    .sa-check input { margin-top: 2px; flex-shrink: 0; }
+    .sa-check a { color: var(--c-primary); text-decoration: none; }
+    .sa-note { text-align: center; font-size: 10.5px; color: var(--c-text-3); margin-top: 10px; }
+    .scene-foot { padding: 16px 0 22px; font-size: 10px; color: rgba(255,255,255,0.34); text-align: center; z-index: 1; }
+    .scene-top.fail { padding-top: 104px; }
+    .scene-logo.fail { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.18); color: rgba(255,255,255,0.6); }
+    .scene-logo.fail svg { width: 30px; height: 30px; }
+    .fail-actions { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .scene-wrap .m-btn.ghost { background: transparent; color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.4); }
+
+    /* ---------- S01 首页 ---------- */
+    .home-hero {
+      position: relative; overflow: hidden; padding: 18px 16px 18px; color: #fff;
+      background-color: var(--c-primary-deep);
+      background-image: linear-gradient(152deg, rgba(28,63,110,0.90) 0%, rgba(20,48,79,0.95) 100%), url('assets/hero-campus.jpg');
+      background-size: cover, cover; background-position: center, center;
+    }
+    .hh-watermark {
+      position: absolute; right: -4px; top: 2px; font-size: 66px; font-weight: 700; line-height: 1;
+      color: rgba(255,255,255,0.07); letter-spacing: -2px; font-family: Georgia, "Times New Roman", serif;
+      pointer-events: none;
+    }
+    .hh-top { display: flex; align-items: center; gap: 11px; position: relative; z-index: 1; }
+    .hh-logo {
+      width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0; background-size: cover; background-position: center;
+      background-color: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.28);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; letter-spacing: 1px;
+    }
+    .hh-school { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
+    .hh-scene { font-size: 11px; color: rgba(255,255,255,0.66); margin-top: 4px; letter-spacing: 0.5px; }
+    .hh-welcome {
+      position: relative; z-index: 1; margin-top: 14px; font-size: 13px; line-height: 1.72;
+      color: rgba(255,255,255,0.9);
+    }
+    .hh-timeline { position: relative; z-index: 1; display: flex; gap: 7px; margin-top: 15px; }
+    .ht-node {
+      flex: 1; text-align: center; padding: 8px 5px; cursor: pointer;
+      background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); border-radius: 6px;
+    }
+    .ht-node:active { background: rgba(255,255,255,0.16); }
+    .ht-node b { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 14.5px; font-weight: 700; color: #EBDCB8; letter-spacing: 0.5px; }
+    .ht-node i { font-style: normal; font-size: 9.5px; color: rgba(255,255,255,0.62); }
+    .ask-wrap { position: relative; z-index: 2; margin: -20px 16px 0; }
+    .ask-bar {
+      display: flex; align-items: center; gap: 7px; height: 48px; padding: 0 6px 0 15px;
+      background: #fff; border: 1px solid rgba(255,255,255,0.85); border-radius: var(--r-input);
+      box-shadow: 0 6px 18px rgba(20,48,79,0.16);
+    }
+    .ask-bar input {
+      flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+      font-size: 14px; font-family: inherit; color: var(--c-text);
+    }
+    .ask-bar input::placeholder { color: #B5B0A7; }
+    .ask-voice {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; border: none;
+      background: var(--c-primary-soft); color: var(--c-primary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ask-voice svg { width: 17px; height: 17px; }
+    .ask-send {
+      height: 36px; padding: 0 16px; flex-shrink: 0; border: none; border-radius: 18px; cursor: pointer;
+      background: var(--c-primary); color: #fff; font-size: 13.5px; font-weight: 500; font-family: inherit;
+    }
+    .ask-send[disabled] { background: #EDEAE4; color: #B8B3AA; }
+    .ask-tip { margin-top: 6px; font-size: 11px; color: var(--c-danger); padding-left: 4px; }
+    .sg-list { display: flex; flex-direction: column; gap: 8px; }
+    .sg-item {
+      display: flex; align-items: center; gap: 10px; padding: 12px; cursor: pointer;
+      background: #fff; border: 1px solid var(--c-line-soft); border-radius: var(--r-card);
+      font-size: 13.5px; line-height: 1.45; color: var(--c-text);
+    }
+    .sg-item:active { background: #FAF8F5; }
+    .sg-item .sg-ico { width: 16px; height: 16px; color: var(--c-primary); flex-shrink: 0; }
+    .sg-item span { flex: 1; }
+    .sg-item .sg-arrow { width: 14px; height: 14px; color: #CCC7BF; flex-shrink: 0; }
+    .tp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .tp-card { background: #fff; border: 1px solid var(--c-line-soft); border-radius: var(--r-card); overflow: hidden; cursor: pointer; }
+    .tp-card:active { background: #FAF8F5; }
+    .tp-cover { height: 72px; position: relative; background-size: cover; background-position: center; }
+    .tp-cover:after {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 7px);
+    }
+    .tp-txt { padding: 9px 10px 11px; }
+    .tp-name { font-size: 13.5px; font-weight: 600; }
+    .tp-brief { font-size: 11px; color: var(--c-text-2); line-height: 1.5; margin-top: 4px; height: 33px; overflow: hidden; }
+    .tp-span { font-family: Georgia, "Times New Roman", serif; font-size: 10px; color: var(--c-accent); letter-spacing: 0.5px; margin-top: 6px; }
+    .today-card {
+      display: flex; gap: 13px; padding: 14px; cursor: pointer;
+      background: #fff; border: 1px solid var(--c-line-soft); border-radius: var(--r-card);
+    }
+    .today-card:active { background: #FAF8F5; }
+    .tc-date { flex-shrink: 0; text-align: center; padding-right: 13px; border-right: 1px solid var(--c-line-soft); }
+    .tc-date b { display: block; font-size: 11.5px; font-weight: 500; color: var(--c-text-2); white-space: nowrap; }
+    .tc-date span { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; color: var(--c-primary); margin-top: 3px; }
+    .tc-title { font-size: 13.5px; font-weight: 600; }
+    .tc-brief { font-size: 11.5px; color: var(--c-text-2); line-height: 1.6; margin-top: 5px; }
+    .home-foot { display: flex; gap: 7px; padding: 20px 16px 26px; font-size: 10.5px; color: var(--c-text-3); line-height: 1.65; }
+    .home-foot svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 2px; }
+
+    /* 主题/文档封面（真实校园照片 · 来源 Wikimedia Commons，署名见 README） */
+    .cover-origin, .cover-spirit, .cover-campus, .cover-innov,
+    .banner-origin, .banner-spirit, .banner-campus, .banner-innov {
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+    }
+    .cover-origin { background-image: url('assets/cover-origin.jpg'); }
+    .cover-spirit { background-image: url('assets/cover-spirit.jpg'); }
+    .cover-campus { background-image: url('assets/cover-campus.jpg'); }
+    .cover-innov  { background-image: url('assets/cover-innov.jpg'); }
+    .banner-origin { background-image: url('assets/banner-origin.jpg'); }
+    .banner-spirit { background-image: url('assets/banner-spirit.jpg'); }
+    .banner-campus { background-image: url('assets/banner-campus.jpg'); }
+    .banner-innov  { background-image: url('assets/banner-innov.jpg'); }
+
+    /* ---------- S02 对话页 ---------- */
+    .chat-list { padding: 14px 12px 0; }
+    .chat-empty { padding: 68px 30px; text-align: center; }
+    .ce-ico { width: 54px; height: 54px; margin: 0 auto 14px; border-radius: 50%; background: var(--c-primary-soft); color: var(--c-primary); display: flex; align-items: center; justify-content: center; }
+    .ce-ico svg { width: 25px; height: 25px; }
+    .ce-t { font-size: 14px; font-weight: 500; color: var(--c-text-2); }
+    .ce-s { font-size: 12px; color: var(--c-text-3); margin-top: 6px; line-height: 1.6; }
+    .msg { display: flex; margin-bottom: 14px; }
+    .msg.user { justify-content: flex-end; }
+    .u-bubble {
+      max-width: 78%; padding: 10px 13px; background: var(--c-primary); color: #fff;
+      border-radius: 14px 14px 4px 14px; font-size: 14px; line-height: 1.62; word-break: break-word;
+    }
+    .msg.ai { justify-content: flex-start; }
+    .ai-card {
+      width: 100%; padding: 14px; background: #fff;
+      border: 1px solid var(--c-line-soft); border-radius: 12px;
+    }
+    .ai-title { font-size: 15px; font-weight: 600; line-height: 1.5; margin-bottom: 9px; color: var(--c-text); }
+    .ai-text p { font-size: 15px; line-height: 1.72; color: #333; margin-bottom: 9px; }
+    .ai-text p:last-child { margin-bottom: 0; }
+    .ai-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .ai-cite {
+      display: flex; align-items: center; gap: 7px; margin-top: 12px; padding: 10px 11px; cursor: pointer;
+      background: var(--c-primary-soft); border-radius: 6px; font-size: 12.5px; font-weight: 500; color: var(--c-primary);
+    }
+    .ai-cite svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .ai-cite .ac-arrow { margin-left: auto; width: 14px; height: 14px; }
+    .ai-related { margin-top: 10px; }
+    .ar-card {
+      display: flex; align-items: center; gap: 10px; padding: 9px 10px; margin-top: 6px; cursor: pointer;
+      border: 1px solid var(--c-line-soft); border-radius: 6px;
+    }
+    .ar-card:active { background: #FAF8F5; }
+    .ar-cover { width: 42px; height: 30px; border-radius: 4px; flex-shrink: 0; background-size: cover; }
+    .ar-txt { flex: 1; min-width: 0; }
+    .ar-txt b { display: block; font-size: 12.5px; }
+    .ar-txt span { display: block; font-size: 10.5px; color: var(--c-text-3); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ar-card svg { width: 14px; height: 14px; color: #CCC7BF; flex-shrink: 0; }
+    .ai-follow { margin-top: 12px; padding-top: 11px; border-top: 1px dashed var(--c-line); }
+    .af-label { font-size: 11px; color: var(--c-text-3); margin-bottom: 7px; }
+    .fu-btn {
+      display: block; width: 100%; text-align: left; padding: 9px 11px; margin-bottom: 6px; cursor: pointer;
+      background: #FAF8F5; border: 1px solid var(--c-line-soft); border-radius: 6px;
+      font-size: 12.5px; line-height: 1.45; color: var(--c-primary); font-family: inherit;
+    }
+    .fu-btn:last-child { margin-bottom: 0; }
+    .fu-btn:active { background: var(--c-primary-soft); border-color: var(--c-primary); }
+    .ai-ops {
+      display: flex; align-items: center; gap: 3px; flex-wrap: wrap;
+      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--c-line-soft);
+    }
+    .op-btn {
+      display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; border: none; border-radius: 5px;
+      background: transparent; color: var(--c-text-2); font-size: 12px; cursor: pointer; font-family: inherit;
+    }
+    .op-btn svg { width: 14px; height: 14px; }
+    .op-btn:active { background: #F4F2EE; }
+    .op-btn.on { color: var(--c-primary); font-weight: 500; }
+    .op-btn.stop { color: var(--c-danger); }
+    .ops-right { margin-left: auto; display: flex; gap: 2px; }
+    .ai-loading { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--c-text-2); }
+    .spinner {
+      width: 13px; height: 13px; flex-shrink: 0; border-radius: 50%;
+      border: 2px solid var(--c-primary-soft); border-top-color: var(--c-primary);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ai-cursor { display: inline-block; width: 7px; height: 15px; background: var(--c-primary); opacity: 0.65; animation: blink 1s step-end infinite; vertical-align: -2px; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .ai-stopped { margin-top: 10px; font-size: 11px; color: var(--c-text-3); }
+    .ai-fail { }
+    .af-t { font-size: 14px; font-weight: 600; color: var(--c-danger); }
+    .af-s { font-size: 12px; color: var(--c-text-2); margin-top: 6px; line-height: 1.6; }
+    .af-btn { margin-top: 11px; height: 34px; padding: 0 16px; border: 1px solid var(--c-primary); background: #fff; color: var(--c-primary); border-radius: 6px; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+    .ai-miss { }
+    .am-h { display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: #8A6D3B; }
+    .am-h svg { width: 16px; height: 16px; }
+    .am-t { margin-top: 9px; font-size: 14px; line-height: 1.72; color: #4A4A4A; }
+    .am-ops { display: flex; gap: 8px; margin-top: 13px; }
+    .am-ops button { flex: 1; height: 36px; border: 1px solid var(--c-primary); background: #fff; color: var(--c-primary); border-radius: 6px; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+    .am-ops button.primary { background: var(--c-primary); color: #fff; }
+    .am-note { margin-top: 11px; font-size: 10.5px; color: var(--c-text-3); line-height: 1.65; }
+    .ai-plain { font-size: 15px; line-height: 1.72; color: #333; }
+    .scene-banner {
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 9px 14px;
+      background: var(--c-accent-soft); color: #7A5B23; font-size: 11.5px; line-height: 1.5;
+    }
+    .scene-banner svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .scene-banner button {
+      margin-left: auto; flex-shrink: 0; height: 26px; padding: 0 10px; cursor: pointer;
+      border: 1px solid #C9A961; background: #fff; color: #7A5B23; border-radius: 4px;
+      font-size: 11px; font-family: inherit;
+    }
+    .chat-foot { flex-shrink: 0; padding: 9px 14px 12px; background: #fff; border-top: 1px solid var(--c-line-soft); }
+    .chat-foot .ask-bar { height: 46px; box-shadow: none; border: 1px solid var(--c-line); }
+    .chat-bottom-pad { height: 12px; }
+    .back-latest {
+      position: absolute; left: 50%; transform: translateX(-50%); bottom: 82px; z-index: 30;
+      display: flex; align-items: center; gap: 5px; height: 32px; padding: 0 13px; cursor: pointer;
+      background: #fff; border: 1px solid var(--c-line); border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12); font-size: 12px; color: var(--c-text-2); font-family: inherit;
+    }
+    .back-latest svg { width: 13px; height: 13px; }
+
+    /* ---------- S03 主题知识详情 ---------- */
+    .th-media { height: 146px; position: relative; display: flex; align-items: flex-end; padding: 12px; background-size: cover; background-position: center; }
+    .th-media:after {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 8px);
+    }
+    .th-span {
+      position: relative; z-index: 1; font-family: Georgia, "Times New Roman", serif;
+      font-size: 11px; color: #fff; background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
+    }
+    .th-title { font-size: 19px; font-weight: 700; line-height: 1.45; padding: 16px 16px 0; }
+    .th-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 0; }
+    .topic-sum {
+      margin: 14px 16px 0; padding: 12px 13px; background: #fff;
+      border-left: 3px solid var(--c-accent); border-radius: 0 6px 6px 0;
+      font-size: 13px; line-height: 1.76; color: var(--c-text-2);
+    }
+    .topic-sec { padding: 18px 16px 0; }
+    .topic-sec h2 { display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .topic-sec h2:before { content: ''; width: 3px; height: 13px; border-radius: 2px; background: var(--c-primary); flex-shrink: 0; }
+    .topic-sec p { font-size: 14px; line-height: 1.78; color: #3A3A3A; }
+    .topic-src { margin: 20px 16px 0; padding-top: 14px; border-top: 1px solid var(--c-line); }
+    .topic-rel { margin: 20px 16px 0; }
+    .ts-h { font-size: 13px; font-weight: 600; color: var(--c-text-2); margin-bottom: 10px; }
+    .src-item { padding: 11px 0; border-bottom: 1px solid var(--c-line-soft); }
+    .si-t { font-size: 13px; font-weight: 500; }
+    .si-m { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 10.5px; color: var(--c-text-3); margin-top: 5px; }
+    .si-q { margin-top: 7px; padding: 8px 10px; background: #FAF8F5; border-radius: 5px; font-size: 12px; line-height: 1.72; color: #4A4A4A; }
+    .ts-note { margin-top: 12px; font-size: 10.5px; color: var(--c-text-3); line-height: 1.65; }
+    .rel-item { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--c-line-soft); cursor: pointer; }
+    .rel-type { flex-shrink: 0; font-size: 10px; color: var(--c-primary); background: var(--c-primary-soft); padding: 3px 6px; border-radius: 3px; }
+    .rel-txt { flex: 1; min-width: 0; }
+    .rel-txt b { display: block; font-size: 13px; }
+    .rel-txt span { display: block; font-size: 10.5px; color: var(--c-text-3); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rel-item svg { width: 14px; height: 14px; color: #CCC7BF; flex-shrink: 0; }
+    .topic-foot { flex-shrink: 0; padding: 10px 16px 14px; background: #fff; border-top: 1px solid var(--c-line-soft); }
+    .topic-bottom-pad { height: 10px; }
+    .topic-gone { padding: 110px 24px; text-align: center; }
+    .tg-t { font-size: 15px; font-weight: 600; color: var(--c-text-2); }
+    .tg-s { font-size: 12px; color: var(--c-text-3); margin: 8px 0 20px; line-height: 1.7; }
+
+    /* ---------- S04 个人资料 ---------- */
+    .pf-head { background: #fff; padding: 26px 16px 22px; text-align: center; }
+    .pf-avatar { width: 62px; height: 62px; margin: 0 auto 11px; border-radius: 50%; background: var(--c-primary-soft); color: var(--c-primary); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; }
+    .pf-name { font-size: 16px; font-weight: 600; }
+    .pf-sub { font-size: 11.5px; color: var(--c-text-3); margin-top: 6px; }
+    .pf-login { margin-top: 15px; height: 38px; padding: 0 22px; border: none; border-radius: 6px; background: var(--c-primary); color: #fff; font-size: 13.5px; cursor: pointer; font-family: inherit; }
+    .pf-group { margin-top: 10px; background: #fff; }
+    .pf-row { display: flex; align-items: center; gap: 10px; padding: 14px 16px; font-size: 13.5px; border-bottom: 1px solid var(--c-line-soft); }
+    .pf-row:last-child { border-bottom: none; }
+    .pf-k { flex-shrink: 0; }
+    .pf-v { margin-left: auto; font-size: 12.5px; color: var(--c-text-3); text-align: right; }
+    .pf-row.link { cursor: pointer; }
+    .pf-row.link svg { width: 14px; height: 14px; color: #CCC7BF; flex-shrink: 0; }
+    .pf-note { padding: 14px 16px; font-size: 10.5px; color: var(--c-text-3); line-height: 1.7; }
+    .pf-logout { margin: 16px; height: 44px; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 6px; color: var(--c-danger); font-size: 14px; cursor: pointer; }
+
+    /* ---------- 语音面板 ---------- */
+    .voice-panel { position: absolute; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center; background: rgba(20,24,30,0.5); }
+    .voice-panel.show { display: flex; }
+    .vp-box { background: #fff; border-radius: 14px; padding: 26px 30px 22px; text-align: center; }
+    .vp-mic {
+      width: 62px; height: 62px; margin: 0 auto 15px; border-radius: 50%; background: var(--c-primary); color: #fff;
+      display: flex; align-items: center; justify-content: center; animation: pulse 1.7s ease-in-out infinite;
+    }
+    .vp-mic svg { width: 26px; height: 26px; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(28,63,110,0.35); } 50% { box-shadow: 0 0 0 14px rgba(28,63,110,0); } }
+    .vp-status { font-size: 13px; color: var(--c-text-2); }
+    .vp-sec { font-family: Georgia, "Times New Roman", serif; font-size: 20px; color: var(--c-primary); margin-top: 6px; }
+    .vp-ops { display: flex; gap: 10px; margin-top: 17px; }
+    .vp-ops button { height: 34px; padding: 0 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12.5px; border: 1px solid var(--c-line); background: #fff; color: var(--c-text-2); }
+    .vp-ops button.primary { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+  </style>
+</head>
+<body>
+  <div class="mobile-shell">
+    <div class="mobile-screen">
+      <div class="status-bar">
+        <span class="sb-left">10:24</span>
+        <span class="sb-right">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="none">
+            <rect x="0" y="7" width="3" height="4" rx="0.8" fill="#1a1a1a"/>
+            <rect x="4.6" y="5" width="3" height="6" rx="0.8" fill="#1a1a1a"/>
+            <rect x="9.2" y="2.5" width="3" height="8.5" rx="0.8" fill="#1a1a1a"/>
+            <rect x="13.8" y="0" width="3" height="11" rx="0.8" fill="#1a1a1a" opacity="0.25"/>
+          </svg>
+          <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
+            <path d="M1.2 3.4a9.4 9.4 0 0112.6 0" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M3.6 5.9a5.9 5.9 0 017.8 0" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="7.5" cy="9" r="1.6" fill="#1a1a1a"/>
+          </svg>
+          <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+            <rect x="0.5" y="0.5" width="20" height="11" rx="3" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="2" y="2" width="14.5" height="8" rx="1.6" fill="#1a1a1a"/>
+            <path d="M22.5 4v4a2 2 0 000-4z" fill="#1a1a1a"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="app-root" id="app-root">
+        <div class="page" id="page-scene">
+  <!-- 正常态 -->
+  <div class="scene-wrap" id="scene-main">
+    <div class="scene-top">
+      <div class="scene-logo" id="scene-logo">七宝</div>
+      <div class="scene-name" id="scene-name">AI 校史馆</div>
+      <div class="scene-tenant" id="scene-tenant">上海市七宝中学</div>
+      <div class="scene-code" id="scene-code">scene=school_history</div>
+    </div>
+
+    <div class="scene-mid">
+      <div class="scene-loading" id="scene-loading">
+        <span class="spinner"></span>
+        <span id="scene-loading-text">正在校验入口…</span>
+      </div>
+
+      <div class="scene-agree" id="scene-agree" style="display:none">
+        <div class="sa-box">
+          <div class="sa-h">首次使用请确认</div>
+          <div class="sa-p">本入口为 <b id="sa-tenant">上海市七宝中学</b> AI 校史馆体验服务。为提供问答与历史会话功能，我们会记录你的提问内容用于知识库优化；我们不会收集你的姓名、学号、班级等个人信息。</div>
+          <label class="sa-check">
+            <input type="checkbox" id="agree-cb" onchange="onAgreeChange()">
+            <span>我已阅读并同意 <a href="javascript:;" onclick="toast('Demo 演示：《服务协议》正文以学校正式发布版本为准')">《服务协议》</a> 与 <a href="javascript:;" onclick="toast('Demo 演示：《隐私政策》正文以学校正式发布版本为准')">《隐私政策》</a></span>
+          </label>
+          <button class="m-btn" id="enter-btn" disabled onclick="enterScene()">进入体验</button>
+          <div class="sa-note">无需登录即可浏览与提问，最多可提 3 个游客问题</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene-foot">场景配置版本 <span id="scene-ver">v1.3</span> · 知识空间 校史公共库</div>
+  </div>
+
+  <!-- 失败态 -->
+  <div class="scene-wrap" id="scene-fail" style="display:none">
+    <div class="scene-top fail">
+      <div class="scene-logo fail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+      </div>
+      <div class="scene-name" id="fail-title">入口无效或已停用</div>
+      <div class="scene-tenant" id="fail-desc">请重新扫描校史馆入口二维码</div>
+    </div>
+    <div class="scene-mid">
+      <div class="fail-actions">
+        <button class="m-btn" onclick="retryScan()">重新扫描</button>
+        <button class="m-btn ghost" onclick="showSceneFail('expired')">查看「活动已结束」示例</button>
+      </div>
+    </div>
+    <div class="scene-foot">如多次扫描仍无法进入，请联系校史馆现场工作人员</div>
+  </div>
+</div>
+
+<div class="page" id="page-home">
+  <!-- 1. 品牌导航栏 -->
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="openSidePanel()" aria-label="会话与个人">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name" id="home-nav-name">七宝中学 · AI 校史馆</div>
+      <div class="m-nav-sub">AI 校史助手</div>
+    </div>
+    <div class="m-capsule" aria-hidden="true">
+      <i class="dots"><b></b><b></b><b></b></i>
+      <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/></svg></i>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <!-- 2. 场景头部 -->
+    <div class="home-hero">
+      <div class="hh-watermark">1947</div>
+      <div class="hh-top">
+        <div class="hh-logo" id="home-logo">七宝</div>
+        <div class="hh-meta">
+          <div class="hh-school" id="home-school">上海市七宝中学</div>
+          <div class="hh-scene" id="home-scene">AI 校史馆 · 1947—今天</div>
+        </div>
+      </div>
+      <div class="hh-welcome" id="home-welcome"></div>
+      <div class="hh-timeline" id="home-timeline">
+        <span class="ht-node" onclick="openTopic('topic_origin')"><b>1947</b><i>建校源流</i></span>
+        <span class="ht-node" onclick="openTopic('topic_origin')"><b>1956</b><i>两校合并</i></span>
+        <span class="ht-node" onclick="openTopic('topic_campus')"><b>1997</b><i>迁入新址</i></span>
+      </div>
+    </div>
+
+    <!-- 3. 主输入框 -->
+    <div class="ask-wrap">
+      <div class="ask-bar">
+        <input id="ask-input" type="text" maxlength="520" placeholder="问问学校的故事"
+               oninput="onAskInput()" onkeydown="onAskKey(event)" autocomplete="off">
+        <button class="ask-voice" id="ask-voice" onclick="startVoice()" aria-label="语音提问">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+        </button>
+        <button class="ask-send" id="ask-send" disabled onclick="submitAsk()">发送</button>
+      </div>
+      <div class="ask-tip" id="ask-tip" style="display:none">最多 500 字，请精简后再发送</div>
+    </div>
+
+    <!-- 4. 推荐问题 -->
+    <div class="blk" id="blk-suggest">
+      <div class="blk-title"><span class="bar"></span>可以这样问</div>
+      <div class="sg-list" id="sg-list"></div>
+    </div>
+
+    <!-- 5. 主题入口 -->
+    <div class="blk" id="blk-topics">
+      <div class="blk-title"><span class="bar"></span>校史主题<span class="more" onclick="toast('Demo 演示：主题列表页可在后续版本扩展')">全部 ›</span></div>
+      <div class="tp-grid" id="tp-grid"></div>
+    </div>
+
+    <!-- 6. 今日内容 -->
+    <div class="blk" id="blk-today">
+      <div class="blk-title"><span class="bar"></span>历史上的今天</div>
+      <div class="today-card" id="today-card" onclick="openTopic('topic_campus')"></div>
+    </div>
+
+    <!-- 7. 可信说明 -->
+    <div class="home-foot" id="home-foot"></div>
+  </div>
+</div>
+
+<div class="page" id="page-chat">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name" id="chat-nav-name">AI 校史助手</div>
+      <div class="m-nav-sub" id="chat-nav-sub">基于校史公共库回答</div>
+    </div>
+    <div class="m-capsule" aria-hidden="true">
+      <i class="dots"><b></b><b></b><b></b></i>
+      <i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/></svg></i>
+    </div>
+  </div>
+
+  <!-- 跨场景只读提示条（UI-13） -->
+  <div class="scene-banner" id="scene-banner" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+    <span id="scene-banner-text"></span>
+    <button onclick="newConversationInScene()">在此场景新建会话</button>
+  </div>
+
+  <div class="page-body" id="chat-body">
+    <div class="chat-list" id="chat-list"></div>
+    <div class="chat-bottom-pad"></div>
+  </div>
+
+  <button class="back-latest" id="back-latest" onclick="scrollToLatest()" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+    回到最新
+  </button>
+
+  <!-- 固定底部输入栏 -->
+  <div class="chat-foot">
+    <div class="ask-bar">
+      <input id="chat-input" type="text" maxlength="520" placeholder="继续问点什么…"
+             oninput="onChatInput()" onkeydown="onChatKey(event)" autocomplete="off">
+      <button class="ask-voice" id="chat-voice" onclick="startVoice()" aria-label="语音提问">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+      </button>
+      <button class="ask-send" id="chat-send" disabled onclick="submitChatAsk()">发送</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-topic">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center">
+      <div class="m-nav-name" id="topic-nav-name">校史主题</div>
+      <div class="m-nav-sub" id="topic-nav-sub">来自校史公共库</div>
+    </div>
+    <button class="m-nav-btn" onclick="shareTopic()" aria-label="分享">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M12 16V3M8 7l4-4 4 4"/></svg>
+    </button>
+  </div>
+
+  <div class="page-body" id="topic-body">
+    <div id="topic-content"></div>
+    <div class="topic-bottom-pad"></div>
+  </div>
+
+  <div class="topic-foot">
+    <button class="m-btn" onclick="continueAskAI()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" style="width:18px;height:18px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      继续问 AI
+    </button>
+  </div>
+</div>
+
+<div class="page" id="page-profile">
+  <div class="m-nav">
+    <button class="m-nav-btn" onclick="historyBack()" aria-label="返回">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="m-nav-center"><div class="m-nav-name">个人资料</div></div>
+    <div style="width:40px"></div>
+  </div>
+
+  <div class="page-body">
+    <div class="pf-head">
+      <div class="pf-avatar" id="pf-avatar">游</div>
+      <div class="pf-name" id="pf-name">游客</div>
+      <div class="pf-sub" id="pf-sub">未登录 · 本机保留最近 3 条临时会话</div>
+      <button class="pf-login" id="pf-login" onclick="doLogin()">微信授权登录</button>
+    </div>
+
+    <div class="pf-group">
+      <div class="pf-row">
+        <span class="pf-k">手机号</span>
+        <span class="pf-v" id="pf-phone">未绑定</span>
+      </div>
+      <div class="pf-row">
+        <span class="pf-k">常用场景</span>
+        <span class="pf-v" id="pf-scene">AI 校史馆</span>
+      </div>
+      <div class="pf-row">
+        <span class="pf-k">历史会话</span>
+        <span class="pf-v" id="pf-conv-count">3 条（游客临时）</span>
+      </div>
+    </div>
+
+    <div class="pf-group">
+      <div class="pf-row link" onclick="openPrivacy()">
+        <span class="pf-k">隐私设置</span>
+        <span class="pf-v">可清除历史会话、撤回非必要授权</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+      <div class="pf-row link" onclick="clearHistory()">
+        <span class="pf-k">清除历史会话</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+      <div class="pf-row link" onclick="toast('Demo 演示：意见反馈入口将在正式版接入')">
+        <span class="pf-k">意见反馈</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+      </div>
+    </div>
+
+    <div class="pf-note">
+      本 Demo 不演示短信验证码流程；手机号是否可修改以正式账号系统能力为准。
+    </div>
+
+    <div class="pf-logout" id="pf-logout" style="display:none" onclick="doLogout()">退出登录</div>
+  </div>
+</div>
+      </div>
+
+      <div class="home-indicator"></div>
+
+      <!-- ============ 全局浮层区 ============ -->
+      <div class="ov-mask" id="ov-mask" onclick="closeAllOverlays()"></div>
+
+      <!-- D03 会话与个人侧栏 -->
+      <aside class="side-panel" id="side-panel">
+        <div class="sp-head">
+          <div class="sp-scene">
+            <div class="logo" id="sp-logo">七宝</div>
+            <div class="txt"><b id="sp-tenant">上海市七宝中学</b><span id="sp-scene-name">AI 校史馆</span></div>
+          </div>
+          <button class="sp-new" onclick="newConversation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            新建会话
+          </button>
+        </div>
+        <div class="sp-list" id="sp-list"></div>
+        <div class="sp-foot" onclick="goProfile()">
+          <div class="av" id="sp-avatar">游</div>
+          <div class="info"><b id="sp-user">游客</b><span id="sp-user-sub">登录后可保存历史会话</span></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </aside>
+
+      <!-- D01 来源证据抽屉 -->
+      <div class="sheet" id="cite-sheet">
+        <div class="sheet-head">
+          <div class="grab"></div>
+          <h3>参考资料 <em id="cite-count"></em></h3>
+          <button class="sheet-close" onclick="closeCiteSheet()" aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="sheet-body" id="cite-body"></div>
+      </div>
+
+      <!-- D02 回答反馈弹层 -->
+      <div class="sheet" id="feedback-sheet">
+        <div class="sheet-head">
+          <div class="grab"></div>
+          <h3>这条回答哪里有问题？</h3>
+          <button class="sheet-close" onclick="closeFeedbackSheet()" aria-label="关闭">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="sheet-body">
+          <div class="fb-opts" id="fb-opts"></div>
+          <textarea class="fb-note" id="fb-note" maxlength="300" placeholder="补充说明（选填）"></textarea>
+          <div class="fb-count"><span id="fb-count">0</span>/300</div>
+          <label class="fb-line">
+            <input type="checkbox" id="fb-contact">
+            <span>提供新线索，并希望学校联系我（需登录，联系方式仅用于核实史料）</span>
+          </label>
+        </div>
+        <div class="sheet-foot">
+          <button class="m-btn" id="fb-submit" onclick="submitFeedback()">提交反馈</button>
+        </div>
+      </div>
+
+      <!-- 语音输入面板（absolute · 相对手机屏） -->
+      <div class="voice-panel" id="voice-panel">
+        <div class="vp-box">
+          <div class="vp-mic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+          </div>
+          <div class="vp-status" id="voice-status">正在聆听…（最长 60 秒）</div>
+          <div class="vp-sec" id="voice-sec">0″</div>
+          <div class="vp-ops">
+            <button onclick="stopVoice(false)">完成</button>
+            <button class="primary" onclick="stopVoice(true)">停止</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- toast -->
+      <div class="m-toast" id="m-toast"></div>
+    </div>
+  </div>
+
+  <!-- 浏览器级演示控制 -->
+  <button class="demo-fab" onclick="toggleDemoMenu(event)">演示控制</button>
+  <div class="demo-menu" id="demo-menu">
+    <div id="demo-menu-items"></div>
+  </div>
+
+  <script>
+/* mock-data.js - 演示数据 */
+var MOCK = {
+  user: { name: "管理员", role: "admin", avatar: "👤", department: "产品部" },
+  users: [
+    { phone: "138****1234", name: "张三", customers: ["XX博物馆"], sessions: 23, lastVisit: "2026-07-13", regTime: "2026-03-15", status: "正常", color: "#faad14" },
+    { phone: "139****5678", name: "李四", customers: ["科技馆"], sessions: 8, lastVisit: "2026-07-12", regTime: "2026-04-20", status: "正常", color: "#52c41a" },
+    { phone: "136****9012", name: "王五", customers: ["XX博物馆","科技馆","自然博物馆"], sessions: 45, lastVisit: "2026-07-13", regTime: "2026-02-10", status: "正常", color: "#1890ff" },
+    { phone: "137****3456", name: "赵六", customers: ["XX博物馆"], sessions: 3, lastVisit: "2026-07-10", regTime: "2026-06-01", status: "正常", color: "#722ed1" },
+    { phone: "135****7890", name: "孙七", customers: ["自然博物馆"], sessions: 12, lastVisit: "2026-07-08", regTime: "2026-05-12", status: "已禁用", color: "#f5222d" },
+    { phone: "133****2468", name: "周八", customers: ["科技馆"], sessions: 1, lastVisit: "2026-07-13", regTime: "2026-07-01", status: "正常", color: "#13c2c2" }
+  ],
+  chatRecords: [
+    { id: "C001", user: "张三", customer: "XX博物馆", messages: 12, startTime: "2026-07-13 14:30" },
+    { id: "C002", user: "李四", customer: "科技馆", messages: 5, startTime: "2026-07-13 13:20" },
+    { id: "C003", user: "王五", customer: "XX博物馆", messages: 28, startTime: "2026-07-13 10:15" },
+    { id: "C004", user: "赵六", customer: "XX博物馆", messages: 3, startTime: "2026-07-12 16:45" },
+    { id: "C005", user: "孙七", customer: "自然博物馆", messages: 8, startTime: "2026-07-12 11:00" }
+  ],
+  chatList: [
+    { id: 1, title: "示例对话一", time: "14:30", unread: 0 },
+    { id: 2, title: "示例对话二", time: "昨天", unread: 2 },
+    { id: 3, title: "示例对话三", time: "07-11", unread: 0 }
+  ]
+};
+
+  </script>
+  <script>
+/* =========================================================================
+   全局数据层（本文件按文件名序首个执行，其他页面共用此作用域）
+   对应 SDD 第 8 节数据对象：Tenant / Scene / SceneConfigVersion / KnowledgeItem
+   ⚠️ 事实性内容来自公开校史资料（百度百科、维基百科、文汇报 2017 专题），
+      来源统一标注为「示例资料」，对外演示前须由学校核定（SDD 第 10 节）
+   ========================================================================= */
+
+/* ---------- 租户与场景配置 ---------- */
+var TENANT = { id: 'qibao', name: '上海市七宝中学' };
+
+var SCENE = {
+  id: 'scene_qibao_history',
+  tenantId: 'qibao',
+  sceneCode: 'school_history',
+  name: 'AI 校史馆',
+  type: 'school_history',
+  status: 'published',
+  configVersion: 'v1.3',
+  knowledgeSpace: '校史公共库',
+  theme: {
+    logoText: '七宝',
+    logoUrl: '',            // 校徽（授权待确认，暂用文字标）
+    coverUrl: '',           // 首页封面（授权待确认）
+    primary: '#1C3F6E',
+    accent: '#C8A05A',
+    pageBg: '#F6F4F0'
+  },
+  assistant: {
+    name: 'AI 校史助手',
+    welcome: '你好，我是七宝中学 AI 校史助手。可以和你一起查找学校沿革、人物故事与校园记忆。',
+    placeholder: '问问学校的故事'
+  },
+  capability: { voice: true, tts: true, citation: true, topic: true, visitor: true },
+  disclaimer: '回答基于学校审核资料，重要信息请以学校正式发布为准'
+};
+
+/* ---------- 首页：推荐问题（首屏 4 条） ---------- */
+var SUGGESTIONS = [
+  { id: 'sg1', text: '七宝中学为何有两条办学源流？', key: 'origin' },
+  { id: 'sg2', text: '学校的人文传统是怎样形成的？', key: 'spirit' },
+  { id: 'sg3', text: '研究型高中建设从何开始？', key: 'innov' },
+  { id: 'sg4', text: '用一分钟介绍七宝中学。', key: 'intro' }
+];
+
+/* ---------- 首页：主题入口（4 个） ---------- */
+var TOPICS = [
+  { id: 'topic_origin', name: '学校沿革', brief: '两条源流，1956 年汇成一校', span: '1947—1956', media: 'cover-origin' },
+  { id: 'topic_spirit', name: '人物与精神', brief: '全面发展，人文见长', span: '1996—2007', media: 'cover-spirit' },
+  { id: 'topic_campus', name: '校园空间', brief: '从民主路 121 号到农南路 22 号', span: '1997', media: 'cover-campus' },
+  { id: 'topic_innov', name: '创新教育', brief: '研究性学习从这里开始', span: '1998—2017', media: 'cover-innov' }
+];
+
+/* ---------- 首页：今日内容 ---------- */
+var TODAY_CONTENT = {
+  dateLabel: '9 月 1 日',
+  year: '1997',
+  title: '迁入农南路新校址',
+  brief: '1997 年 9 月 1 日起，学校由民主路校址迁入农南路新址，成为上海市首批高标准现代化寄宿制高级中学之一。',
+  topicId: 'topic_campus'
+};
+
+/* ---------- 知识库（KnowledgeItem，12 条片段 / 10 个知识项） ---------- */
+var KB = [
+  { id: 'kb_event_1947a', title: '上海市七宝农业职业学校创办', type: 'event', trustLevel: 'verified',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·1947 年条目', sourceDate: '2026',
+    body: '1947 年 4 月，上海市七宝农业职业学校在七宝镇创办，是七宝中学的两条办学源流之一。' },
+  { id: 'kb_event_1947b', title: '私立南洋模范中学七宝分校创办', type: 'event', trustLevel: 'verified',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·1947 年条目', sourceDate: '2026',
+    body: '1947 年 9 月，私立南洋模范中学七宝分校创办，是七宝中学的另一条办学源流。该校 1952 年改为公立，更名上海市第二十初级中学。' },
+  { id: 'kb_event_1953', title: '农校改为普通完全中学，定名七宝中学', type: 'event', trustLevel: 'verified',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·1950 年代', sourceDate: '2026',
+    body: '1951 年，上海市七宝农业职业学校易名上海市七宝农业学校；1953 年改为普通完全中学，定名为七宝中学。' },
+  { id: 'kb_event_1956', title: '两校合并成立上海市七宝中学', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·合并纪要', sourceDate: '2026',
+    body: '1956 年 8 月，七宝中学与上海市第二十初级中学合并，成立新的上海市七宝中学。这一合并使 1947 年创办的两条源流正式汇为一校。' },
+  { id: 'kb_event_1961', title: '列为上海市重点中学', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·荣誉沿革', sourceDate: '2026',
+    body: '1961 年，学校被列为上海市重点中学。1985 年停办初中、高中每届扩至 8 个班，成为一所高级中学。' },
+  { id: 'kb_event_1994', title: '易地重建新校舍的决定', type: 'event', trustLevel: 'verified',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·1990 年代', sourceDate: '2026',
+    body: '1994 年，闵行区委、区政府决定投资二亿元易地重建新校舍，学校由此进入新一轮发展；同年正式创建文来中学。' },
+  { id: 'kb_event_1996', title: '提出「全面发展，人文见长」', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学办学理念资料·人文见长', sourceDate: '2026',
+    body: '1996 年，仇忠海校长提出「全面发展，人文见长」的办学理念，此后成为学校校训，确立了七宝中学的人文底色。' },
+  { id: 'kb_event_1997', title: '迁入农南路 22 号新校址', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学校史沿革资料·校址变迁', sourceDate: '2026',
+    body: '1997 年 9 月 1 日起，学校由民主路校址迁入农南路新址，成为上海市首批高标准现代化寄宿制高级中学之一。现址位于闵行区七宝镇农南路 22 号。' },
+  { id: 'kb_event_1998', title: '开放性主题活动课程开全国先河', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学课程改革资料·研究性学习', sourceDate: '2026',
+    body: '1998 年，学校开设开放性主题活动课程，开全国先河，被教育部肯定为「研究性学习最有推广价值的模式之一」，并作为一种学习方式在国内推广。' },
+  { id: 'kb_event_2007', title: '提出「平民本色，精英气质」，学生科学研究院开馆', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学育人目标资料·2007', sourceDate: '2026',
+    body: '2007 年，学校提出「平民本色，精英气质」的育人目标；同年学生科学研究院开馆，为学生的课题研究提供固定场所与平台。' },
+  { id: 'kb_event_2017', title: '研究型育人模式获市级特等奖', type: 'event', trustLevel: 'official',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学教学成果资料·2017', sourceDate: '2026',
+    body: '2017 年，学校《普通高中「研究型」育人模式的探索与实践》获上海市基础教育成果奖特等奖、国家二等奖。' },
+  { id: 'kb_person_qiuzhonghai', title: '仇忠海校长', type: 'person', trustLevel: 'verified',
+    sourceOrg: '校史馆筹备组（示例资料）', sourceTitle: '七宝中学历任校长资料', sourceDate: '2026',
+    body: '仇忠海自 1994 年 9 月起任上海市七宝中学校长，1996 年提出「全面发展，人文见长」的办学理念，是学校人文传统与研究型高中建设的重要推动者。' }
+];
+var findKb = function(id) { return KB.filter(function(k) { return k.id === id; })[0]; };
+
+/* ---------- 文档（主题知识详情，KnowledgeTopic） ---------- */
+var TOPIC_DOCS = {
+  topic_origin: {
+    id: 'topic_origin', topicId: 'topic_origin', name: '学校沿革', title: '两条源流，1956 年汇成一校',
+    span: '1947—1956', years: ['1947', '1953', '1956'], people: [], places: ['七宝镇'],
+    cover: 'banner-origin',
+    summary: '七宝中学的起点不是一所学校，而是 1947 年在七宝镇同时创办的两所学校：上海市七宝农业职业学校与私立南洋模范中学七宝分校。1956 年 8 月两校合并，成立上海市七宝中学。',
+    sections: [
+      { h: '两条源流的起点', p: '1947 年 4 月，上海市七宝农业职业学校在七宝镇创办；同年 9 月，私立南洋模范中学七宝分校创办。两校同处一镇、同年创办，构成了七宝中学的两条办学源流。' },
+      { h: '各自的调整', p: '1951 年，农校易名上海市七宝农业学校，1953 年改为普通完全中学并定名为七宝中学；南洋模范中学七宝分校则在 1952 年改为公立，更名上海市第二十初级中学。' },
+      { h: '1956 年合并', p: '1956 年 8 月，两校合并成立新的上海市七宝中学。此后学校于 1961 年被列为上海市重点中学，1985 年停办初中成为高级中学。' }
+    ],
+    sources: ['kb_event_1947a', 'kb_event_1947b', 'kb_event_1953', 'kb_event_1956', 'kb_event_1961'],
+    related: [
+      { type: 'place', id: 'topic_campus', name: '校园空间' },
+      { type: 'person', id: 'kb_person_qiuzhonghai', name: '仇忠海校长' }
+    ]
+  },
+  topic_spirit: {
+    id: 'topic_spirit', topicId: 'topic_spirit', name: '人物与精神', title: '「全面发展，人文见长」是怎么确立的',
+    span: '1996—2007', years: ['1996', '2007'], people: ['仇忠海'], places: [],
+    cover: 'banner-spirit',
+    summary: '学校的人文底色由 1996 年提出的办学理念「全面发展，人文见长」确立，此后成为校训；2007 年进一步提出「平民本色，精英气质」的育人目标。',
+    sections: [
+      { h: '理念的提出', p: '1994 年闵行区委、区政府决定投资二亿元易地重建新校舍，学校进入新一轮发展。1996 年，仇忠海校长提出「全面发展，人文见长」的办学理念，此后成为学校校训。' },
+      { h: '育人目标的延伸', p: '2007 年，学校提出「平民本色，精英气质」的育人目标，与「人文、研究、创新」的校风一起，构成了今天的育人主张。' }
+    ],
+    sources: ['kb_event_1994', 'kb_event_1996', 'kb_event_2007', 'kb_person_qiuzhonghai'],
+    related: [
+      { type: 'person', id: 'kb_person_qiuzhonghai', name: '仇忠海校长' },
+      { type: 'topic', id: 'topic_innov', name: '创新教育' }
+    ]
+  },
+  topic_campus: {
+    id: 'topic_campus', topicId: 'topic_campus', name: '校园空间', title: '从民主路 121 号到农南路 22 号',
+    span: '1997', years: ['1994', '1997'], people: [], places: ['农南路 22 号', '民主路'],
+    cover: 'banner-campus',
+    summary: '1994 年闵行区决定投资二亿元易地重建；1997 年 9 月 1 日起，学校由民主路校址迁入农南路新址，成为上海市首批高标准现代化寄宿制高级中学之一。',
+    sections: [
+      { h: '易地重建的决定', p: '1994 年，闵行区委、区政府决定投资二亿元易地重建新校舍，学校由此获得新的发展空间。' },
+      { h: '迁入农南路', p: '1997 年 9 月 1 日起，学校由民主路校址迁入农南路新址。现址位于闵行区七宝镇农南路 22 号，东临农南路外环辅道，临近闵行体育公园。' },
+      { h: '校园里的研究空间', p: '2007 年学生科学研究院开馆，为学生的课题研究提供了固定场所与平台，是校园空间中具有代表性的一处。' }
+    ],
+    sources: ['kb_event_1994', 'kb_event_1997', 'kb_event_2007'],
+    related: [
+      { type: 'topic', id: 'topic_origin', name: '学校沿革' },
+      { type: 'topic', id: 'topic_innov', name: '创新教育' }
+    ]
+  },
+  topic_innov: {
+    id: 'topic_innov', topicId: 'topic_innov', name: '创新教育', title: '从「开放性主题活动课程」到研究型高中',
+    span: '1998—2017', years: ['1998', '2007', '2017'], people: [], places: [],
+    cover: 'banner-innov',
+    summary: '1998 年学校开设开放性主题活动课程，开全国先河，被教育部肯定为「研究性学习最有推广价值的模式之一」；2017 年研究型育人模式获上海市基础教育成果奖特等奖。',
+    sections: [
+      { h: '一门课开全国先河', p: '1998 年，学校开设开放性主题活动课程，被教育部肯定为「研究性学习最有推广价值的模式之一」，并作为一种学习方式在国内推广。' },
+      { h: '固定的研究场所', p: '2007 年学生科学研究院开馆，为学生的课题研究提供场所与平台。' },
+      { h: '从课程到育人模式', p: '2017 年，学校《普通高中「研究型」育人模式的探索与实践》获上海市基础教育成果奖特等奖、国家二等奖，标志着这条路径从一门课程发展为一套育人模式。' }
+    ],
+    sources: ['kb_event_1998', 'kb_event_2007', 'kb_event_2017'],
+    related: [
+      { type: 'topic', id: 'topic_spirit', name: '人物与精神' },
+      { type: 'place', id: 'topic_campus', name: '校园空间' }
+    ]
+  }
+};
+
+/* =========================================================================
+   S00 场景解析与协议
+   ========================================================================= */
+var SCENE_LOADING_STEPS = ['正在校验入口…', '正在加载场景配置…', '正在准备校史资料…'];
+var _sceneTimers = [];
+
+function init_scene() {
+  _sceneTimers.forEach(clearTimeout); _sceneTimers = [];
+  var entry = window.DEMO_ENTRY || 'ok';
+  if (entry !== 'ok') { showSceneFail(entry); return; }
+
+  document.getElementById('scene-main').style.display = 'flex';
+  document.getElementById('scene-fail').style.display = 'none';
+  document.getElementById('scene-name').textContent = SCENE.name;
+  document.getElementById('scene-tenant').textContent = TENANT.name;
+  document.getElementById('scene-logo').textContent = SCENE.theme.logoText;
+  document.getElementById('scene-ver').textContent = SCENE.configVersion;
+  document.getElementById('scene-code').textContent = 'scene=' + SCENE.sceneCode;
+  document.getElementById('sa-tenant').textContent = TENANT.name;
+
+  var agreed = sessionStorage.getItem('qb_agreed') === '1';
+  var loadingEl = document.getElementById('scene-loading');
+  var agreeEl = document.getElementById('scene-agree');
+
+  if (agreed) {
+    loadingEl.style.display = 'flex';
+    agreeEl.style.display = 'none';
+    var i = 0;
+    (function step() {
+      document.getElementById('scene-loading-text').textContent = SCENE_LOADING_STEPS[i];
+      i++;
+      if (i < SCENE_LOADING_STEPS.length) {
+        _sceneTimers.push(setTimeout(step, 220));
+      } else {
+        _sceneTimers.push(setTimeout(function() {
+          resetStack('home'); showPage('home', { fresh: true });
+        }, 320));
+      }
+    })();
+  } else {
+    loadingEl.style.display = 'none';
+    agreeEl.style.display = 'block';
+    document.getElementById('agree-cb').checked = false;
+    document.getElementById('enter-btn').disabled = true;
+  }
+}
+
+function onAgreeChange() {
+  document.getElementById('enter-btn').disabled = !document.getElementById('agree-cb').checked;
+}
+
+function enterScene() {
+  sessionStorage.setItem('qb_agreed', '1');
+  var btn = document.getElementById('enter-btn');
+  btn.textContent = '正在进入…';
+  setTimeout(function() {
+    resetStack('home'); showPage('home', { fresh: true });
+  }, 800);
+}
+
+function showSceneFail(kind) {
+  document.getElementById('scene-main').style.display = 'none';
+  document.getElementById('scene-fail').style.display = 'flex';
+  var t = kind === 'expired' ? '该场景已结束' : '入口无效或已停用';
+  var d = kind === 'expired'
+    ? '本活动场景已于 2026 年 8 月 31 日结束'
+    : '请重新扫描校史馆入口二维码';
+  document.getElementById('fail-title').textContent = t;
+  document.getElementById('fail-desc').textContent = d;
+  document.getElementById('scene-fail').querySelectorAll('.m-btn')[0].textContent = kind === 'expired' ? '进入默认场景' : '重新扫描';
+}
+
+function retryScan() {
+  window.DEMO_ENTRY = 'ok';
+  init_scene();
+}
+
+function resetSceneDemo() {
+  sessionStorage.removeItem('qb_agreed');
+  window.DEMO_ENTRY = 'ok';
+  init_scene();
+}
+
+/* ================= S01 校史问答首页 ================= */
+
+function init_home() {
+  /* 场景头部 */
+  document.getElementById('home-nav-name').textContent = TENANT.name.replace('上海市', '') + ' · ' + SCENE.name;
+  document.getElementById('home-logo').textContent = SCENE.theme.logoText;
+  document.getElementById('home-school').textContent = TENANT.name;
+  document.getElementById('home-scene').textContent = SCENE.name + ' · 1947—今天';
+  document.getElementById('home-welcome').textContent = SCENE.assistant.welcome;
+  document.getElementById('ask-input').placeholder = SCENE.assistant.placeholder;
+  document.getElementById('home-foot').innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
+    '<span>' + SCENE.disclaimer + '</span>';
+
+  /* 能力开关（UI-14：关闭后入口完全隐藏，布局自然重排） */
+  var cap = SCENE.capability;
+  document.getElementById('ask-voice').style.display = cap.voice ? 'flex' : 'none';
+  document.getElementById('blk-topics').style.display = cap.topic ? 'block' : 'none';
+
+  /* 推荐问题 */
+  var sgBox = document.getElementById('sg-list');
+  if (SUGGESTIONS && SUGGESTIONS.length) {
+    document.getElementById('blk-suggest').style.display = 'block';
+    sgBox.innerHTML = SUGGESTIONS.map(function(s) {
+      return '<div class="sg-item" onclick="askFromHome(\'' + s.key + '\')">' +
+             '<svg class="sg-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' +
+             '<span>' + s.text + '</span>' +
+             '<svg class="sg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>' +
+             '</div>';
+    }).join('');
+  } else {
+    document.getElementById('blk-suggest').style.display = 'none';
+  }
+
+  /* 主题入口 */
+  var tpBox = document.getElementById('tp-grid');
+  if (cap.topic && TOPICS && TOPICS.length) {
+    tpBox.innerHTML = TOPICS.map(function(t) {
+      return '<div class="tp-card" onclick="openTopic(\'' + t.id + '\')">' +
+             '<div class="tp-cover ' + t.media + '"></div>' +
+             '<div class="tp-txt">' +
+               '<div class="tp-name">' + t.name + '</div>' +
+               '<div class="tp-brief">' + t.brief + '</div>' +
+               '<div class="tp-span">' + t.span + '</div>' +
+             '</div></div>';
+    }).join('');
+  } else {
+    document.getElementById('blk-topics').style.display = 'none';
+  }
+
+  /* 今日内容 */
+  var tc = document.getElementById('today-card');
+  if (TODAY_CONTENT) {
+    document.getElementById('blk-today').style.display = 'block';
+    tc.innerHTML =
+      '<div class="tc-date"><b>' + TODAY_CONTENT.dateLabel + '</b><span>' + TODAY_CONTENT.year + '</span></div>' +
+      '<div class="tc-main"><div class="tc-title">' + TODAY_CONTENT.title + '</div>' +
+      '<div class="tc-brief">' + TODAY_CONTENT.brief + '</div></div>';
+  } else {
+    document.getElementById('blk-today').style.display = 'none';
+  }
+
+  onAskInput();
+}
+
+/* ---------- 输入框 ---------- */
+function onAskInput() {
+  var el = document.getElementById('ask-input');
+  var v = el.value;
+  var len = v.length;
+  var send = document.getElementById('ask-send');
+  var tip = document.getElementById('ask-tip');
+  var over = len > 500;
+  send.disabled = over || v.trim().length === 0;
+  tip.style.display = over ? 'block' : 'none';
+  if (over) tip.textContent = '已输入 ' + len + ' 字，超出 500 字上限';
+}
+function onAskKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); submitAsk(); }
+}
+function submitAsk() {
+  var el = document.getElementById('ask-input');
+  var q = el.value.trim();
+  if (!q || q.length > 500) return;
+  el.value = '';
+  onAskInput();
+  askQuestion(q);
+}
+function askFromHome(key) {
+  var s = SUGGESTIONS.filter(function(x) { return x.key === key; })[0];
+  if (s) askQuestion(s.text);
+}
+
+/* ---------- 语音（Demo 模拟） ---------- */
+var _voiceTimers = [];
+function startVoice() {
+  if (!SCENE.capability.voice) return;
+  _voiceTimers.forEach(clearTimeout); _voiceTimers = [];
+  var panel = document.getElementById('voice-panel');
+  panel.classList.add('show');
+  document.getElementById('voice-status').textContent = '正在聆听…（最长 60 秒）';
+  var sec = 0;
+  var timer = setInterval(function() {
+    sec++;
+    document.getElementById('voice-sec').textContent = sec + '″';
+    if (sec >= 60) { clearInterval(timer); stopVoice(true); }
+  }, 1000);
+  _voiceTimers.push(timer);
+  window.__VOICE_TIMER = timer;
+}
+function stopVoice(auto) {
+  clearInterval(window.__VOICE_TIMER);
+  var panel = document.getElementById('voice-panel');
+  document.getElementById('voice-status').textContent = auto ? '已停止录音，正在识别…' : '正在识别…';
+  setTimeout(function() {
+    panel.classList.remove('show');
+    var el = document.getElementById('ask-input');
+    el.value = '七宝中学的两条办学源流是怎么回事？';
+    onAskInput();
+    toast('识别完成，已填入输入框，确认后可发送');
+    document.getElementById('voice-sec').textContent = '0″';
+  }, 900);
+  document.getElementById('voice-sec').textContent = '0″';
+}
+
+/* =========================================================================
+   S02 AI 对话页 · 回答引擎（Demo 用前端 fixture 模拟检索与流式生成）
+   对应 SDD 第 9 节 AI 规则与 8.2 结构化响应契约
+   ========================================================================= */
+
+/* ---------- 结构化回答 fixture（answerText 先结论后展开） ---------- */
+var QA_FIXTURES = {
+  origin: {
+    answerType: 'grounded_answer', retrievalLevel: 'high',
+    answerTitle: '两条源流，1956 年汇成一校',
+    answerText: '七宝中学的起点不是一所学校，而是 1947 年在七宝镇同时创办的两所学校。\n\n源流之一，是 1947 年 4 月创办的上海市七宝农业职业学校；源流之二，是同年 9 月创办的私立南洋模范中学七宝分校。前者在 1953 年经调整后定名为七宝中学，后者在 1952 年改为公立、更名上海市第二十初级中学。\n\n1956 年 8 月，两校合并，成立上海市七宝中学。今天校史上常说的「两条办学源流」，指的就是这段 1947—1956 年的汇合过程。',
+    factMeta: { years: ['1947', '1953', '1956'], people: [], places: ['七宝镇'] },
+    citations: ['kb_event_1947a', 'kb_event_1947b', 'kb_event_1956'],
+    relatedContentIds: ['topic_origin'],
+    followUps: ['两条源流分别经历了哪些阶段？', '1956 年合并后学校设在哪条路上？', '为什么一所农业职业学校要和一所普通中学合并？']
+  },
+  spirit: {
+    answerType: 'grounded_answer', retrievalLevel: 'high',
+    answerTitle: '「全面发展，人文见长」是学校人文底色的起点',
+    answerText: '学校的人文传统，由 1996 年提出的办学理念「全面发展，人文见长」确立，此后成为七宝中学的校训。\n\n这一理念出现在学校易地重建的节点上：1994 年闵行区委、区政府决定投资二亿元易地重建新校舍，学校进入新一轮发展；1996 年办学理念成型；1997 年 9 月 1 日迁入农南路 22 号新校址。\n\n2007 年，学校进一步提出「平民本色，精英气质」的育人目标，与「人文、研究、创新」的校风一起，构成了今天的育人主张。',
+    factMeta: { years: ['1994', '1996', '2007'], people: ['仇忠海'], places: [] },
+    citations: ['kb_event_1996', 'kb_event_1994', 'kb_event_2007'],
+    relatedContentIds: ['topic_spirit'],
+    followUps: ['「平民本色，精英气质」具体指什么？', '仇忠海校长还推动了哪些事？', '校风「人文、研究、创新」是怎么提出的？']
+  },
+  innov: {
+    answerType: 'grounded_answer', retrievalLevel: 'high',
+    answerTitle: '从「开放性主题活动课程」到研究型高中',
+    answerText: '研究型高中的起点是 1998 年的开放性主题活动课程。这门课开全国先河，被教育部肯定为「研究性学习最有推广价值的模式之一」，并作为一种学习方式在国内推广。\n\n2007 年，学生科学研究院开馆，为学生的课题研究提供了固定的场所与平台。\n\n2017 年，学校《普通高中「研究型」育人模式的探索与实践》获上海市基础教育成果奖特等奖、国家二等奖。这条路径由此从一门课程，发展为一套育人模式。',
+    factMeta: { years: ['1998', '2007', '2017'], people: [], places: [] },
+    citations: ['kb_event_1998', 'kb_event_2017', 'kb_event_2007'],
+    relatedContentIds: ['topic_innov'],
+    followUps: ['开放性主题活动课程具体怎么上？', '学生科学研究院里能做什么？', '研究型育人模式的核心是什么？']
+  },
+  intro: {
+    answerType: 'grounded_answer', retrievalLevel: 'high',
+    answerTitle: '一分钟了解上海市七宝中学',
+    answerText: '上海市七宝中学创建于 1947 年，前身是同年 4 月创办的上海市七宝农业职业学校和同年 9 月创办的私立南洋模范中学七宝分校，1956 年 8 月两校合并成立七宝中学。\n\n学校 1961 年被列为上海市重点中学，1997 年 9 月迁入闵行区七宝镇农南路 22 号现址，成为上海市首批高标准现代化寄宿制高级中学之一。\n\n办学理念「全面发展，人文见长」于 1996 年提出，此后成为校训；育人目标为「平民本色，精英气质」。1998 年学校开设开放性主题活动课程，开全国先河，2017 年研究型育人模式获上海市基础教育成果奖特等奖。',
+    factMeta: { years: ['1947', '1956', '1997'], people: [], places: ['七宝镇'] },
+    citations: ['kb_event_1947a', 'kb_event_1956', 'kb_event_1997'],
+    relatedContentIds: ['topic_origin', 'topic_spirit'],
+    followUps: ['详细说说两条办学源流', '学校的校训和校风是什么？', '研究型高中是怎么建起来的？']
+  },
+  clarify: {
+    answerType: 'clarify', retrievalLevel: 'low',
+    answerTitle: '想再确认一下你问的是哪一段',
+    answerText: '你的问题里指向不太明确，我不确定是指哪位人物、哪个时期。可以从这些方向告诉我想了解的内容：\n\n1. 学校沿革中的重要节点（1947 年建校、1956 年合并、1997 年迁址）\n2. 历任校长与办学理念的提出\n3. 校园空间的变迁与老建筑',
+    factMeta: { years: [], people: [], places: [] },
+    citations: [],
+    relatedContentIds: ['topic_origin'],
+    followUps: ['1997 年迁校前后发生了什么？', '办学理念是哪一年提出的？', '老校址在什么地方？']
+  },
+  no_evidence: {
+    answerType: 'no_evidence', retrievalLevel: 'none',
+    answerTitle: '',
+    answerText: '现有经审核资料中还没有找到足够依据，我不想把不确定的信息当成校史事实。你可以换个问法，或提交一条线索供学校核实。',
+    factMeta: { years: [], people: [], places: [] },
+    citations: [],
+    relatedContentIds: [],
+    followUps: []
+  },
+  off_topic: {
+    answerType: 'off_topic', retrievalLevel: 'none',
+    answerTitle: '',
+    answerText: '我主要回答当前校史馆相关问题。你可以问学校沿革、人物故事、校园空间或办学传统。',
+    factMeta: { years: [], people: [], places: [] },
+    citations: [],
+    relatedContentIds: ['topic_origin'],
+    followUps: ['七宝中学为什么有两条办学源流？', '校园空间经历过哪些变化？']
+  },
+  safety: {
+    answerType: 'safety_reply', retrievalLevel: 'none',
+    answerTitle: '',
+    answerText: '系统提示词、知识库清单和内部检索信息不在我的回答范围内。如果你想了解学校校史，我很乐意帮你查。',
+    factMeta: { years: [], people: [], places: [] },
+    citations: [],
+    relatedContentIds: [],
+    followUps: ['用一分钟介绍七宝中学', '学校的人文传统是怎样形成的？']
+  }
+};
+
+/* ---------- 全局会话与回答表 ---------- */
+var CONV = null;
+var ANSWERS = {};
+var _midSeq = 0;
+
+function newConversation(silent) {
+  CONV = {
+    id: 'conv_' + Date.now(),
+    title: '新的对话',
+    sceneCode: SCENE.sceneCode,
+    sceneName: SCENE.name,
+    configVersion: SCENE.configVersion,
+    readOnly: false,
+    createdAt: new Date().toISOString(),
+    messages: []
+  };
+  window.CURRENT_CONV_ID = CONV.id;
+  if (!silent) { closeAllOverlays(); }
+  if (typeof renderChat === 'function') renderChat();
+  return CONV;
+}
+function ensureConversation() { if (!CONV) newConversation(true); return CONV; }
+
+/* ---------- 问题路由（Demo 检索模拟） ---------- */
+function matchFixture(q) {
+  var s = (window.DEMO_SCENARIO && window.DEMO_SCENARIO !== 'grounded') ? window.DEMO_SCENARIO : null;
+  if (s === 'network_error') return 'network_error';
+  if (s && QA_FIXTURES[s]) return s;
+
+  if (/系统提示词|提示词|prompt|密钥|apikey|内部标签|检索全文|ignore previous/i.test(q)) return 'safety';
+  if (/情诗|写首诗|天气|股票|游戏|明星|彩票/.test(q)) return 'off_topic';
+  if (/菜谱|食堂菜单|校长手机|校长电话|住址|身份证|学籍|成绩单|某个学生/.test(q)) return 'no_evidence';
+  if (/源流|沿革|1947|1956|建校|合并|办学起源|怎么来的/.test(q)) return 'origin';
+  if (/人文|理念|传统|校训|校风|精神|仇忠海|全面发展/.test(q)) return 'spirit';
+  if (/研究型|创新|研究性学习|课题|科学研究院|开放.*课程/.test(q)) return 'innov';
+  if (/一分钟|介绍|概况|怎么样/.test(q)) return 'intro';
+  if (/^(他|她|那里|那一年|那时候|这个|那个时候)/.test(q) && q.length <= 16) return 'clarify';
+  if (/他|那里|那一年/.test(q) && q.length <= 12) return 'clarify';
+  return 'no_evidence';
+}
+
+/* ---------- 打开历史会话（D03 → S02） ---------- */
+function buildCompletedAnswer(mid, q, fx) {
+  return {
+    id: mid, role: 'ai', question: q, status: 'completed',
+    answerType: fx.answerType, retrievalLevel: fx.retrievalLevel,
+    answerTitle: fx.answerTitle, fullText: fx.answerText, shown: fx.answerText.length,
+    factMeta: fx.factMeta, citationIds: fx.citations.slice(),
+    relatedIds: fx.relatedContentIds.slice(), followUps: fx.followUps.slice(),
+    feedback: null, versions: [{ title: fx.answerTitle, text: fx.answerText }], versionIndex: 0
+  };
+}
+
+function loadConversation(id) {
+  var h = HISTORY.filter(function(x) { return x.id === id; })[0];
+  if (!h) return;
+  window.CURRENT_CONV_ID = id;
+  closeAllOverlays();
+
+  if (!h.cur) {
+    /* 其他场景历史会话：只读展示（UI-13），不检索当前场景知识库 */
+    var roText = '本次开放日设置校史陈列室、学生科学研究院与图书馆三处参观点，均在农南路 22 号校区内。校史陈列室按 1947 年建校、1956 年合并、1997 年迁址三个节点布展。';
+    var roAns = {
+      id: 'ro_a', role: 'ai', question: '开放日有哪些参观点？', status: 'completed',
+      answerType: 'grounded_answer', retrievalLevel: 'high', answerTitle: '开放日参观点',
+      fullText: roText, shown: roText.length,
+      factMeta: { years: ['1947', '1956', '1997'], people: [], places: ['农南路 22 号'] },
+      citationIds: [], relatedIds: [], followUps: [], feedback: null,
+      versions: [{ title: '开放日参观点', text: roText }], versionIndex: 0
+    };
+    ANSWERS['ro_a'] = roAns;
+    CONV = {
+      id: h.id, title: h.title, sceneName: h.sceneName, sceneCode: h.sceneCode,
+      configVersion: 'v1.1', readOnly: true,
+      messages: [{ id: 'ro_q', role: 'user', text: '开放日有哪些参观点？' }, roAns]
+    };
+  } else {
+    /* 当前场景历史会话：以已完成状态复现 */
+    var qMap = { h1: '七宝中学为何有两条办学源流？', h2: '研究型高中建设从何开始？' };
+    var fxMap = { h1: 'origin', h2: 'innov' };
+    var q = qMap[id] || h.title;
+    var ans = buildCompletedAnswer('hist_' + id, q, QA_FIXTURES[fxMap[id] || 'origin']);
+    ANSWERS[ans.id] = ans;
+    CONV = {
+      id: h.id, title: h.title, sceneName: h.sceneName, sceneCode: h.sceneCode,
+      configVersion: SCENE.configVersion, readOnly: false,
+      messages: [{ id: 'hu_' + id, role: 'user', text: q }, ans]
+    };
+  }
+  showPage('chat', { fresh: true });
+}
+
+/* 在只读会话所属场景新建会话（UI-13） */
+function newConversationInScene() {
+  CONV = null;
+  newConversation(true);
+  window.CURRENT_CONV_ID = CONV.id;
+  showPage('chat', { fresh: true });
+  toast('已在「' + SCENE.name + '」新建会话');
+}
+
+/* ---------- 提问入口 ---------- */
+function askQuestion(q) {
+  resetStack('home');
+  PAGE_STACK.push('chat');
+  showPage('chat', { noPush: true, fresh: true });
+  ensureConversation();
+  sendQuestion(q);
+}
+
+function sendQuestion(q) {
+  ensureConversation();
+  var uid = 'u' + (++_midSeq);
+  CONV.messages.push({ id: uid, role: 'user', text: q });
+  if (CONV.title === '新的对话') CONV.title = q.length > 16 ? q.slice(0, 16) + '…' : q;
+
+  var mid = 'a' + (++_midSeq);
+  var fx = QA_FIXTURES[matchFixture(q)];
+  var ans = {
+    id: mid, role: 'ai', question: q,
+    status: 'retrieving',
+    answerType: fx.answerType,
+    retrievalLevel: fx.retrievalLevel,
+    answerTitle: fx.answerTitle,
+    fullText: fx.answerText,
+    shown: 0,
+    factMeta: fx.factMeta,
+    citationIds: fx.citations.slice(),
+    relatedIds: fx.relatedContentIds.slice(),
+    followUps: fx.followUps.slice(),
+    feedback: null,
+    versions: [{ title: fx.answerTitle, text: fx.answerText }],
+    versionIndex: 0,
+    stopped: false,
+    failed: false
+  };
+  if (fx.answerType === 'no_evidence') { registerMissedQuestion(q); }
+  ANSWERS[mid] = ans;
+  CONV.messages.push(ans);
+  renderChat();
+  scrollToLatest(true);
+  runAnswer(mid);
+}
+
+/* ---------- 流式生成模拟 ---------- */
+var _streamTimer = null;
+function runAnswer(mid) {
+  var a = ANSWERS[mid];
+  if (!a) return;
+  a.status = 'retrieving'; a.shown = 0;
+  updateAiNode(mid);
+  var delay = a.answerType === 'grounded_answer' ? 700 : 420;
+  setTimeout(function() {
+    if (a.status !== 'retrieving') return;
+    a.status = 'generating';
+    updateAiNode(mid);
+    stepStream(mid);
+  }, delay);
+}
+function stepStream(mid) {
+  var a = ANSWERS[mid];
+  if (!a || a.status !== 'generating') return;
+  clearTimeout(_streamTimer);
+  a.shown = Math.min(a.fullText.length, a.shown + (a.fullText.length > 200 ? 5 : 3));
+  updateAiNode(mid, true);
+  if (!window.__USER_SCROLLED) scrollToLatest();
+  if (a.shown >= a.fullText.length) {
+    a.status = 'completed';
+    updateAiNode(mid);
+    return;
+  }
+  _streamTimer = setTimeout(function() { stepStream(mid); }, 34);
+}
+function stopGenerating(mid) {
+  var a = ANSWERS[mid];
+  if (!a || a.status !== 'generating') return;
+  a.status = 'stopped';
+  clearTimeout(_streamTimer);
+  updateAiNode(mid);
+  toast('已停止生成');
+}
+function regenerate(mid, ev) {
+  if (ev) ev.stopPropagation();
+  var a = ANSWERS[mid];
+  if (!a || a.status === 'generating') return;
+  var v = { title: a.answerTitle, text: a.fullText };
+  if (a.versions.length < 3) a.versions.push(v);
+  a.versionIndex = a.versions.length - 1;
+  a.status = 'retrieving'; a.shown = 0; a.stopped = false;
+  updateAiNode(mid);
+  setTimeout(function() { runAnswer(mid); }, 300);
+  toast('正在重新回答…');
+}
+function switchVersion(mid) {
+  var a = ANSWERS[mid];
+  if (!a || a.versions.length < 2) return;
+  a.versionIndex = (a.versionIndex + 1) % a.versions.length;
+  a.answerTitle = a.versions[a.versionIndex].title;
+  a.fullText = a.versions[a.versionIndex].text;
+  a.shown = a.fullText.length;
+  a.status = 'completed';
+  updateAiNode(mid);
+  toast('已切换到版本 ' + (a.versionIndex + 1) + ' / ' + a.versions.length);
+}
+function retryAnswer(mid) {
+  var a = ANSWERS[mid];
+  if (!a) return;
+  a.failed = false;
+  runAnswer(mid);
+}
+
+/* ---------- 未命中登记（SDD 7.3） ---------- */
+var MISSED = [];
+function registerMissedQuestion(q) {
+  MISSED.push({ originalQuestion: q, normalizedQuestion: q.replace(/[？?。，,、\s]/g, ''), retrievalLevel: 'none', triggerCount: 1, status: 'pending', time: new Date().toISOString() });
+}
+
+/* ---------- 反馈 ---------- */
+var FB_REASONS = ['没有回答问题', '信息可能不准确', '资料太少', '表达难懂', '内容不合适', '其他'];
+function markUseful(mid, ev) {
+  if (ev) ev.stopPropagation();
+  var a = ANSWERS[mid];
+  if (!a) return;
+  a.feedback = a.feedback === 'useful' ? null : 'useful';
+  updateAiNode(mid);
+  if (a.feedback) toast('感谢反馈，已记录');
+}
+function copyAnswer(mid, ev) {
+  if (ev) ev.stopPropagation();
+  var a = ANSWERS[mid];
+  if (!a) return;
+  var text = a.fullText;
+  if (navigator.clipboard) { navigator.clipboard.writeText(text).catch(function(){}); }
+  toast('已复制回答正文（不含免责声明与引用编号）');
+}
+var _ttsTimer = null;
+function speakAnswer(mid, ev) {
+  if (ev) ev.stopPropagation();
+  var a = ANSWERS[mid];
+  if (!a) return;
+  if (a.speaking) { a.speaking = false; clearTimeout(_ttsTimer); updateAiNode(mid); return; }
+  Object.keys(ANSWERS).forEach(function(k) { ANSWERS[k].speaking = false; });
+  a.speaking = true;
+  updateAiNode(mid);
+  _ttsTimer = setTimeout(function() { a.speaking = false; updateAiNode(mid); }, 6000);
+}
+
+/* ---------- 渲染 ---------- */
+function findAnswerById(id) { return ANSWERS[id]; }
+
+function renderChat() {
+  var list = document.getElementById('chat-list');
+  if (!CONV || !CONV.messages.length) {
+    list.innerHTML = '<div class="chat-empty">' +
+      '<div class="ce-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>' +
+      '<div class="ce-t">还没有提问</div><div class="ce-s">可以问学校沿革、人物故事或校园空间</div></div>';
+    return;
+  }
+  list.innerHTML = CONV.messages.map(function(m) {
+    if (m.role === 'user') return userNode(m);
+    return aiNode(m);
+  }).join('');
+}
+
+function userNode(m) {
+  return '<div class="msg user"><div class="u-bubble">' + esc(m.text) + '</div></div>';
+}
+
+function aiBody(a) {
+  var body = '';
+  if (a.status === 'retrieving') {
+    body = '<div class="ai-loading"><span class="spinner"></span>正在查找校史资料…</div>';
+  } else if (a.failed) {
+    body = '<div class="ai-fail"><div class="af-t">回答生成失败</div>' +
+           '<div class="af-s">网络或服务异常，你的问题已保留</div>' +
+           '<button class="af-btn" onclick="retryAnswer(\'' + a.id + '\')">重新尝试</button></div>';
+  } else if (a.answerType === 'no_evidence') {
+    body = '<div class="ai-miss">' +
+           '<div class="am-h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>没有找到可靠依据</div>' +
+           '<div class="am-t">' + esc(a.fullText) + '</div>' +
+           '<div class="am-ops">' +
+             '<button onclick="toast(\'Demo 演示：已跳转输入框，可换个问法\')">换个问法再问</button>' +
+             '<button class="primary" onclick="submitClue(\'' + a.id + '\')">提交线索</button>' +
+           '</div>' +
+           '<div class="am-note">该问题已记录为「未命中」，运营端可在未命中台账中补充或合并知识</div>' +
+           '</div>';
+  } else if (a.answerType === 'safety_reply' || a.answerType === 'off_topic') {
+    body = '<div class="ai-plain">' + esc(a.fullText) + '</div>' + relatedBlock(a) + followBlock(a);
+  } else {
+    body = titleBlock(a) + '<div class="ai-text" id="txt-' + a.id + '">' + streamHtml(a) + '</div>' +
+           (a.status === 'completed' || a.status === 'stopped' ? factBlock(a) + citeBlock(a) + relatedBlock(a) : '') +
+           (a.status === 'stopped' ? '<div class="ai-stopped">回答已停止</div>' : '') +
+           (a.status === 'generating' ? '<div class="ai-cursor"></div>' : '') +
+           (a.status === 'completed' ? followBlock(a) : '');
+  }
+  return body;
+}
+function aiCardHtml(a) {
+  return '<div class="ai-card' + (a.status === 'generating' ? ' generating' : '') + '">' + aiBody(a) + opsBlock(a) + '</div>';
+}
+function aiNode(a) {
+  return '<div class="msg ai" data-mid="' + a.id + '">' + aiCardHtml(a) + '</div>';
+}
+
+function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+function streamHtml(a) {
+  var t = a.fullText.slice(0, a.shown);
+  return t.split('\n\n').map(function(p) { return '<p>' + esc(p) + '</p>'; }).join('');
+}
+function titleBlock(a) {
+  if (!a.answerTitle) return '';
+  return '<div class="ai-title">' + esc(a.answerTitle) + '</div>';
+}
+function factBlock(a) {
+  var m = a.factMeta || {};
+  var items = [];
+  (m.years || []).forEach(function(y) { items.push('<span class="m-tag year">' + y + '</span>'); });
+  (m.people || []).forEach(function(y) { items.push('<span class="m-tag person">' + y + '</span>'); });
+  (m.places || []).forEach(function(y) { items.push('<span class="m-tag place">' + y + '</span>'); });
+  if (!items.length) return '';
+  return '<div class="ai-meta">' + items.join('') + '</div>';
+}
+function citeBlock(a) {
+  if (!a.citationIds || !a.citationIds.length) return '';
+  return '<div class="ai-cite" onclick="openCiteSheet(\'' + a.id + '\')">' +
+         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 016.5 22H20V2H6.5A2.5 2.5 0 004 4.5z"/></svg>' +
+         '<span>参考资料 ' + a.citationIds.length + ' 条</span>' +
+         '<svg class="ac-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>' +
+         '</div>';
+}
+function relatedBlock(a) {
+  if (!a.relatedIds || !a.relatedIds.length) return '';
+  return '<div class="ai-related">' + a.relatedIds.map(function(id) {
+    var t = TOPIC_DOCS[id];
+    if (!t) return '';
+    return '<div class="ar-card" onclick="openTopic(\'' + id + '\')">' +
+           '<div class="ar-cover ' + t.cover + '"></div>' +
+           '<div class="ar-txt"><b>' + t.name + '</b><span>' + t.title + '</span></div>' +
+           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>' +
+           '</div>';
+  }).join('') + '</div>';
+}
+function followBlock(a) {
+  if (!a.followUps || !a.followUps.length || a.stopped) return '';
+  return '<div class="ai-follow"><div class="af-label">继续问</div>' +
+         a.followUps.map(function(f) {
+           return '<button class="fu-btn" onclick="askFollowUp(this)">' + esc(f) + '</button>';
+         }).join('') + '</div>';
+}
+function opsBlock(a) {
+  if (a.status === 'retrieving') return '';
+  if (a.status === 'generating') {
+    return '<div class="ai-ops"><button class="op-btn stop" onclick="stopGenerating(\'' + a.id + '\')">' +
+           '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>停止生成</button></div>';
+  }
+  if (a.answerType === 'no_evidence') return '';
+  var vBtn = a.versions && a.versions.length > 1
+    ? '<button class="op-btn" onclick="switchVersion(\'' + a.id + '\')">查看上一个版本</button>' : '';
+  return '<div class="ai-ops">' +
+    '<button class="op-btn" onclick="copyAnswer(\'' + a.id + '\', event)">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>复制</button>' +
+    '<button class="op-btn' + (a.speaking ? ' on' : '') + '" onclick="speakAnswer(\'' + a.id + '\', event)">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 010 7"/></svg>' + (a.speaking ? '停止' : '朗读') + '</button>' +
+    '<button class="op-btn" onclick="regenerate(\'' + a.id + '\', event)">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12a9 9 0 019-9 9 9 0 016.7 3M21 12a9 9 0 01-9 9 9 9 0 01-6.7-3"/><path d="M21 3v6h-6M3 21v-6h6"/></svg>重新回答</button>' +
+    vBtn +
+    '<span class="ops-right">' +
+      '<button class="op-btn' + (a.feedback === 'useful' ? ' on' : '') + '" onclick="markUseful(\'' + a.id + '\', event)" aria-label="有用">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 22V11l5-9a2 2 0 013 2v5h5a2 2 0 012 2.4l-1.6 7A2 2 0 0118.4 22z"/></svg></button>' +
+      '<button class="op-btn' + (a.feedback === 'not_useful' ? ' on' : '') + '" onclick="openFeedbackSheet(\'' + a.id + '\')" aria-label="无用">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 2v11l-5 9a2 2 0 01-3-2v-5H4a2 2 0 01-2-2.4l1.6-7A2 2 0 015.6 2z"/></svg></button>' +
+    '</span></div>';
+}
+
+function updateAiNode(mid, streamOnly) {
+  var a = ANSWERS[mid];
+  if (!a) return;
+  var node = document.querySelector('.msg.ai[data-mid="' + mid + '"]');
+  if (!node) return;
+  if (streamOnly) {
+    var t = document.getElementById('txt-' + mid);
+    if (t) t.innerHTML = streamHtml(a);
+    return;
+  }
+  node.innerHTML = aiCardHtml(a);
+}
+
+/* ---------- 滚动控制（UI-06） ---------- */
+function scrollToLatest(force) {
+  var body = document.getElementById('chat-body');
+  if (!body) return;
+  if (window.__USER_SCROLLED && !force) return;
+  body.scrollTop = body.scrollHeight;
+  window.__USER_SCROLLED = false;
+  document.getElementById('back-latest').style.display = 'none';
+}
+(function bindScrollWatch() {
+  document.addEventListener('scroll', function(e) {
+    var body = document.getElementById('chat-body');
+    if (!body || e.target !== body) return;
+    var nearBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 60;
+    window.__USER_SCROLLED = !nearBottom;
+    document.getElementById('back-latest').style.display = nearBottom ? 'none' : 'flex';
+  }, true);
+})();
+
+/* ---------- 底部输入 ---------- */
+function onChatInput() {
+  var v = document.getElementById('chat-input').value;
+  document.getElementById('chat-send').disabled = v.trim().length === 0 || v.length > 500;
+}
+function onChatKey(e) { if (e.key === 'Enter') { e.preventDefault(); submitChatAsk(); } }
+function submitChatAsk() {
+  var el = document.getElementById('chat-input');
+  var q = el.value.trim();
+  if (!q) return;
+  el.value = '';
+  onChatInput();
+  if (CONV && CONV.readOnly) { toast('只读会话，请先「在此场景新建会话」'); return; }
+  sendQuestion(q);
+}
+function askFollowUp(btn) {
+  var q = btn.textContent;
+  if (CONV && CONV.readOnly) { toast('只读会话，请先「在此场景新建会话」'); return; }
+  sendQuestion(q);
+}
+function submitClue(mid) { toast('Demo 演示：线索提交表单将在下一版接入（需登录并单独同意联系方式用途）'); }
+
+function init_chat() {
+  document.getElementById('chat-nav-name').textContent = SCENE.assistant.name;
+  document.getElementById('chat-nav-sub').textContent = '基于' + SCENE.knowledgeSpace + '回答';
+  document.getElementById('chat-input').placeholder = '继续问点什么…';
+  document.getElementById('chat-voice').style.display = SCENE.capability.voice ? 'flex' : 'none';
+  var banner = document.getElementById('scene-banner');
+  if (CONV && CONV.readOnly) {
+    banner.style.display = 'flex';
+    document.getElementById('scene-banner-text').textContent =
+      '你正在查看「' + CONV.sceneName + '」场景的历史会话，当前为只读';
+  } else {
+    banner.style.display = 'none';
+  }
+  renderChat();
+}
+
+/* ================= S03 主题知识详情 ================= */
+var CUR_TOPIC_ID = null;
+
+function openTopic(id) {
+  var doc = TOPIC_DOCS[id];
+  if (!doc) { toast('该内容暂不可用'); return; }
+  CUR_TOPIC_ID = id;
+  showPage('topic');
+}
+
+function init_topic() {
+  var doc = TOPIC_DOCS[CUR_TOPIC_ID];
+  var box = document.getElementById('topic-content');
+  if (!doc) {
+    box.innerHTML = '<div class="topic-gone"><div class="tg-t">内容已下架</div>' +
+      '<div class="tg-s">该主题内容已由运营方下架，暂不可查看</div>' +
+      '<button class="m-btn ghost" onclick="historyBack()">返回</button></div>';
+    return;
+  }
+  document.getElementById('topic-nav-name').textContent = doc.name;
+  document.getElementById('topic-nav-sub').textContent = '来自' + SCENE.knowledgeSpace;
+
+  var tags = [];
+  (doc.years || []).forEach(function(y) { tags.push('<span class="m-tag year">' + y + '</span>'); });
+  (doc.people || []).forEach(function(y) { tags.push('<span class="m-tag person">' + y + '</span>'); });
+  (doc.places || []).forEach(function(y) { tags.push('<span class="m-tag place">' + y + '</span>'); });
+
+  var srcHtml = (doc.sources || []).map(function(kid) {
+    var k = findKb(kid);
+    if (!k) return '';
+    return '<div class="src-item">' +
+           '<div class="si-t">' + k.title + '</div>' +
+           '<div class="si-m">' + k.sourceOrg + ' · ' + k.sourceDate +
+             '<span class="trust ' + k.trustLevel + '">' + trustLabel(k.trustLevel) + '</span></div>' +
+           '<div class="si-q">' + k.body + '</div>' +
+           '</div>';
+  }).join('');
+
+  var relHtml = (doc.related || []).map(function(r) {
+    var t = TOPIC_DOCS[r.id];
+    var name = t ? t.name : r.name;
+    var title = t ? t.title : '';
+    return '<div class="rel-item" onclick="' + (t ? 'openTopic(\'' + r.id + '\')' : 'toast(\'Demo 演示：人物档案页在后续版本接入\')') + '">' +
+           '<span class="rel-type">' + ({ person: '人物', place: '地点', topic: '主题', event: '事件' }[r.type] || '关联') + '</span>' +
+           '<div class="rel-txt"><b>' + name + '</b><span>' + title + '</span></div>' +
+           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>' +
+           '</div>';
+  }).join('');
+
+  box.innerHTML =
+    '<div class="topic-hero">' +
+      '<div class="th-media ' + doc.cover + '"><span class="th-span">' + doc.span + '</span></div>' +
+      '<h1 class="th-title">' + doc.title + '</h1>' +
+      '<div class="th-tags">' + tags.join('') + '</div>' +
+    '</div>' +
+    '<div class="topic-sum">' + doc.summary + '</div>' +
+    doc.sections.map(function(s) {
+      return '<div class="topic-sec"><h2>' + s.h + '</h2><p>' + s.p + '</p></div>';
+    }).join('') +
+    '<div class="topic-src"><div class="ts-h">资料来源</div>' + srcHtml +
+      '<div class="ts-note">Demo 演示数据为公开校史资料整理稿，正式发布前须由学校核定</div></div>' +
+    (relHtml ? '<div class="topic-rel"><div class="ts-h">相关内容</div>' + relHtml + '</div>' : '');
+  document.getElementById('topic-body').scrollTop = 0;
+}
+
+function continueAskAI() {
+  var doc = TOPIC_DOCS[CUR_TOPIC_ID];
+  resetStack('home'); PAGE_STACK.push('chat');
+  showPage('chat', { noPush: true });
+  if (!CONV || !CONV.messages.length) ensureConversation();
+  var q = doc ? '关于「' + doc.name + '」还能查到什么？' : '';
+  if (!CONV.messages.length) {
+    CONV.messages.push({ id: 'ctx', role: 'user', text: q, isContext: true });
+    renderChat();
+  }
+  toast('已带入主题上下文，可直接提问（不自动发送）');
+}
+
+function shareTopic() {
+  var doc = TOPIC_DOCS[CUR_TOPIC_ID];
+  if (!doc) return;
+  toast('Demo 演示：分享链接为 ?scene=' + SCENE.sceneCode + '&topic=' + doc.id);
+}
+
+/* ================= S04 个人资料 ================= */
+var USER = { logged: false, name: '游客', phone: '' };
+
+function goProfile() { closeAllOverlays(); showPage('profile'); }
+
+function init_profile() {
+  var av = document.getElementById('pf-avatar');
+  var nm = document.getElementById('pf-name');
+  var sub = document.getElementById('pf-sub');
+  var lo = document.getElementById('pf-logout');
+  var lg = document.getElementById('pf-login');
+  if (USER.logged) {
+    av.textContent = USER.name.slice(0, 1);
+    nm.textContent = USER.name;
+    sub.textContent = '已登录 · 历史会话保留 90 天';
+    document.getElementById('pf-phone').textContent = maskPhone(USER.phone);
+    document.getElementById('pf-conv-count').textContent = '4 条（含 1 条其他场景）';
+    lo.style.display = 'block';
+    lg.style.display = 'none';
+  } else {
+    av.textContent = '游';
+    nm.textContent = '游客';
+    sub.textContent = '未登录 · 本机保留最近 3 条临时会话';
+    document.getElementById('pf-phone').textContent = '未绑定';
+    document.getElementById('pf-conv-count').textContent = '3 条（游客临时）';
+    lo.style.display = 'none';
+    lg.style.display = 'block';
+  }
+  document.getElementById('pf-scene').textContent = SCENE.name;
+}
+
+function maskPhone(p) {
+  if (!p || p.length < 11) return '未绑定';
+  return p.slice(0, 3) + '****' + p.slice(7);
+}
+
+function doLogin() {
+  toast('正在唤起微信授权…');
+  setTimeout(function() {
+    USER.logged = true;
+    USER.name = '七宝校友';
+    USER.phone = '13800001234';
+    mergeGuestConversations();
+    init_profile();
+    toast('登录成功，游客会话已合并到账号');
+  }, 900);
+}
+
+function mergeGuestConversations() {
+  HISTORY.forEach(function(h) { h.owned = true; });
+}
+
+function doLogout() {
+  USER.logged = false;
+  init_profile();
+  toast('已退出登录');
+}
+
+function openPrivacy() {
+  toast('Demo 演示：隐私设置可清除历史会话、撤回非必要授权');
+}
+function clearHistory() {
+  HISTORY = [];
+  renderSidePanel();
+  init_profile();
+  toast('已清除本机历史会话');
+}
+  </script>
+  <script>
+/* ============================
+   base.js - ProtoKit 运行时引擎
+   ProtoRouter + ProtoAnno + ProtoDoc
+   ============================ */
+
+// ---- 路由引擎 ----
+var ProtoRouter = {
+  currentPage: null,
+  defaultPage: null,
+
+  init: function(defaultPage) {
+    this.defaultPage = defaultPage || '';
+    window.addEventListener('hashchange', this.render.bind(this));
+    this.render();
+  },
+
+  render: function() {
+    var hash = window.location.hash || '#/' + this.defaultPage;
+    var pageId = hash.replace('#/', '').replace('#', '');
+
+    // 销毁旧页面
+    if (this.currentPage && typeof window['destroy_' + this.currentPage.replace(/-/g, '_')] === 'function') {
+      window['destroy_' + this.currentPage.replace(/-/g, '_')]();
+    }
+
+    // 隐藏所有页面
+    document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+
+    // 显示目标页面
+    var target = document.getElementById('page-' + pageId);
+    if (target) {
+      target.classList.add('active');
+      this.currentPage = pageId;
+
+      // 调用初始化
+      var fnName = 'init_' + pageId.replace(/-/g, '_');
+      if (typeof window[fnName] === 'function') {
+        window[fnName]();
+      }
+
+      // 更新菜单高亮
+      document.querySelectorAll('.pc-menu-item').forEach(function(item) {
+        item.classList.toggle('active', item.getAttribute('data-page') === pageId);
+      });
+
+      // 更新移动端 Tab
+      document.querySelectorAll('.tab-bar-item').forEach(function(tab) {
+        tab.classList.toggle('active', tab.getAttribute('data-page') === pageId);
+      });
+
+      // 更新面包屑
+      var bc = document.getElementById('breadcrumb-current');
+      if (bc) bc.textContent = pageId;
+
+      // 更新页码导航
+      document.querySelectorAll('.page-nav-btn').forEach(function(btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-page') === pageId);
+      });
+
+      // 文档联动
+      ProtoDoc.trigger('page-load', pageId);
+
+      // 渲染标注
+      ProtoAnno.render();
+
+      // 更新 hash
+      if (location.hash !== '#/' + pageId) {
+        history.replaceState(null, '', '#/' + pageId);
+      }
+    }
+  },
+
+  go: function(pageId) {
+    window.location.hash = '#/' + pageId;
+  }
+};
+
+// ---- 标注引擎 ----
+var ProtoAnno = {
+  visible: true,
+
+  render: function() {
+    if (!this.visible) return;
+    document.querySelectorAll('[data-anno-id]').forEach(function(el) {
+      if (el.querySelector('.anno-badge')) return;
+      var id = el.getAttribute('data-anno-id');
+      var badge = document.createElement('span');
+      badge.className = 'anno-badge';
+      badge.textContent = id;
+      badge.onclick = function(e) {
+        e.stopPropagation();
+        if (window.PLATFORM === 'mobile') {
+          ProtoDoc.trigger('anno:' + id, ProtoRouter.currentPage);
+        } else {
+          ProtoAnno.showPopover(el, id);
+        }
+      };
+      el.appendChild(badge);
+    });
+  },
+
+  toggle: function() {
+    this.visible = !this.visible;
+    document.querySelectorAll('.anno-badge').forEach(function(b) {
+      b.style.display = ProtoAnno.visible ? 'flex' : 'none';
+    });
+  },
+
+  showPopover: function(el, id) {
+    var title = el.getAttribute('data-anno-title') || id;
+    var desc = el.getAttribute('data-anno-desc') || '暂无说明';
+    var container = document.getElementById('anno-popover-container');
+    if (!container) return;
+
+    var rect = el.getBoundingClientRect();
+    container.innerHTML =
+      '<div style="position:fixed;top:' + (rect.bottom + 8) + 'px;left:' + rect.left +
+      'px;background:#fff;border-radius:8px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,0.15);' +
+      'z-index:10001;min-width:240px;max-width:360px;">' +
+      '<div style="font-weight:600;margin-bottom:8px;">' + title + '</div>' +
+      '<div style="font-size:13px;color:#666;line-height:1.6;">' + desc + '</div>' +
+      '<div style="text-align:right;margin-top:12px;">' +
+      '<button class="btn btn-sm btn-default" onclick="document.getElementById(\'anno-popover-container\').innerHTML=\'\'">关闭</button>' +
+      '</div></div>';
+
+    setTimeout(function() {
+      document.addEventListener('click', function handler() {
+        container.innerHTML = '';
+        document.removeEventListener('click', handler);
+      });
+    }, 100);
+  }
+};
+
+// ---- 文档联动引擎 ----
+var ProtoDoc = {
+  storagePrefix: 'proto_doc_',
+
+  trigger: function(eventId, pageId) {
+    var panel = document.getElementById('doc-panel');
+    if (!panel) return;
+
+    // 查找对应 doc-section
+    var sections = document.querySelectorAll('.doc-section[data-trigger]');
+    var matched = null;
+    sections.forEach(function(s) {
+      if (s.getAttribute('data-trigger') === eventId) matched = s;
+    });
+
+    // 移动端：高亮对应 doc-card
+    if (pageId) {
+      document.querySelectorAll('.doc-card').forEach(function(card) {
+        card.classList.toggle('highlight', card.getAttribute('data-page') === pageId);
+      });
+      var docCard = document.querySelector('.doc-card[data-page="' + pageId + '"]');
+      if (docCard) {
+        panel.innerHTML = docCard.innerHTML;
+        return;
+      }
+    }
+
+    if (matched) {
+      var saved = localStorage.getItem(this.storagePrefix + eventId);
+      panel.innerHTML = saved || matched.innerHTML;
+      panel.setAttribute('data-current-trigger', eventId);
+    }
+  },
+
+  save: function() {
+    var panel = document.getElementById('doc-panel');
+    var eventId = panel.getAttribute('data-current-trigger');
+    if (eventId) {
+      localStorage.setItem(this.storagePrefix + eventId, panel.innerHTML);
+      showToast('保存成功');
+    }
+  },
+
+  reset: function() {
+    var panel = document.getElementById('doc-panel');
+    var eventId = panel.getAttribute('data-current-trigger');
+    if (eventId) {
+      localStorage.removeItem(this.storagePrefix + eventId);
+      this.trigger(eventId);
+      showToast('已重置');
+    }
+  }
+};
+
+// ---- 工具函数 ----
+function renderList(containerId, items, renderItem) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = items.map(renderItem).join('');
+}
+
+function renderTable(containerId, columns, rows) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var html = '<table class="table"><thead><tr>';
+  columns.forEach(function(col) { html += '<th>' + col.label + '</th>'; });
+  html += '</tr></thead><tbody>';
+  rows.forEach(function(row) {
+    html += '<tr>';
+    columns.forEach(function(col) { html += '<td>' + (row[col.key] !== undefined ? row[col.key] : '') + '</td>'; });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function showModal(title, bodyHtml, onConfirm) {
+  var overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML =
+    '<div class="modal"><div class="modal-title">' + title + '</div>' +
+    '<div class="modal-body">' + bodyHtml + '</div>' +
+    '<div class="modal-footer"><button class="btn btn-default" onclick="this.closest(\'.modal-overlay\').remove()">取消</button>' +
+    '<button class="btn btn-primary" id="modal-confirm-btn">确定</button></div></div>';
+  document.body.appendChild(overlay);
+  overlay.querySelector('#modal-confirm-btn').onclick = function() {
+    document.body.removeChild(overlay);
+    if (typeof onConfirm === 'function') onConfirm();
+  };
+}
+
+function showToast(msg, duration) {
+  duration = duration || 2000;
+  var toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    setTimeout(function() { document.body.removeChild(toast); }, 300);
+  }, duration);
+}
+
+function mockRequest(data, delay) {
+  delay = delay || 300;
+  return new Promise(function(resolve) { setTimeout(function() { resolve(data); }, delay); });
+}
+
+  </script>
+  <script>
+    window.PLATFORM = 'mobile';
+
+    /* ============ 全局浮层控制 ============ */
+    function showMask() { document.getElementById('ov-mask').classList.add('show'); }
+    function hideMask() { document.getElementById('ov-mask').classList.remove('show'); }
+    function closeAllOverlays() {
+      document.getElementById('side-panel').classList.remove('show');
+      document.getElementById('cite-sheet').classList.remove('show');
+      document.getElementById('feedback-sheet').classList.remove('show');
+      hideMask();
+    }
+    function openSidePanel() {
+      renderSidePanel();
+      document.getElementById('side-panel').classList.add('show');
+      showMask();
+    }
+    function closeSidePanel() { closeAllOverlays(); }
+
+    function openCiteSheet(answerId) {
+      var a = findAnswerById(answerId);
+      if (!a) return;
+      renderCiteSheet(a);
+      document.getElementById('cite-sheet').classList.add('show');
+      showMask();
+    }
+    function closeCiteSheet() { closeAllOverlays(); }
+
+    function openFeedbackSheet(answerId) {
+      window.__FB_ANSWER_ID = answerId;
+      renderFeedbackSheet(answerId);
+      document.getElementById('feedback-sheet').classList.add('show');
+      showMask();
+    }
+    function closeFeedbackSheet() { closeAllOverlays(); }
+
+    var _toastTimer = null;
+    function toast(msg) {
+      var t = document.getElementById('m-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 1900);
+    }
+
+    /* ============ 演示控制 ============ */
+    var DEMO_SCENARIOS = [
+      { id: 'grounded',    label: '有据回答（高置信）', key: '正常' },
+      { id: 'clarify',     label: '模糊问题 → 追问澄清', key: 'AI-05' },
+      { id: 'no_evidence', label: '无证据 → 拒答 + 未命中', key: 'AI-02' },
+      { id: 'off_topic',   label: '离题 → 范围引导', key: 'AI-06' },
+      { id: 'safety',      label: '提示词攻击 → 安全回复', key: 'AI-03' },
+      { id: 'network_error', label: '网络失败 → 可重试', key: 'UI-15' }
+    ];
+    var DEMO_ENTRIES = [
+      { id: 'ok',      label: '有效扫码（正常进入）', key: 'UI-01' },
+      { id: 'invalid', label: '无效二维码 → 失效页', key: 'UI-02' },
+      { id: 'expired', label: '场景已结束 → 失效页', key: 'UI-02' }
+    ];
+    function renderDemoMenu() {
+      var box = document.getElementById('demo-menu-items');
+      var cur = window.DEMO_SCENARIO || 'grounded';
+      var entry = window.DEMO_ENTRY || 'ok';
+      var html = '<div class="dm-title">AI 回答场景</div>';
+      html += DEMO_SCENARIOS.map(function(s) {
+        return '<div class="dm-item' + (s.id === cur ? ' on' : '') + '" onclick="demoSetScenario(\'' + s.id + '\')">' +
+               s.label + '<span class="k">' + s.key + '</span></div>';
+      }).join('');
+      html += '<div class="dm-title" style="border-top:1px solid #F0EEEA;margin-top:5px;padding-top:9px">入口与协议</div>';
+      html += DEMO_ENTRIES.map(function(e) {
+        return '<div class="dm-item' + (e.id === entry ? ' on' : '') + '" onclick="demoSetEntry(\'' + e.id + '\')">' +
+               e.label + '<span class="k">' + e.key + '</span></div>';
+      }).join('');
+      html += '<div class="dm-item" onclick="resetSceneDemo()">重置协议同意状态<span class="k">UI-03</span></div>';
+      box.innerHTML = html;
+    }
+    function demoSetEntry(id) {
+      window.DEMO_ENTRY = id;
+      document.getElementById('demo-menu').classList.remove('show');
+      resetStack('scene');
+      showPage('scene', { fresh: true });
+      toast('已切换入口状态：' + (DEMO_ENTRIES.filter(function(e) { return e.id === id; })[0] || {}).label);
+    }
+    function toggleDemoMenu(e) {
+      if (e) e.stopPropagation();
+      var m = document.getElementById('demo-menu');
+      renderDemoMenu();
+      m.classList.toggle('show');
+    }
+    function demoSetScenario(id) {
+      window.DEMO_SCENARIO = id;
+      document.getElementById('demo-menu').classList.remove('show');
+      toast('已切换演示场景：' + (DEMO_SCENARIOS.filter(function(s){ return s.id === id; })[0] || {}).label);
+      renderDemoMenu();
+      if (typeof onDemoScenarioChanged === 'function') onDemoScenarioChanged(id);
+    }
+    document.addEventListener('click', function(e) {
+      var m = document.getElementById('demo-menu');
+      if (m && m.classList.contains('show') && !e.target.closest('.demo-menu') && !e.target.closest('.demo-fab')) {
+        m.classList.remove('show');
+      }
+    });
+
+    /* ============ D03 会话与个人侧栏 ============ */
+    var HISTORY = [
+      { id: 'h1', title: '七宝中学为何有两条办学源流？', sceneName: 'AI 校史馆', sceneCode: 'school_history', cur: true, group: '今天', time: '10:21' },
+      { id: 'h2', title: '研究型高中建设从何开始？', sceneName: 'AI 校史馆', sceneCode: 'school_history', cur: true, group: '今天', time: '10:38' },
+      { id: 'h3', title: '校园开放日的参观路线', sceneName: '开放日专题', sceneCode: 'open_day', cur: false, group: '昨天', time: '昨天 16:02' }
+    ];
+
+    function spItem(h) {
+      return '<div class="sp-item' + (h.id === window.CURRENT_CONV_ID ? ' active' : '') + '" onclick="loadConversation(\'' + h.id + '\')">' +
+             '<div class="t">' + h.title + '</div>' +
+             '<div class="m"><span class="scene-tag' + (h.cur ? ' cur' : '') + '">' + h.sceneName + '</span>' +
+             '<span>' + h.time + '</span>' + (h.readOnly ? '<span>只读</span>' : '') + '</div>' +
+             '</div>';
+    }
+
+    function renderSidePanel() {
+      document.getElementById('sp-tenant').textContent = TENANT.name;
+      document.getElementById('sp-scene-name').textContent = SCENE.name;
+      document.getElementById('sp-logo').textContent = SCENE.theme.logoText;
+      document.getElementById('sp-avatar').textContent = USER.logged ? USER.name.slice(0, 1) : '游';
+      document.getElementById('sp-user').textContent = USER.logged ? USER.name : '游客';
+      document.getElementById('sp-user-sub').textContent = USER.logged ? maskPhone(USER.phone) : '登录后可保存历史会话';
+
+      var cur = HISTORY.filter(function(h) { return h.cur; });
+      var other = HISTORY.filter(function(h) { return !h.cur; });
+      var html = '';
+      var groups = {};
+      cur.forEach(function(h) { (groups[h.group] = groups[h.group] || []).push(h); });
+      Object.keys(groups).forEach(function(g) {
+        html += '<div class="sp-group">' + g + '</div>';
+        groups[g].forEach(function(h) { html += spItem(h); });
+      });
+      if (!USER.logged) {
+        html += '<div class="sp-guest">当前为游客模式，仅在本机保留最近 3 条临时会话。登录后可长期保存并跨设备恢复。' +
+                '<button onclick="doLogin()">微信授权登录</button></div>';
+      }
+      if (other.length) {
+        html += '<div class="sp-other-fold" onclick="toggleOtherScenes(this)">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px"><path d="M9 6l6 6-6 6"/></svg>' +
+                '其他场景（' + other.length + '）</div>' +
+                '<div id="sp-other" style="display:none">' + other.map(spItem).join('') + '</div>';
+      }
+      document.getElementById('sp-list').innerHTML = html;
+    }
+
+    function toggleOtherScenes(el) {
+      var box = document.getElementById('sp-other');
+      var open = box.style.display !== 'none';
+      box.style.display = open ? 'none' : 'block';
+      el.querySelector('svg').style.transform = open ? '' : 'rotate(90deg)';
+    }
+
+    /* ============ D01 来源证据抽屉 ============ */
+    function trustLabel(t) {
+      return { official: '学校正式', verified: '已核实', reference: '参考资料', unverified: '未核实' }[t] || t;
+    }
+    function typeLabel(t) {
+      return { document: '文档', qa: '问答', event: '事件', person: '人物', place: '地点', photo: '照片' }[t] || t;
+    }
+    function renderCiteSheet(a) {
+      document.getElementById('cite-count').textContent = a.citationIds.length + ' 条';
+      var html = a.citationIds.map(function(kid, i) {
+        var k = findKb(kid);
+        if (!k) return '';
+        return '<div class="cite-item">' +
+          '<div class="ct"><span class="idx">' + (i + 1) + '</span><b>' + k.sourceTitle + '</b></div>' +
+          '<div class="meta">' + k.sourceOrg + ' · ' + k.sourceDate +
+            '<span class="trust ' + k.trustLevel + '">' + trustLabel(k.trustLevel) + '</span>' +
+            '<span>' + typeLabel(k.type) + '</span></div>' +
+          '<div class="cite-quote">' + k.body + '</div>' +
+          '</div>';
+      }).join('');
+      html += '<div class="cite-disclaimer">引用片段取自实际检索文本，未经模型改写；来源按对回答的支持度排序，不展示检索分数。Demo 数据为公开校史资料整理稿，正式发布前须由学校核定。</div>';
+      document.getElementById('cite-body').innerHTML = html;
+    }
+
+    /* ============ D02 回答反馈弹层 ============ */
+    var FB_REASONS = ['没有回答问题', '信息可能不准确', '资料太少', '表达难懂', '内容不合适', '其他'];
+    var FB_SUBMITTED = {};
+
+    function renderFeedbackSheet(answerId) {
+      var box = document.getElementById('fb-opts');
+      var prev = FB_SUBMITTED[answerId];
+      box.innerHTML = FB_REASONS.map(function(r) {
+        var on = prev && prev.reasons.indexOf(r) >= 0;
+        return '<div class="fb-opt' + (on ? ' on' : '') + '" onclick="toggleFbOpt(this)">' + r + '</div>';
+      }).join('');
+      var note = document.getElementById('fb-note');
+      note.value = prev ? (prev.note || '') : '';
+      note.disabled = !!(prev && prev.edited);
+      document.getElementById('fb-count').textContent = note.value.length;
+      document.getElementById('fb-contact').checked = prev ? !!prev.contact : false;
+      document.getElementById('fb-submit').textContent = prev ? '修改反馈（仅可修改 1 次）' : '提交反馈';
+    }
+    function toggleFbOpt(el) { el.classList.toggle('on'); }
+    function submitFeedback() {
+      var id = window.__FB_ANSWER_ID;
+      var a = ANSWERS[id];
+      var reasons = [].slice.call(document.querySelectorAll('#fb-opts .fb-opt.on')).map(function(e) { return e.textContent; });
+      if (!reasons.length) { toast('请至少选择一个原因'); return; }
+      var contact = document.getElementById('fb-contact').checked;
+      if (contact && !USER.logged) { toast('选择「希望联系我」需先登录'); return; }
+      var prev = FB_SUBMITTED[id];
+      if (prev && prev.edited) { toast('反馈已提交，不可重复提交'); return; }
+      FB_SUBMITTED[id] = {
+        reasons: reasons,
+        note: document.getElementById('fb-note').value,
+        contact: contact,
+        edited: !!prev
+      };
+      if (a) a.feedback = 'not_useful';
+      closeAllOverlays();
+      if (a) updateAiNode(id);
+      toast(prev ? '反馈已修改' : '反馈已提交，感谢你帮我们改进');
+    }
+    document.addEventListener('input', function(e) {
+      if (e.target && e.target.id === 'fb-note') {
+        document.getElementById('fb-count').textContent = e.target.value.length;
+      }
+    });
+
+    /* ============ 演示场景切换联动 ============ */
+    function onDemoScenarioChanged(id) {
+      if (id === 'network_error') toast('下次提问将模拟回答失败，可在气泡内重试');
+    }
+
+    /* ============ 页面导航（PAGE_STACK 栈语义 · 返回从哪来回哪去） ============ */
+    var PAGE_STACK = ['scene'];
+    var _scrollMemo = {};
+    function showPage(id, opts) {
+      var cur = document.querySelector('.page.active');
+      if (cur) {
+        var cb = cur.querySelector('.page-body');
+        if (cb) _scrollMemo[cur.id] = cb.scrollTop;
+      }
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+      var el = document.getElementById('page-' + id);
+      if (!el) return id;
+      el.classList.add('active');
+      var fn = window['init_' + id.replace(/-/g, '_')];
+      if (typeof fn === 'function') fn();
+      if (!opts || !opts.noPush) {
+        if (PAGE_STACK[PAGE_STACK.length - 1] !== id) PAGE_STACK.push(id);
+      }
+      var nb = el.querySelector('.page-body');
+      if (nb) nb.scrollTop = (opts && opts.fresh) ? 0 : (_scrollMemo['page-' + id] || 0);
+      return id;
+    }
+    function historyBack() {
+      PAGE_STACK.pop();
+      var to = PAGE_STACK[PAGE_STACK.length - 1] || 'home';
+      showPage(to, { noPush: true });
+    }
+    function resetStack(id) { PAGE_STACK.length = 0; PAGE_STACK.push(id); }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      ProtoRouter.init('scene');
+    });
+  </script>
+</body>
+</html>
