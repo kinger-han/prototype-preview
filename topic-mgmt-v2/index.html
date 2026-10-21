@@ -6775,8 +6775,6 @@ if (tagFilterActive.length > 0) {
             var checkState = resMgmtTopicCheckState(t);
             var checkCls = checkState ? ' ' + checkState : '';
             var ops = '<button class="action-btn" onclick="resMgmtTopicEdit(' + t.id + ')">修改</button>'
-          + '<button class="action-btn" onclick="resToast(\'审核（演示）\')">审核</button>'
-          + '<button class="action-btn" onclick="resToast(\'发布（演示）\')">发布</button>'
               + '<button class="action-btn danger" onclick="resMgmtTopicDelete(' + t.id + ')">删除</button>';
             html += '<tr>'
               + '<td class="checkbox-cell"><span class="resmg-topic-check' + checkCls + '" onclick="resMgmtTopicCheck(' + t.id + ')"></span></td>'
@@ -10360,8 +10358,6 @@ if (tagFilterActive.length > 0) {
         var st = PVT_MGMT_TOPIC_STATUS_STYLES[t.status] || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
         var checked = PVT_MGMT_TOPIC_SELECTED.indexOf(t.id) >= 0 ? ' checked' : '';
         var ops = '<button class="action-btn" onclick="pvtMgmtTopicEdit(' + t.id + ')">修改</button>'
-          + '<button class="action-btn" onclick="resToast(\'审核（演示）\')">审核</button>'
-          + '<button class="action-btn" onclick="resToast(\'发布（演示）\')">发布</button>'
           + '<button class="action-btn danger" onclick="pvtMgmtTopicDelete(' + t.id + ')">删除</button>';
         html += '<tr>'
           + '<td class="checkbox-cell"><input type="checkbox"' + checked + ' onchange="pvtMgmtTopicCheck(' + t.id + ', this)"></td>'
@@ -21361,8 +21357,6 @@ function resTagChips(arr, cls) {
             var checkState = resMgmtTopicCheckState(t);
             var checkCls = checkState ? ' ' + checkState : '';
             var ops = '<button class="action-btn" onclick="resMgmtTopicEdit(' + t.id + ')">修改</button>'
-          + '<button class="action-btn" onclick="resToast(\'审核（演示）\')">审核</button>'
-          + '<button class="action-btn" onclick="resToast(\'发布（演示）\')">发布</button>'
               + '<button class="action-btn danger" onclick="resMgmtTopicDelete(' + t.id + ')">删除</button>';
             html += '<tr>'
               + '<td class="checkbox-cell"><span class="resmg-topic-check' + checkCls + '" onclick="resMgmtTopicCheck(' + t.id + ')"></span></td>'
@@ -24367,8 +24361,6 @@ var CAT_MGMT_EDIT_INDEX = -1;
         var st = PVT_MGMT_TOPIC_STATUS_STYLES[t.status] || { color:'#666', bg:'#f5f5f5', border:'#e8e8e8' };
         var checked = PVT_MGMT_TOPIC_SELECTED.indexOf(t.id) >= 0 ? ' checked' : '';
         var ops = '<button class="action-btn" onclick="pvtMgmtTopicEdit(' + t.id + ')">修改</button>'
-          + '<button class="action-btn" onclick="resToast(\'审核（演示）\')">审核</button>'
-          + '<button class="action-btn" onclick="resToast(\'发布（演示）\')">发布</button>'
           + '<button class="action-btn danger" onclick="pvtMgmtTopicDelete(' + t.id + ')">删除</button>';
         html += '<tr>'
           + '<td class="checkbox-cell"><input type="checkbox"' + checked + ' onchange="pvtMgmtTopicCheck(' + t.id + ', this)"></td>'
