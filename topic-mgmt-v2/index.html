@@ -6632,18 +6632,18 @@ if (tagFilterActive.length > 0) {
     /* ===== 主题列表视图（复刻公共主题v2 表格，类别全部有值） ===== */
     var RES_MGMT_VIEW = 'card'; /* 默认资源卡片视图 */ /* topic | card */
     var RES_MGMT_TOPICS = [
-      { id:1, name:'听党指挥能打胜仗', cover:'📷', publishTime:'2026-07-27 14:30', category:'public/thought/xiyu', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'张三', auditTime:'07-26 16:20', resources:3, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['党建','强军'] },
-      { id:2, name:'福建数字规划（横版）', cover:'📷', publishTime:'2026-07-21 10:00', category:'region/fujian/省级', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'李四', auditTime:'07-20 09:10', resources:2, createTime:'2026-07-19', reviewTime:'2026-07-20', tags:['数字福建'] },
-      { id:3, name:'春节廉洁提醒海报', cover:'📷', publishTime:'2026-07-20 09:15', category:'public/thought/lianjie', status:'待校对', extStatus:'审核通过', platform:'广电昊象', auditor:'王五', auditTime:'07-19 15:40', resources:2, createTime:'2026-07-18', reviewTime:'2026-07-19', tags:['廉洁','节日'] },
-      { id:4, name:'台风安全科普视频', cover:'🎬', publishTime:'2026-07-18 16:20', category:'public/kepu/ziran', status:'待发布', extStatus:'待审核', platform:'东方有线', auditor:'赵六', auditTime:'07-17 11:05', resources:2, createTime:'2026-07-16', reviewTime:'', tags:['科普','安全'] },
-      { id:5, name:'二十大精神宣讲', cover:'🎬', publishTime:'2026-07-15 11:00', category:'public/thought/zhuanti', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 14:30', resources:3, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['党建','二十大'] },
-      { id:6, name:'上海城市形象宣传片', cover:'🎬', publishTime:'2026-07-28 09:00', category:'region/shanghai/市级', status:'已发布', extStatus:'审核通过', platform:'东方有线', auditor:'李四', auditTime:'07-26 17:25', resources:2, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['城市形象'] },
-      { id:7, name:'清明节文明祭扫', cover:'📷', publishTime:'2026-07-10 14:00', category:'public/jieri/zhuti', status:'主题关闭', extStatus:'审核退回', platform:'广网融科', auditor:'王五', auditTime:'07-09 10:30', resources:2, createTime:'2026-07-08', reviewTime:'2026-07-09', tags:['节日','文明'] },
-      { id:8, name:'垃圾分类科普动图', cover:'🎬', publishTime:'2026-07-15 08:45', category:'public/gongyi/huanbao', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 16:00', resources:2, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['环保','科普'] },
-      { id:9, name:'机关作风建设专题', cover:'📷', publishTime:'2026-07-22 13:00', category:'party/shizheng/yaowen', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'赵六', auditTime:'07-21 09:50', resources:2, createTime:'2026-07-20', reviewTime:'2026-07-21', tags:['机关','作风'] },
-      { id:10, name:'健康养生系列讲堂', cover:'🎬', publishTime:'2026-07-19 10:30', category:'education/shield/weisheng', status:'已发布', extStatus:'审核通过', platform:'智融平台', auditor:'李四', auditTime:'07-17 15:20', resources:2, createTime:'2026-07-16', reviewTime:'2026-07-17', tags:['健康','养生'] },
-      { id:11, name:'景区导览服务指南', cover:'📷', publishTime:'2026-07-17 15:00', category:'public/kepu/renwen', status:'待发布', extStatus:'待审核', platform:'无', auditor:'', auditTime:'', resources:1, createTime:'2026-07-15', reviewTime:'', tags:['景区','导览'] },
-      { id:12, name:'廉洁诚信经营倡议书', cover:'📷', publishTime:'2026-07-14 11:20', category:'public/thought/lianjie', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-12 10:15', resources:4, createTime:'2026-07-11', reviewTime:'2026-07-12', tags:['廉洁','诚信'] }
+      { id:1, name:'听党指挥能打胜仗', cover:'📷', publishTime:'2026-07-27 14:30', category:'public/thought/xiyu', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'张三', auditTime:'07-26 16:20', direction:'竖版', resources:3, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['党建','强军'] },
+      { id:2, name:'福建数字规划（横版）', cover:'📷', publishTime:'2026-07-21 10:00', category:'region/fujian/省级', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'李四', auditTime:'07-20 09:10', direction:'横版', resources:2, createTime:'2026-07-19', reviewTime:'2026-07-20', tags:['数字福建'] },
+      { id:3, name:'春节廉洁提醒海报', cover:'📷', publishTime:'2026-07-20 09:15', category:'public/thought/lianjie', status:'待校对', extStatus:'审核通过', platform:'广电昊象', auditor:'王五', auditTime:'07-19 15:40', direction:'竖版', resources:2, createTime:'2026-07-18', reviewTime:'2026-07-19', tags:['廉洁','节日'] },
+      { id:4, name:'台风安全科普视频', cover:'🎬', publishTime:'2026-07-18 16:20', category:'public/kepu/ziran', status:'待发布', extStatus:'待审核', platform:'东方有线', auditor:'赵六', auditTime:'07-17 11:05', direction:'横版', resources:2, createTime:'2026-07-16', reviewTime:'', tags:['科普','安全'] },
+      { id:5, name:'二十大精神宣讲', cover:'🎬', publishTime:'2026-07-15 11:00', category:'public/thought/zhuanti', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 14:30', direction:'竖版', resources:3, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['党建','二十大'] },
+      { id:6, name:'上海城市形象宣传片', cover:'🎬', publishTime:'2026-07-28 09:00', category:'region/shanghai/市级', status:'已发布', extStatus:'审核通过', platform:'东方有线', auditor:'李四', auditTime:'07-26 17:25', direction:'横版', resources:2, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['城市形象'] },
+      { id:7, name:'清明节文明祭扫', cover:'📷', publishTime:'2026-07-10 14:00', category:'public/jieri/zhuti', status:'主题关闭', extStatus:'审核退回', platform:'广网融科', auditor:'王五', auditTime:'07-09 10:30', direction:'竖版', resources:2, createTime:'2026-07-08', reviewTime:'2026-07-09', tags:['节日','文明'] },
+      { id:8, name:'垃圾分类科普动图', cover:'🎬', publishTime:'2026-07-15 08:45', category:'public/gongyi/huanbao', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 16:00', direction:'横版', resources:2, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['环保','科普'] },
+      { id:9, name:'机关作风建设专题', cover:'📷', publishTime:'2026-07-22 13:00', category:'party/shizheng/yaowen', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'赵六', auditTime:'07-21 09:50', direction:'横版', resources:2, createTime:'2026-07-20', reviewTime:'2026-07-21', tags:['机关','作风'] },
+      { id:10, name:'健康养生系列讲堂', cover:'🎬', publishTime:'2026-07-19 10:30', category:'education/shield/weisheng', status:'已发布', extStatus:'审核通过', platform:'智融平台', auditor:'李四', auditTime:'07-17 15:20', direction:'横版', resources:2, createTime:'2026-07-16', reviewTime:'2026-07-17', tags:['健康','养生'] },
+      { id:11, name:'景区导览服务指南', cover:'📷', publishTime:'2026-07-17 15:00', category:'public/kepu/renwen', status:'待发布', extStatus:'待审核', platform:'无', auditor:'', auditTime:'', direction:'竖版', resources:1, createTime:'2026-07-15', reviewTime:'', tags:['景区','导览'] },
+      { id:12, name:'廉洁诚信经营倡议书', cover:'📷', publishTime:'2026-07-14 11:20', category:'public/thought/lianjie', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-12 10:15', direction:'横版', resources:4, createTime:'2026-07-11', reviewTime:'2026-07-12', tags:['廉洁','诚信'] }
     ];
     var RES_MGMT_TOPIC_STATUS_STYLES = { '已发布':{color:'#52c41a',bg:'#e6fffb',border:'#b5f5ec'}, '待发布':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '待校对':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '机审中':{color:'#722ed1',bg:'#f9f0ff',border:'#d3adf7'}, '机审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '校对退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '待复审':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '复审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '主题关闭':{color:'#999',bg:'#f5f5f5',border:'#e8e8e8'}, '发布退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'} };
     var RES_MGMT_TOPIC_SELECTED = [];
@@ -10251,16 +10251,16 @@ if (tagFilterActive.length > 0) {
     /* ===== 私有主题列表视图（复刻公共主题v2 表格 + 客户列） ===== */
     var PVT_MGMT_VIEW = 'card'; /* 默认资源卡片视图 */ /* topic | card */
     var PVT_MGMT_TOPICS = [
-      { id:1, name:'福建新闻联播宣传海报', cover:'📷', publishTime:'2026-07-08 10:20', category:'private-fj/local', customer:'福建广电', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'陈静怡', auditTime:'07-08 15:30', resources:1, createTime:'2026-07-08', reviewTime:'', tags:['新闻联播','本地频道'] },
-      { id:2, name:'福建综艺节目预告视频', cover:'🎬', publishTime:'2026-07-09 14:36', category:'private-fj/local', customer:'福建广电', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'康素鸿', auditTime:'07-09 16:10', resources:1, createTime:'2026-07-09', reviewTime:'2026-07-09', tags:['综艺','本地频道'] },
-      { id:3, name:'福建政务宣传海报', cover:'📷', publishTime:'2026-07-10 09:12', category:'private-fj/ad', customer:'福建广电', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'张卫', auditTime:'07-10 10:05', resources:1, createTime:'2026-07-10', reviewTime:'', tags:['政务宣传'] },
-      { id:4, name:'广西壮族文化宣传海报', cover:'📷', publishTime:'2026-07-11 16:05', category:'private-gx/local', customer:'广西广电', status:'待复审', extStatus:'审核退回', platform:'广电昊象', auditor:'韦晓', auditTime:'07-11 17:20', resources:1, createTime:'2026-07-11', reviewTime:'2026-07-11', tags:['壮族文化','本地频道'] },
-      { id:5, name:'广西文旅推广宣传视频', cover:'🎬', publishTime:'2026-07-12 11:48', category:'private-gx/rural', customer:'广西广电', status:'已发布', extStatus:'审核通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-12 14:00', resources:1, createTime:'2026-07-12', reviewTime:'2026-07-12', tags:['文旅推广','乡村振兴'] },
-      { id:6, name:'广西民族综艺宣传视频', cover:'🎬', publishTime:'2026-07-16 10:10', category:'private-gx/local', customer:'广西广电', status:'已发布', extStatus:'自动通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-16 11:00', resources:1, createTime:'2026-07-16', reviewTime:'2026-07-16', tags:['民族综艺','本地频道'] },
-      { id:7, name:'数字福建数字政务海报', cover:'📷', publishTime:'2026-07-13 09:30', category:'private-szfj/smart', customer:'数字福建', status:'机审中', extStatus:'待审核', platform:'广网融科', auditor:'林芳', auditTime:'07-13 10:15', resources:1, createTime:'2026-07-13', reviewTime:'', tags:['数字政务','智慧城市'] },
-      { id:8, name:'数字福建数字文旅海报', cover:'📷', publishTime:'2026-07-14 14:20', category:'private-szfj/industry', customer:'数字福建', status:'待复审', extStatus:'自动通过', platform:'广网融科', auditor:'郑涛', auditTime:'07-14 15:00', resources:1, createTime:'2026-07-14', reviewTime:'', tags:['数字文旅','数字经济'] },
-      { id:9, name:'数字福建城市大脑宣传视频', cover:'🎬', publishTime:'2026-07-15 16:05', category:'private-szfj/smart', customer:'数字福建', status:'待发布', extStatus:'审核通过', platform:'广网融科', auditor:'林芳', auditTime:'07-15 17:30', resources:1, createTime:'2026-07-15', reviewTime:'2026-07-15', tags:['城市大脑','智慧城市'] },
-      { id:10, name:'福建商业推广宣传海报', cover:'📷', publishTime:'2026-07-17 15:40', category:'private-fj/ad', customer:'福建广电', status:'待复审', extStatus:'待审核', platform:'广网融科', auditor:'陈静怡', auditTime:'07-17 16:20', resources:1, createTime:'2026-07-17', reviewTime:'', tags:['商业推广'] }
+      { id:1, name:'福建新闻联播宣传海报', cover:'📷', publishTime:'2026-07-08 10:20', category:'private-fj/local', customer:'福建广电', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'陈静怡', auditTime:'07-08 15:30', direction:'竖版', resources:1, createTime:'2026-07-08', reviewTime:'', tags:['新闻联播','本地频道'] },
+      { id:2, name:'福建综艺节目预告视频', cover:'🎬', publishTime:'2026-07-09 14:36', category:'private-fj/local', customer:'福建广电', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'康素鸿', auditTime:'07-09 16:10', direction:'横版', resources:1, createTime:'2026-07-09', reviewTime:'2026-07-09', tags:['综艺','本地频道'] },
+      { id:3, name:'福建政务宣传海报', cover:'📷', publishTime:'2026-07-10 09:12', category:'private-fj/ad', customer:'福建广电', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'张卫', auditTime:'07-10 10:05', direction:'横版', resources:1, createTime:'2026-07-10', reviewTime:'', tags:['政务宣传'] },
+      { id:4, name:'广西壮族文化宣传海报', cover:'📷', publishTime:'2026-07-11 16:05', category:'private-gx/local', customer:'广西广电', status:'待复审', extStatus:'审核退回', platform:'广电昊象', auditor:'韦晓', auditTime:'07-11 17:20', direction:'竖版', resources:1, createTime:'2026-07-11', reviewTime:'2026-07-11', tags:['壮族文化','本地频道'] },
+      { id:5, name:'广西文旅推广宣传视频', cover:'🎬', publishTime:'2026-07-12 11:48', category:'private-gx/rural', customer:'广西广电', status:'已发布', extStatus:'审核通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-12 14:00', direction:'横版', resources:1, createTime:'2026-07-12', reviewTime:'2026-07-12', tags:['文旅推广','乡村振兴'] },
+      { id:6, name:'广西民族综艺宣传视频', cover:'🎬', publishTime:'2026-07-16 10:10', category:'private-gx/local', customer:'广西广电', status:'已发布', extStatus:'自动通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-16 11:00', direction:'横版', resources:1, createTime:'2026-07-16', reviewTime:'2026-07-16', tags:['民族综艺','本地频道'] },
+      { id:7, name:'数字福建数字政务海报', cover:'📷', publishTime:'2026-07-13 09:30', category:'private-szfj/smart', customer:'数字福建', status:'机审中', extStatus:'待审核', platform:'广网融科', auditor:'林芳', auditTime:'07-13 10:15', direction:'竖版', resources:1, createTime:'2026-07-13', reviewTime:'', tags:['数字政务','智慧城市'] },
+      { id:8, name:'数字福建数字文旅海报', cover:'📷', publishTime:'2026-07-14 14:20', category:'private-szfj/industry', customer:'数字福建', status:'待复审', extStatus:'自动通过', platform:'广网融科', auditor:'郑涛', auditTime:'07-14 15:00', direction:'横版', resources:1, createTime:'2026-07-14', reviewTime:'', tags:['数字文旅','数字经济'] },
+      { id:9, name:'数字福建城市大脑宣传视频', cover:'🎬', publishTime:'2026-07-15 16:05', category:'private-szfj/smart', customer:'数字福建', status:'待发布', extStatus:'审核通过', platform:'广网融科', auditor:'林芳', auditTime:'07-15 17:30', direction:'横版', resources:1, createTime:'2026-07-15', reviewTime:'2026-07-15', tags:['城市大脑','智慧城市'] },
+      { id:10, name:'福建商业推广宣传海报', cover:'📷', publishTime:'2026-07-17 15:40', category:'private-fj/ad', customer:'福建广电', status:'待复审', extStatus:'待审核', platform:'广网融科', auditor:'陈静怡', auditTime:'07-17 16:20', direction:'竖版', resources:1, createTime:'2026-07-17', reviewTime:'', tags:['商业推广'] }
     ];
     var PVT_MGMT_TOPIC_STATUS_STYLES = { '已发布':{color:'#52c41a',bg:'#e6fffb',border:'#b5f5ec'}, '待发布':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '待客户审核':{color:'#d48806',bg:'#fffbe6',border:'#ffe58f'}, '客户审核退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '机审中':{color:'#722ed1',bg:'#f9f0ff',border:'#d3adf7'}, '机审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '待复审':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '复审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '主题关闭':{color:'#999',bg:'#f5f5f5',border:'#e8e8e8'}, '发布退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'} };
     var PVT_MGMT_TOPIC_SELECTED = [];
@@ -12939,6 +12939,22 @@ if (tagFilterActive.length > 0) {
     .dd-select:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.1); }
     .dd-select:disabled { background-color: #f5f5f5; color: #bfbfbf; cursor: not-allowed; border-color: #e8e8e8; }
     .dd-select.ph { color: #bfbfbf; }
+    .dd-combo { position: relative; }
+    .dd-combo-btn { width: 100%; height: 32px; padding: 0 24px 0 8px; border: 1px solid #dfe4ee; border-radius: 4px; background: #fff; font-size: 13px; color: #1f2329; text-align: left; cursor: pointer; font-family: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; position: relative; }
+    .dd-combo-btn.ph { color: #bfbfbf; }
+    .dd-combo-btn:hover { border-color: #4096ff; }
+    .dd-combo-btn::after { content: ''; position: absolute; right: 10px; top: 11px; width: 5px; height: 5px; border-right: 1.5px solid #bfbfbf; border-bottom: 1.5px solid #bfbfbf; transform: rotate(45deg); }
+    .dd-combo.open .dd-combo-btn { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,.1); }
+    .dd-combo-panel { position: absolute; left: 0; top: 36px; z-index: 60; width: 300px; background: #fff; border: 1px solid #dfe4ee; border-radius: 6px; box-shadow: 0 6px 20px rgba(16,24,40,.12); padding: 8px; box-sizing: border-box; }
+    .dd-combo-search { width: 100%; height: 30px; padding: 0 8px; border: 1px solid #dfe4ee; border-radius: 4px; font-size: 13px; color: #1f2329; outline: none; box-sizing: border-box; font-family: inherit; }
+    .dd-combo-search:focus { border-color: #1677ff; }
+    .dd-combo-list { max-height: 208px; overflow-y: auto; margin-top: 6px; }
+    .dd-combo-item { padding: 7px 8px; font-size: 13px; color: #1f2329; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .dd-combo-item:hover { background: #f5f9ff; }
+    .dd-combo-item.on { background: #e8f2ff; color: #1677ff; }
+    .dd-combo-item .nm { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dd-combo-item .cat { font-size: 12px; color: #8c8c8c; flex-shrink: 0; }
+    .dd-combo-empty { padding: 16px 8px; text-align: center; font-size: 12px; color: #a8b0bd; }
     .dd-gcover-cell { grid-column: 4; grid-row: 1 / span 3; }
     .dd-gcover { width: 88px; height: 88px; border: 1px dashed #d9d9d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #bfbfbf; font-size: 20px; background: #fff; cursor: pointer; overflow: hidden; }
     .dd-gcover:hover { border-color: #1677ff; color: #1677ff; }
@@ -13174,6 +13190,7 @@ if (tagFilterActive.length > 0) {
        明细表为录入表：组内可添加行 / 勾选删除 / 分页；资源标签复用资源编辑页标签弹窗（__EDIT_TAG_MODE='demand-row'）。 */
     var DD_DEMAND = null;
     var DD_GROUPS = [];   /* 主题组：key/name/cat/createMode/region/platform/tags/remark/cover/dir/collapsed/page/pageSize/rows */
+    var DD_COMBO = { gk: null, q: '' };  /* 主题名称可搜索下拉：当前展开的组 + 搜索词 */
     var DD_SEQ = 0;       /* 行 key 自增 */
     var DD_GSEQ = 0;      /* 主题组 key 自增 */
     var DD_ERR = {};      /* 校验失败的单元格：{ 行key: ['资源名称'] } */
@@ -13943,12 +13960,17 @@ if (tagFilterActive.length > 0) {
         /* 主题名称 */
         var nameInner;
         if (g.createMode === '选择已有主题') {
-          var opts = '<option value="">请选择主题</option>';
-          var srcList = ddPickSource();
-          for (var si = 0; si < srcList.length; si++) {
-            opts += '<option value="' + ddEsc(srcList[si].name) + '"' + (srcList[si].name === g.name ? ' selected' : '') + '>' + ddEsc(srcList[si].name) + '</option>';
+          var comboOpen = (DD_COMBO.gk === g.key);
+          var comboHtml = '<div class="dd-combo' + (comboOpen ? ' open' : '') + '" data-combo="' + g.key + '">'
+            + '<button class="dd-combo-btn' + (g.name ? '' : ' ph') + '" onclick="ddComboToggle(' + g.key + ')">' + (g.name ? ddEsc(g.name) : '请选择主题') + '</button>';
+          if (comboOpen) {
+            comboHtml += '<div class="dd-combo-panel">'
+              + '<input class="dd-combo-search" id="ddComboSearch-' + g.key + '" placeholder="搜索主题名称" value="' + ddEsc(DD_COMBO.q) + '" oninput="ddComboSearch(' + g.key + ', this.value)">'
+              + '<div class="dd-combo-list" id="ddComboList-' + g.key + '">' + ddComboListHtml(g.key) + '</div>'
+              + '</div>';
           }
-          nameInner = '<select class="dd-select' + (g.name ? '' : ' ph') + '" id="ddGName-' + g.key + '" onchange="ddSetGroupTheme(' + g.key + ', this.value)">' + opts + '</select>';
+          comboHtml += '</div>';
+          nameInner = comboHtml;
         } else {
           nameInner = '<input class="dd-input" id="ddGName-' + g.key + '" value="' + ddEsc(g.name) + '" placeholder="请输入主题名称" oninput="ddSetGroupName(' + g.key + ', this.value)" onblur="setTimeout(renderGroups, 120)">';
         }
@@ -13971,9 +13993,10 @@ if (tagFilterActive.length > 0) {
           body += ddGField('地域', '<input class="dd-input" value="' + ddEsc(g.region) + '" placeholder="请输入地域" oninput="ddSetGroupRegion(' + g.key + ', this.value)">');
           body += ddGField('同步平台', '<input class="dd-input" value="' + ddEsc(g.platform) + '" placeholder="请输入同步平台" oninput="ddSetGroupPlatform(' + g.key + ', this.value)">');
         }
-        var dirLocked = g.rows.length > 0;
+        /* 方向锁定只看创建方式：选已有主题时沿用该主题在资源库里的方向；新建主题可自由选 */
+        var dirLocked = (g.createMode === '选择已有主题');
         body += ddGField('资源方向', '<select class="dd-select" '
-          + (dirLocked ? 'disabled title="组内已有资源，需先移除或替换不匹配的资源才能改方向"' : 'onchange="ddSetGroupDir(' + g.key + ', this.value)"')
+          + (dirLocked ? 'disabled title="选择已有主题时沿用该主题的资源方向，不能修改；需要改方向请用「新建主题」"' : 'onchange="ddSetGroupDir(' + g.key + ', this.value)"')
           + '>'
           + '<option value="横版"' + (g.dir === '横版' ? ' selected' : '') + '>横版</option>'
           + '<option value="竖版"' + (g.dir === '竖版' ? ' selected' : '') + '>竖版</option>'
@@ -14143,6 +14166,65 @@ if (tagFilterActive.length > 0) {
         setTimeout(function () { try { el.focus(); } catch (e) {} }, 280);
       }
     }
+    /* 可选主题数据源：专属需求取同客户的私有主题，公共需求取公共主题库 */
+    function ddPickSource() {
+      if (DD_DEMAND && DD_DEMAND.type === '专属') {
+        var pAll = (typeof PVT_MGMT_TOPICS !== 'undefined') ? PVT_MGMT_TOPICS : [];
+        var cus = DD_DEMAND.customer || '';
+        if (!cus) return pAll;
+        var out = [];
+        for (var i = 0; i < pAll.length; i++) { if (pAll[i].customer === cus) out.push(pAll[i]); }
+        return out;
+      }
+      return (typeof RES_MGMT_TOPICS !== 'undefined') ? RES_MGMT_TOPICS : [];
+    }
+    /* 主题类别路径转显示文本（复用公共资源页的类别树） */
+    function ddTopicCatPath(t) {
+      if (!t || !t.category) return '';
+      if (typeof resMgmtTopicCatPath === 'function') {
+        var p = resMgmtTopicCatPath(t.category);
+        if (p && p !== t.category) return p;
+      }
+      return '';
+    }
+    /* 主题名称：可搜索下拉 */
+    function ddComboToggle(gk) {
+      DD_COMBO = (DD_COMBO.gk === gk) ? { gk: null, q: '' } : { gk: gk, q: '' };
+      renderGroups();
+      if (DD_COMBO.gk) {
+        setTimeout(function () {
+          var el = document.getElementById('ddComboSearch-' + gk);
+          if (el) { try { el.focus(); } catch (e) {} }
+        }, 30);
+      }
+    }
+    function ddComboSearch(gk, v) {
+      DD_COMBO.q = v;
+      var box = document.getElementById('ddComboList-' + gk);
+      if (box) box.innerHTML = ddComboListHtml(gk);
+    }
+    function ddComboListHtml(gk) {
+      var g = ddGroupById(gk); if (!g) return '';
+      var q = (DD_COMBO.q || '').toLowerCase();
+      var src = ddPickSource(), h = '', n = 0;
+      for (var i = 0; i < src.length; i++) {
+        var t = src[i];
+        if (q && String(t.name).toLowerCase().indexOf(q) < 0) continue;
+        n++;
+        h += '<div class="dd-combo-item' + (t.name === g.name ? ' on' : '') + '" onclick="ddComboPick(' + gk + ',' + i + ')">'
+          + '<span class="nm">' + ddEsc(t.name) + '</span>'
+          + '<span class="cat">' + ddEsc(ddTopicCatPath(t)) + '</span>'
+          + '</div>';
+      }
+      if (!n) h = '<div class="dd-combo-empty">没有匹配的主题</div>';
+      return h;
+    }
+    function ddComboPick(gk, idx) {
+      var src = ddPickSource();
+      if (!src[idx]) return;
+      ddSetGroupTheme(gk, src[idx].name);
+    }
+
     /* 创建方式切换：控制「主题名称」是文本输入还是已有主题下拉 */
     function ddSetGroupMode(gk, mode) {
       var g = ddGroupById(gk); if (!g) return;
@@ -14158,11 +14240,13 @@ if (tagFilterActive.length > 0) {
     /* 选择已有主题：带入类别 / 标签 / 该主题已有资源（组内为空时） */
     function ddSetGroupTheme(gk, name) {
       var g = ddGroupById(gk); if (!g) return;
+      DD_COMBO = { gk: null, q: '' };
       g.name = name || '';
       if (!name) { renderGroups(); return; }
-      var src = ddPickSource();
+      var src = ddPickSource(), hit = null;
       for (var i = 0; i < src.length; i++) {
         if (src[i].name !== name) continue;
+        hit = src[i];
         g.cat = (DD_DEMAND.type === '专属') ? (DD_DEMAND.cat || '') : ddTopicCatPath(src[i]);
         g.tags = (src[i].tags || []).slice();
         break;
@@ -14170,8 +14254,9 @@ if (tagFilterActive.length > 0) {
       if (!g.rows.length && typeof demandResList === 'function') {
         var list = demandResList({ type: DD_DEMAND.type, themes: [name] });
         for (var k = 0; k < list.length; k++) g.rows.push(ddRowFromRes(list[k]));
-        if (g.rows.length) g.dir = ddInferGroupDir(g.rows);
       }
+      /* 方向以主题在资源库里记的为准，没有再用组内资源推断 */
+      g.dir = (hit && hit.direction) ? hit.direction : (g.rows.length ? ddInferGroupDir(g.rows) : g.dir);
       renderGroups();
       resToast(g.rows.length ? ('已带入主题「' + name + '」的 ' + g.rows.length + ' 条资源') : ('已选择主题「' + name + '」'), 'success');
     }
@@ -14240,6 +14325,20 @@ if (tagFilterActive.length > 0) {
       RES_CURRENT_PAGE = 'demand-detail';
       if (typeof renderAppSidebar === 'function') renderAppSidebar('demand-list');
       if (typeof renderAppBreadcrumb === 'function') renderAppBreadcrumb('生产管理', '需求详情');
+      /* 点空白处收起主题名称下拉（只绑一次） */
+      if (!window.__DD_COMBO_BOUND) {
+        window.__DD_COMBO_BOUND = 1;
+        document.addEventListener('click', function (e) {
+          if (!DD_COMBO || !DD_COMBO.gk) return;
+          var n = e.target;
+          while (n && n !== document) {
+            if (n.getAttribute && n.getAttribute('data-combo')) return;
+            n = n.parentNode;
+          }
+          DD_COMBO = { gk: null, q: '' };
+          if (typeof renderGroups === 'function') renderGroups();
+        });
+      }
       /* 需求编码可经 hash 传入（#demand-detail:REQ-2026-1003），演示期缺省落到固定演示需求 */
       DD_DEMAND = demandByCode(window.__HASH_PARAM) || demandByCode('REQ-2026-1003') || DEMAND_LIST[0];
       DD_SEQ = 0;
@@ -21119,18 +21218,18 @@ function resTagChips(arr, cls) {
     /* ===== 主题列表视图（复刻公共主题v2 表格，类别全部有值） ===== */
     var RES_MGMT_VIEW = 'card'; /* 默认资源卡片视图 */ /* topic | card */
     var RES_MGMT_TOPICS = [
-      { id:1, name:'听党指挥能打胜仗', cover:'📷', publishTime:'2026-07-27 14:30', category:'public/thought/xiyu', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'张三', auditTime:'07-26 16:20', resources:3, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['党建','强军'] },
-      { id:2, name:'福建数字规划（横版）', cover:'📷', publishTime:'2026-07-21 10:00', category:'region/fujian/省级', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'李四', auditTime:'07-20 09:10', resources:2, createTime:'2026-07-19', reviewTime:'2026-07-20', tags:['数字福建'] },
-      { id:3, name:'春节廉洁提醒海报', cover:'📷', publishTime:'2026-07-20 09:15', category:'public/thought/lianjie', status:'待校对', extStatus:'审核通过', platform:'广电昊象', auditor:'王五', auditTime:'07-19 15:40', resources:2, createTime:'2026-07-18', reviewTime:'2026-07-19', tags:['廉洁','节日'] },
-      { id:4, name:'台风安全科普视频', cover:'🎬', publishTime:'2026-07-18 16:20', category:'public/kepu/ziran', status:'待发布', extStatus:'待审核', platform:'东方有线', auditor:'赵六', auditTime:'07-17 11:05', resources:2, createTime:'2026-07-16', reviewTime:'', tags:['科普','安全'] },
-      { id:5, name:'二十大精神宣讲', cover:'🎬', publishTime:'2026-07-15 11:00', category:'public/thought/zhuanti', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 14:30', resources:3, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['党建','二十大'] },
-      { id:6, name:'上海城市形象宣传片', cover:'🎬', publishTime:'2026-07-28 09:00', category:'region/shanghai/市级', status:'已发布', extStatus:'审核通过', platform:'东方有线', auditor:'李四', auditTime:'07-26 17:25', resources:2, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['城市形象'] },
-      { id:7, name:'清明节文明祭扫', cover:'📷', publishTime:'2026-07-10 14:00', category:'public/jieri/zhuti', status:'主题关闭', extStatus:'审核退回', platform:'广网融科', auditor:'王五', auditTime:'07-09 10:30', resources:2, createTime:'2026-07-08', reviewTime:'2026-07-09', tags:['节日','文明'] },
-      { id:8, name:'垃圾分类科普动图', cover:'🎬', publishTime:'2026-07-15 08:45', category:'public/gongyi/huanbao', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 16:00', resources:2, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['环保','科普'] },
-      { id:9, name:'机关作风建设专题', cover:'📷', publishTime:'2026-07-22 13:00', category:'party/shizheng/yaowen', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'赵六', auditTime:'07-21 09:50', resources:2, createTime:'2026-07-20', reviewTime:'2026-07-21', tags:['机关','作风'] },
-      { id:10, name:'健康养生系列讲堂', cover:'🎬', publishTime:'2026-07-19 10:30', category:'education/shield/weisheng', status:'已发布', extStatus:'审核通过', platform:'智融平台', auditor:'李四', auditTime:'07-17 15:20', resources:2, createTime:'2026-07-16', reviewTime:'2026-07-17', tags:['健康','养生'] },
-      { id:11, name:'景区导览服务指南', cover:'📷', publishTime:'2026-07-17 15:00', category:'public/kepu/renwen', status:'待发布', extStatus:'待审核', platform:'无', auditor:'', auditTime:'', resources:1, createTime:'2026-07-15', reviewTime:'', tags:['景区','导览'] },
-      { id:12, name:'廉洁诚信经营倡议书', cover:'📷', publishTime:'2026-07-14 11:20', category:'public/thought/lianjie', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-12 10:15', resources:4, createTime:'2026-07-11', reviewTime:'2026-07-12', tags:['廉洁','诚信'] }
+      { id:1, name:'听党指挥能打胜仗', cover:'📷', publishTime:'2026-07-27 14:30', category:'public/thought/xiyu', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'张三', auditTime:'07-26 16:20', direction:'竖版', resources:3, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['党建','强军'] },
+      { id:2, name:'福建数字规划（横版）', cover:'📷', publishTime:'2026-07-21 10:00', category:'region/fujian/省级', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'李四', auditTime:'07-20 09:10', direction:'横版', resources:2, createTime:'2026-07-19', reviewTime:'2026-07-20', tags:['数字福建'] },
+      { id:3, name:'春节廉洁提醒海报', cover:'📷', publishTime:'2026-07-20 09:15', category:'public/thought/lianjie', status:'待校对', extStatus:'审核通过', platform:'广电昊象', auditor:'王五', auditTime:'07-19 15:40', direction:'竖版', resources:2, createTime:'2026-07-18', reviewTime:'2026-07-19', tags:['廉洁','节日'] },
+      { id:4, name:'台风安全科普视频', cover:'🎬', publishTime:'2026-07-18 16:20', category:'public/kepu/ziran', status:'待发布', extStatus:'待审核', platform:'东方有线', auditor:'赵六', auditTime:'07-17 11:05', direction:'横版', resources:2, createTime:'2026-07-16', reviewTime:'', tags:['科普','安全'] },
+      { id:5, name:'二十大精神宣讲', cover:'🎬', publishTime:'2026-07-15 11:00', category:'public/thought/zhuanti', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 14:30', direction:'竖版', resources:3, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['党建','二十大'] },
+      { id:6, name:'上海城市形象宣传片', cover:'🎬', publishTime:'2026-07-28 09:00', category:'region/shanghai/市级', status:'已发布', extStatus:'审核通过', platform:'东方有线', auditor:'李四', auditTime:'07-26 17:25', direction:'横版', resources:2, createTime:'2026-07-25', reviewTime:'2026-07-26', tags:['城市形象'] },
+      { id:7, name:'清明节文明祭扫', cover:'📷', publishTime:'2026-07-10 14:00', category:'public/jieri/zhuti', status:'主题关闭', extStatus:'审核退回', platform:'广网融科', auditor:'王五', auditTime:'07-09 10:30', direction:'竖版', resources:2, createTime:'2026-07-08', reviewTime:'2026-07-09', tags:['节日','文明'] },
+      { id:8, name:'垃圾分类科普动图', cover:'🎬', publishTime:'2026-07-15 08:45', category:'public/gongyi/huanbao', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-13 16:00', direction:'横版', resources:2, createTime:'2026-07-12', reviewTime:'2026-07-13', tags:['环保','科普'] },
+      { id:9, name:'机关作风建设专题', cover:'📷', publishTime:'2026-07-22 13:00', category:'party/shizheng/yaowen', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'赵六', auditTime:'07-21 09:50', direction:'横版', resources:2, createTime:'2026-07-20', reviewTime:'2026-07-21', tags:['机关','作风'] },
+      { id:10, name:'健康养生系列讲堂', cover:'🎬', publishTime:'2026-07-19 10:30', category:'education/shield/weisheng', status:'已发布', extStatus:'审核通过', platform:'智融平台', auditor:'李四', auditTime:'07-17 15:20', direction:'横版', resources:2, createTime:'2026-07-16', reviewTime:'2026-07-17', tags:['健康','养生'] },
+      { id:11, name:'景区导览服务指南', cover:'📷', publishTime:'2026-07-17 15:00', category:'public/kepu/renwen', status:'待发布', extStatus:'待审核', platform:'无', auditor:'', auditTime:'', direction:'竖版', resources:1, createTime:'2026-07-15', reviewTime:'', tags:['景区','导览'] },
+      { id:12, name:'廉洁诚信经营倡议书', cover:'📷', publishTime:'2026-07-14 11:20', category:'public/thought/lianjie', status:'已发布', extStatus:'自动通过', platform:'智融平台', auditor:'张三', auditTime:'07-12 10:15', direction:'横版', resources:4, createTime:'2026-07-11', reviewTime:'2026-07-12', tags:['廉洁','诚信'] }
     ];
     var RES_MGMT_TOPIC_STATUS_STYLES = { '已发布':{color:'#52c41a',bg:'#e6fffb',border:'#b5f5ec'}, '待发布':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '待校对':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '机审中':{color:'#722ed1',bg:'#f9f0ff',border:'#d3adf7'}, '机审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '校对退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '待复审':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '复审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '主题关闭':{color:'#999',bg:'#f5f5f5',border:'#e8e8e8'}, '发布退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'} };
     var RES_MGMT_TOPIC_SELECTED = [];
@@ -24159,16 +24258,16 @@ var CAT_MGMT_EDIT_INDEX = -1;
     /* ===== 私有主题列表视图（复刻公共主题v2 表格 + 客户列） ===== */
     var PVT_MGMT_VIEW = 'card'; /* 默认资源卡片视图 */ /* topic | card */
     var PVT_MGMT_TOPICS = [
-      { id:1, name:'福建新闻联播宣传海报', cover:'📷', publishTime:'2026-07-08 10:20', category:'private-fj/local', customer:'福建广电', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'陈静怡', auditTime:'07-08 15:30', resources:1, createTime:'2026-07-08', reviewTime:'', tags:['新闻联播','本地频道'] },
-      { id:2, name:'福建综艺节目预告视频', cover:'🎬', publishTime:'2026-07-09 14:36', category:'private-fj/local', customer:'福建广电', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'康素鸿', auditTime:'07-09 16:10', resources:1, createTime:'2026-07-09', reviewTime:'2026-07-09', tags:['综艺','本地频道'] },
-      { id:3, name:'福建政务宣传海报', cover:'📷', publishTime:'2026-07-10 09:12', category:'private-fj/ad', customer:'福建广电', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'张卫', auditTime:'07-10 10:05', resources:1, createTime:'2026-07-10', reviewTime:'', tags:['政务宣传'] },
-      { id:4, name:'广西壮族文化宣传海报', cover:'📷', publishTime:'2026-07-11 16:05', category:'private-gx/local', customer:'广西广电', status:'待复审', extStatus:'审核退回', platform:'广电昊象', auditor:'韦晓', auditTime:'07-11 17:20', resources:1, createTime:'2026-07-11', reviewTime:'2026-07-11', tags:['壮族文化','本地频道'] },
-      { id:5, name:'广西文旅推广宣传视频', cover:'🎬', publishTime:'2026-07-12 11:48', category:'private-gx/rural', customer:'广西广电', status:'已发布', extStatus:'审核通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-12 14:00', resources:1, createTime:'2026-07-12', reviewTime:'2026-07-12', tags:['文旅推广','乡村振兴'] },
-      { id:6, name:'广西民族综艺宣传视频', cover:'🎬', publishTime:'2026-07-16 10:10', category:'private-gx/local', customer:'广西广电', status:'已发布', extStatus:'自动通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-16 11:00', resources:1, createTime:'2026-07-16', reviewTime:'2026-07-16', tags:['民族综艺','本地频道'] },
-      { id:7, name:'数字福建数字政务海报', cover:'📷', publishTime:'2026-07-13 09:30', category:'private-szfj/smart', customer:'数字福建', status:'机审中', extStatus:'待审核', platform:'广网融科', auditor:'林芳', auditTime:'07-13 10:15', resources:1, createTime:'2026-07-13', reviewTime:'', tags:['数字政务','智慧城市'] },
-      { id:8, name:'数字福建数字文旅海报', cover:'📷', publishTime:'2026-07-14 14:20', category:'private-szfj/industry', customer:'数字福建', status:'待复审', extStatus:'自动通过', platform:'广网融科', auditor:'郑涛', auditTime:'07-14 15:00', resources:1, createTime:'2026-07-14', reviewTime:'', tags:['数字文旅','数字经济'] },
-      { id:9, name:'数字福建城市大脑宣传视频', cover:'🎬', publishTime:'2026-07-15 16:05', category:'private-szfj/smart', customer:'数字福建', status:'待发布', extStatus:'审核通过', platform:'广网融科', auditor:'林芳', auditTime:'07-15 17:30', resources:1, createTime:'2026-07-15', reviewTime:'2026-07-15', tags:['城市大脑','智慧城市'] },
-      { id:10, name:'福建商业推广宣传海报', cover:'📷', publishTime:'2026-07-17 15:40', category:'private-fj/ad', customer:'福建广电', status:'待复审', extStatus:'待审核', platform:'广网融科', auditor:'陈静怡', auditTime:'07-17 16:20', resources:1, createTime:'2026-07-17', reviewTime:'', tags:['商业推广'] }
+      { id:1, name:'福建新闻联播宣传海报', cover:'📷', publishTime:'2026-07-08 10:20', category:'private-fj/local', customer:'福建广电', status:'待复审', extStatus:'审核通过', platform:'广网融科', auditor:'陈静怡', auditTime:'07-08 15:30', direction:'竖版', resources:1, createTime:'2026-07-08', reviewTime:'', tags:['新闻联播','本地频道'] },
+      { id:2, name:'福建综艺节目预告视频', cover:'🎬', publishTime:'2026-07-09 14:36', category:'private-fj/local', customer:'福建广电', status:'已发布', extStatus:'审核通过', platform:'广网融科', auditor:'康素鸿', auditTime:'07-09 16:10', direction:'横版', resources:1, createTime:'2026-07-09', reviewTime:'2026-07-09', tags:['综艺','本地频道'] },
+      { id:3, name:'福建政务宣传海报', cover:'📷', publishTime:'2026-07-10 09:12', category:'private-fj/ad', customer:'福建广电', status:'待发布', extStatus:'待审核', platform:'广网融科', auditor:'张卫', auditTime:'07-10 10:05', direction:'横版', resources:1, createTime:'2026-07-10', reviewTime:'', tags:['政务宣传'] },
+      { id:4, name:'广西壮族文化宣传海报', cover:'📷', publishTime:'2026-07-11 16:05', category:'private-gx/local', customer:'广西广电', status:'待复审', extStatus:'审核退回', platform:'广电昊象', auditor:'韦晓', auditTime:'07-11 17:20', direction:'竖版', resources:1, createTime:'2026-07-11', reviewTime:'2026-07-11', tags:['壮族文化','本地频道'] },
+      { id:5, name:'广西文旅推广宣传视频', cover:'🎬', publishTime:'2026-07-12 11:48', category:'private-gx/rural', customer:'广西广电', status:'已发布', extStatus:'审核通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-12 14:00', direction:'横版', resources:1, createTime:'2026-07-12', reviewTime:'2026-07-12', tags:['文旅推广','乡村振兴'] },
+      { id:6, name:'广西民族综艺宣传视频', cover:'🎬', publishTime:'2026-07-16 10:10', category:'private-gx/local', customer:'广西广电', status:'已发布', extStatus:'自动通过', platform:'广电昊象', auditor:'黄晓敏', auditTime:'07-16 11:00', direction:'横版', resources:1, createTime:'2026-07-16', reviewTime:'2026-07-16', tags:['民族综艺','本地频道'] },
+      { id:7, name:'数字福建数字政务海报', cover:'📷', publishTime:'2026-07-13 09:30', category:'private-szfj/smart', customer:'数字福建', status:'机审中', extStatus:'待审核', platform:'广网融科', auditor:'林芳', auditTime:'07-13 10:15', direction:'竖版', resources:1, createTime:'2026-07-13', reviewTime:'', tags:['数字政务','智慧城市'] },
+      { id:8, name:'数字福建数字文旅海报', cover:'📷', publishTime:'2026-07-14 14:20', category:'private-szfj/industry', customer:'数字福建', status:'待复审', extStatus:'自动通过', platform:'广网融科', auditor:'郑涛', auditTime:'07-14 15:00', direction:'横版', resources:1, createTime:'2026-07-14', reviewTime:'', tags:['数字文旅','数字经济'] },
+      { id:9, name:'数字福建城市大脑宣传视频', cover:'🎬', publishTime:'2026-07-15 16:05', category:'private-szfj/smart', customer:'数字福建', status:'待发布', extStatus:'审核通过', platform:'广网融科', auditor:'林芳', auditTime:'07-15 17:30', direction:'横版', resources:1, createTime:'2026-07-15', reviewTime:'2026-07-15', tags:['城市大脑','智慧城市'] },
+      { id:10, name:'福建商业推广宣传海报', cover:'📷', publishTime:'2026-07-17 15:40', category:'private-fj/ad', customer:'福建广电', status:'待复审', extStatus:'待审核', platform:'广网融科', auditor:'陈静怡', auditTime:'07-17 16:20', direction:'竖版', resources:1, createTime:'2026-07-17', reviewTime:'', tags:['商业推广'] }
     ];
     var PVT_MGMT_TOPIC_STATUS_STYLES = { '已发布':{color:'#52c41a',bg:'#e6fffb',border:'#b5f5ec'}, '待发布':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '待客户审核':{color:'#d48806',bg:'#fffbe6',border:'#ffe58f'}, '客户审核退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '机审中':{color:'#722ed1',bg:'#f9f0ff',border:'#d3adf7'}, '机审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '待复审':{color:'#fa8c16',bg:'#fff7e6',border:'#ffd591'}, '复审退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'}, '主题关闭':{color:'#999',bg:'#f5f5f5',border:'#e8e8e8'}, '发布退回':{color:'#f5222d',bg:'#fff1f0',border:'#ffa39e'} };
     var PVT_MGMT_TOPIC_SELECTED = [];
@@ -26277,6 +26376,7 @@ var SPL_TAB = 'public';
        明细表为录入表：组内可添加行 / 勾选删除 / 分页；资源标签复用资源编辑页标签弹窗（__EDIT_TAG_MODE='demand-row'）。 */
     var DD_DEMAND = null;
     var DD_GROUPS = [];   /* 主题组：key/name/cat/createMode/region/platform/tags/remark/cover/dir/collapsed/page/pageSize/rows */
+    var DD_COMBO = { gk: null, q: '' };  /* 主题名称可搜索下拉：当前展开的组 + 搜索词 */
     var DD_SEQ = 0;       /* 行 key 自增 */
     var DD_GSEQ = 0;      /* 主题组 key 自增 */
     var DD_ERR = {};      /* 校验失败的单元格：{ 行key: ['资源名称'] } */
@@ -27046,12 +27146,17 @@ var SPL_TAB = 'public';
         /* 主题名称 */
         var nameInner;
         if (g.createMode === '选择已有主题') {
-          var opts = '<option value="">请选择主题</option>';
-          var srcList = ddPickSource();
-          for (var si = 0; si < srcList.length; si++) {
-            opts += '<option value="' + ddEsc(srcList[si].name) + '"' + (srcList[si].name === g.name ? ' selected' : '') + '>' + ddEsc(srcList[si].name) + '</option>';
+          var comboOpen = (DD_COMBO.gk === g.key);
+          var comboHtml = '<div class="dd-combo' + (comboOpen ? ' open' : '') + '" data-combo="' + g.key + '">'
+            + '<button class="dd-combo-btn' + (g.name ? '' : ' ph') + '" onclick="ddComboToggle(' + g.key + ')">' + (g.name ? ddEsc(g.name) : '请选择主题') + '</button>';
+          if (comboOpen) {
+            comboHtml += '<div class="dd-combo-panel">'
+              + '<input class="dd-combo-search" id="ddComboSearch-' + g.key + '" placeholder="搜索主题名称" value="' + ddEsc(DD_COMBO.q) + '" oninput="ddComboSearch(' + g.key + ', this.value)">'
+              + '<div class="dd-combo-list" id="ddComboList-' + g.key + '">' + ddComboListHtml(g.key) + '</div>'
+              + '</div>';
           }
-          nameInner = '<select class="dd-select' + (g.name ? '' : ' ph') + '" id="ddGName-' + g.key + '" onchange="ddSetGroupTheme(' + g.key + ', this.value)">' + opts + '</select>';
+          comboHtml += '</div>';
+          nameInner = comboHtml;
         } else {
           nameInner = '<input class="dd-input" id="ddGName-' + g.key + '" value="' + ddEsc(g.name) + '" placeholder="请输入主题名称" oninput="ddSetGroupName(' + g.key + ', this.value)" onblur="setTimeout(renderGroups, 120)">';
         }
@@ -27074,9 +27179,10 @@ var SPL_TAB = 'public';
           body += ddGField('地域', '<input class="dd-input" value="' + ddEsc(g.region) + '" placeholder="请输入地域" oninput="ddSetGroupRegion(' + g.key + ', this.value)">');
           body += ddGField('同步平台', '<input class="dd-input" value="' + ddEsc(g.platform) + '" placeholder="请输入同步平台" oninput="ddSetGroupPlatform(' + g.key + ', this.value)">');
         }
-        var dirLocked = g.rows.length > 0;
+        /* 方向锁定只看创建方式：选已有主题时沿用该主题在资源库里的方向；新建主题可自由选 */
+        var dirLocked = (g.createMode === '选择已有主题');
         body += ddGField('资源方向', '<select class="dd-select" '
-          + (dirLocked ? 'disabled title="组内已有资源，需先移除或替换不匹配的资源才能改方向"' : 'onchange="ddSetGroupDir(' + g.key + ', this.value)"')
+          + (dirLocked ? 'disabled title="选择已有主题时沿用该主题的资源方向，不能修改；需要改方向请用「新建主题」"' : 'onchange="ddSetGroupDir(' + g.key + ', this.value)"')
           + '>'
           + '<option value="横版"' + (g.dir === '横版' ? ' selected' : '') + '>横版</option>'
           + '<option value="竖版"' + (g.dir === '竖版' ? ' selected' : '') + '>竖版</option>'
@@ -27246,6 +27352,65 @@ var SPL_TAB = 'public';
         setTimeout(function () { try { el.focus(); } catch (e) {} }, 280);
       }
     }
+    /* 可选主题数据源：专属需求取同客户的私有主题，公共需求取公共主题库 */
+    function ddPickSource() {
+      if (DD_DEMAND && DD_DEMAND.type === '专属') {
+        var pAll = (typeof PVT_MGMT_TOPICS !== 'undefined') ? PVT_MGMT_TOPICS : [];
+        var cus = DD_DEMAND.customer || '';
+        if (!cus) return pAll;
+        var out = [];
+        for (var i = 0; i < pAll.length; i++) { if (pAll[i].customer === cus) out.push(pAll[i]); }
+        return out;
+      }
+      return (typeof RES_MGMT_TOPICS !== 'undefined') ? RES_MGMT_TOPICS : [];
+    }
+    /* 主题类别路径转显示文本（复用公共资源页的类别树） */
+    function ddTopicCatPath(t) {
+      if (!t || !t.category) return '';
+      if (typeof resMgmtTopicCatPath === 'function') {
+        var p = resMgmtTopicCatPath(t.category);
+        if (p && p !== t.category) return p;
+      }
+      return '';
+    }
+    /* 主题名称：可搜索下拉 */
+    function ddComboToggle(gk) {
+      DD_COMBO = (DD_COMBO.gk === gk) ? { gk: null, q: '' } : { gk: gk, q: '' };
+      renderGroups();
+      if (DD_COMBO.gk) {
+        setTimeout(function () {
+          var el = document.getElementById('ddComboSearch-' + gk);
+          if (el) { try { el.focus(); } catch (e) {} }
+        }, 30);
+      }
+    }
+    function ddComboSearch(gk, v) {
+      DD_COMBO.q = v;
+      var box = document.getElementById('ddComboList-' + gk);
+      if (box) box.innerHTML = ddComboListHtml(gk);
+    }
+    function ddComboListHtml(gk) {
+      var g = ddGroupById(gk); if (!g) return '';
+      var q = (DD_COMBO.q || '').toLowerCase();
+      var src = ddPickSource(), h = '', n = 0;
+      for (var i = 0; i < src.length; i++) {
+        var t = src[i];
+        if (q && String(t.name).toLowerCase().indexOf(q) < 0) continue;
+        n++;
+        h += '<div class="dd-combo-item' + (t.name === g.name ? ' on' : '') + '" onclick="ddComboPick(' + gk + ',' + i + ')">'
+          + '<span class="nm">' + ddEsc(t.name) + '</span>'
+          + '<span class="cat">' + ddEsc(ddTopicCatPath(t)) + '</span>'
+          + '</div>';
+      }
+      if (!n) h = '<div class="dd-combo-empty">没有匹配的主题</div>';
+      return h;
+    }
+    function ddComboPick(gk, idx) {
+      var src = ddPickSource();
+      if (!src[idx]) return;
+      ddSetGroupTheme(gk, src[idx].name);
+    }
+
     /* 创建方式切换：控制「主题名称」是文本输入还是已有主题下拉 */
     function ddSetGroupMode(gk, mode) {
       var g = ddGroupById(gk); if (!g) return;
@@ -27261,11 +27426,13 @@ var SPL_TAB = 'public';
     /* 选择已有主题：带入类别 / 标签 / 该主题已有资源（组内为空时） */
     function ddSetGroupTheme(gk, name) {
       var g = ddGroupById(gk); if (!g) return;
+      DD_COMBO = { gk: null, q: '' };
       g.name = name || '';
       if (!name) { renderGroups(); return; }
-      var src = ddPickSource();
+      var src = ddPickSource(), hit = null;
       for (var i = 0; i < src.length; i++) {
         if (src[i].name !== name) continue;
+        hit = src[i];
         g.cat = (DD_DEMAND.type === '专属') ? (DD_DEMAND.cat || '') : ddTopicCatPath(src[i]);
         g.tags = (src[i].tags || []).slice();
         break;
@@ -27273,8 +27440,9 @@ var SPL_TAB = 'public';
       if (!g.rows.length && typeof demandResList === 'function') {
         var list = demandResList({ type: DD_DEMAND.type, themes: [name] });
         for (var k = 0; k < list.length; k++) g.rows.push(ddRowFromRes(list[k]));
-        if (g.rows.length) g.dir = ddInferGroupDir(g.rows);
       }
+      /* 方向以主题在资源库里记的为准，没有再用组内资源推断 */
+      g.dir = (hit && hit.direction) ? hit.direction : (g.rows.length ? ddInferGroupDir(g.rows) : g.dir);
       renderGroups();
       resToast(g.rows.length ? ('已带入主题「' + name + '」的 ' + g.rows.length + ' 条资源') : ('已选择主题「' + name + '」'), 'success');
     }
@@ -27343,6 +27511,20 @@ var SPL_TAB = 'public';
       RES_CURRENT_PAGE = 'demand-detail';
       if (typeof renderAppSidebar === 'function') renderAppSidebar('demand-list');
       if (typeof renderAppBreadcrumb === 'function') renderAppBreadcrumb('生产管理', '需求详情');
+      /* 点空白处收起主题名称下拉（只绑一次） */
+      if (!window.__DD_COMBO_BOUND) {
+        window.__DD_COMBO_BOUND = 1;
+        document.addEventListener('click', function (e) {
+          if (!DD_COMBO || !DD_COMBO.gk) return;
+          var n = e.target;
+          while (n && n !== document) {
+            if (n.getAttribute && n.getAttribute('data-combo')) return;
+            n = n.parentNode;
+          }
+          DD_COMBO = { gk: null, q: '' };
+          if (typeof renderGroups === 'function') renderGroups();
+        });
+      }
       /* 需求编码可经 hash 传入（#demand-detail:REQ-2026-1003），演示期缺省落到固定演示需求 */
       DD_DEMAND = demandByCode(window.__HASH_PARAM) || demandByCode('REQ-2026-1003') || DEMAND_LIST[0];
       DD_SEQ = 0;
