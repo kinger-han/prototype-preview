@@ -1127,7 +1127,7 @@ table tr { cursor: pointer; }
               <select class="filter-select" style="min-width:100px;">
               <option value="">全部</option>
               <option>待处理</option>
-              <option>已新增</option>
+              <option>已补充</option>
               <option>已合并</option>
               <option>已忽略</option>
             </select>
@@ -1246,8 +1246,8 @@ table tr { cursor: pointer; }
                   <td><span class="num-highlight">5</span></td>
                   <td>2026-07-05 09:30</td>
                   <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">知识库缺失（可补充）</span></td>
-                                    <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="event.stopPropagation();openKbFromMiss(this)">已新增 ›</span></td>
-                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(6)">查看详情</button> <span style="color:#999;font-size:12px;">已新增</span></td>
+                                    <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="event.stopPropagation();openKbFromMiss(this)">已补充 ›</span></td>
+                  <td><button class="action-btn" onclick="event.stopPropagation();openGroupDetail(6)">查看详情</button> <span style="color:#999;font-size:12px;">已补充</span></td>
                 </tr>
               </tbody>
             </table>
@@ -1264,7 +1264,17 @@ table tr { cursor: pointer; }
         <!-- ====== 原始列表（默认隐藏） ====== -->
         <div id="missListView" data-anno="miss-04">
         <div class="table-card">
-          <div class="table-toolbar">
+          <div id="missSelBar" style="display:none;align-items:center;gap:10px;background:#e6f4ff;border:1px solid #91caff;border-radius:4px;padding:8px 14px;margin-bottom:12px;font-size:13px;color:#1677ff;flex-wrap:wrap;">
+            <span>已选 <b id="missSelCount">0</b> 条</span>
+            <span id="missSelCrossWrap"></span>
+            <span style="flex:1;"></span>
+            <button class="toolbar-btn" onclick="openBatchSupplement()">批量补充</button>
+            <button class="toolbar-btn" onclick="openBatchMerge()">批量合并</button>
+            <button class="toolbar-btn" onclick="openBatchIgnore()">批量忽略</button>
+            <button class="toolbar-btn" onclick="openBatchRestore()">恢复待处理</button>
+            <button class="toolbar-btn" onclick="clearMissSelection()" style="border-color:transparent;background:transparent;color:#999;">取消选择</button>
+          </div>
+<div class="table-toolbar">
             <button class="toolbar-btn" data-anno="miss-export" onclick="openMissExportModal()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               导出Excel
@@ -1280,6 +1290,7 @@ table tr { cursor: pointer; }
           <table class="miss-table">
             <thead>
               <tr>
+                <th style="width:40px;text-align:center;"><input type="checkbox" id="missCheckAll" onchange="toggleAllMissChecks(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></th>
                 <th style="width:220px;">问题原文</th>
                 <th style="width:100px;">来源客户</th>
                 <th style="width:80px;">来源场馆</th>
@@ -1292,6 +1303,117 @@ table tr { cursor: pointer; }
             </thead>
             <tbody>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>2026年全国两会时间？</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-28 13:50</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">金崇英 (189****9961)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;2026年全国两会时间？&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;2026年全国两会时间？&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>请帮忙展示最新的党史知识</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-28 13:51</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">体验成员 (159****0606)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(2)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;请帮忙展示最新的党史知识&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;请帮忙展示最新的党史知识&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>2026年主题教育是什么？</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-28 13:50</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">体验成员 (159****0606)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;2026年主题教育是什么？&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;2026年主题教育是什么？&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>政绩观学习材料有哪些</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-28 13:47</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">唐俊杰 (150****5809)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(4)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;政绩观学习材料有哪些&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;政绩观学习材料有哪些&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>党建品牌创建的流程是什么</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-28 11:20</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">宝马 (139****0140)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(5)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;党建品牌创建的流程是什么&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;党建品牌创建的流程是什么&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>发展党员的五个阶段是什么</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-27 16:40</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">体验成员 (189****1000)</span></td>
+                <td><span class="badge-status status-kb-merge status-link" data-kb="kb_1024" onclick="openKbFromMiss(this)">已合并 ›</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>党费收缴标准是多少</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-27 15:02</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">体验成员 (189****1000)</span></td>
+                <td><span class="badge-status status-kb-add status-link" data-kb="kb_1031" onclick="openKbFromMiss(this)">已补充 ›</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(7)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>三会一课具体指什么</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-27 10:15</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">宝马 (139****0140)</span></td>
+                <td><span class="badge-status active">已忽略</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>组织生活会多久开一次</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-26 17:30</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">体验成员 (159****0606)</span></td>
+                <td><span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(9)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;组织生活会多久开一次&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;组织生活会多久开一次&apos;,&apos;党建智慧问答体验客户&apos;,&apos;总馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
+                <td>上海麻将规则介绍一下</td>
+                <td>党建智慧问答体验客户</td>
+                <td>总馆</td>
+                <td><span style="font-size:13px;">党建智慧助手</span></td>
+                <td>2026-08-26 14:08</td>
+                <td><span class="link-btn" onclick="showToast('跳转用户详情')">宝马 (139****0140)</span></td>
+                <td><span class="badge-status active">已忽略</span></td>
+                <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
+              </tr>
+              <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>附近有什么好吃的推荐</td>
                 <td>XX博物馆</td>
                 <td>东馆</td>
@@ -1302,6 +1424,7 @@ table tr { cursor: pointer; }
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(10)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>有没有停车场，怎么收费</td>
                 <td>XX博物馆</td>
                 <td>西馆</td>
@@ -1312,16 +1435,18 @@ table tr { cursor: pointer; }
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(1)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;有没有停车场，怎么收费&apos;,&apos;XX博物馆&apos;,&apos;西馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;有没有停车场，怎么收费&apos;,&apos;XX博物馆&apos;,&apos;西馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
               </tr>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>可以带宠物进来吗</td>
                 <td>科技馆</td>
                 <td>主馆</td>
                 <td><span style="font-size:13px;">科技馆讲解员</span></td>
                 <td>2026-07-05 09:30</td>
                 <td><span class="link-btn" onclick="showToast('跳转用户详情：186****9012')">赵六 (186****9012)</span></td>
-                <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="openKbFromMiss(this)">已新增 ›</span></td>
+                <td><span class="badge-status status-kb-add status-link" data-kb="kb_1028" onclick="openKbFromMiss(this)">已补充 ›</span></td>
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(6)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
 <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>博物馆停车场入口在哪</td>
                 <td>XX博物馆</td>
                 <td>东馆</td>
@@ -1332,6 +1457,7 @@ table tr { cursor: pointer; }
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(2)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>有没有讲解员服务</td>
                 <td>XX博物馆</td>
                 <td>少儿馆</td>
@@ -1342,6 +1468,7 @@ table tr { cursor: pointer; }
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(3)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item" onclick="missMenuAction(&apos;add&apos;,&apos;有没有讲解员服务&apos;,&apos;XX博物馆&apos;,&apos;少儿馆&apos;)">新增知识</div><div class="more-menu-item" onclick="missMenuAction(&apos;merge&apos;,&apos;有没有讲解员服务&apos;,&apos;XX博物馆&apos;,&apos;少儿馆&apos;)">合并知识</div><div class="more-menu-item danger" onclick="missMenuAction(&apos;ignore&apos;, this)">忽略</div></div></div></td>
               </tr>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>能不能帮我叫个外卖</td>
                 <td>自然博物馆</td>
                 <td>主馆</td>
@@ -1352,6 +1479,7 @@ table tr { cursor: pointer; }
                 <td><button class="action-btn" onclick="jumpToSessionFromMiss(8)">详情</button> <div class="more-menu-wrap"><button class="more-btn" onclick="toggleMissMenu(event, this)" title="更多操作"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button><div class="more-menu"><div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div></div></div></td>
               </tr>
               <tr>
+                <td style="text-align:center;"><input type="checkbox" class="miss-row-check" onchange="onMissRowCheck(this)" style="accent-color:#1677FF;width:15px;height:15px;cursor:pointer;"></td>
                 <td>这个展品是真品还是仿品</td>
                 <td>XX博物馆</td>
                 <td>东馆</td>
@@ -1366,7 +1494,7 @@ table tr { cursor: pointer; }
 
           <div class="pagination">
             <div class="page-info">
-              共 <b>47</b> 条
+              共 <b>88</b> 条
               <select class="page-size-select">
                 <option>10条/页</option><option>20条/页</option><option>50条/页</option>
               </select>
@@ -1375,8 +1503,7 @@ table tr { cursor: pointer; }
               <div class="page-btns">
                 <div class="page-btn disabled">‹</div>
                 <div class="page-btn active">1</div>
-                <div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">4</div>
-                <div class="page-btn">5</div>
+                <div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">4</div><div class="page-btn">5</div><div class="page-btn">6</div><span style="color:#999;padding:0 6px;">...</span><div class="page-btn">9</div>
                 <div class="page-btn">›</div>
               </div>
               <div class="page-jump">前往 <input type="text" value="1"> 页</div>
@@ -2457,6 +2584,77 @@ table tr { cursor: pointer; }
       </div>
     </div>
   </div>
+
+  <!-- 批量补充知识库弹窗 -->
+  <div class="modal-overlay" id="batchSupplementModal">
+    <div class="modal" style="width:720px;">
+      <div class="modal-header">
+        <h3>批量补充知识库</h3>
+        <button class="modal-close" onclick="closeBatchSupplementModal()">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:13px;color:#606266;margin-bottom:12px;">将为选中的待处理问题补充<span style="color:#1677ff;font-weight:600;">一条</span>知识，补充后状态变为「已补充」并关联该知识条目（提交后触发 Dify 解析）。</div>
+        <div style="border:1px solid #E4E7ED;border-radius:4px;padding:10px 14px;margin-bottom:14px;">
+          <div style="font-size:13px;font-weight:600;color:#303133;margin-bottom:4px;">选中问题清单 <span style="font-weight:400;color:#909399;font-size:12px;">（不需要的可勾掉，至少保留 1 条）</span></div>
+          <div id="batchSupQuestions" style="max-height:150px;overflow-y:auto;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:14px;">
+          <button class="filter-btn primary" id="batchSupTabBtnNew" onclick="batchSupTab('new')">新建知识</button>
+          <button class="filter-btn" id="batchSupTabBtnLink" onclick="batchSupTab('link')">关联已有知识</button>
+        </div>
+        <div id="batchSupTabNew">
+          <div class="venue-form">
+            <div class="form-row"><label class="form-label">知识标题</label><input class="form-control" id="batchSupTitle" placeholder="默认取第一条选中问题"></div>
+            <div class="form-row" style="align-items:flex-start;"><label class="form-label">知识内容</label><textarea class="form-control" id="batchSupContent" rows="4" placeholder="填写答案内容，保存后触发 Dify 解析"></textarea></div>
+          </div>
+        </div>
+        <div id="batchSupTabLink" style="display:none;">
+          <div class="toolbar-search" style="margin-bottom:10px;max-width:420px;">
+            <input type="text" id="batchSupSearchInput" placeholder="搜索已有知识条目（标题/相似问法）" oninput="searchBatchSupTarget()">
+          </div>
+          <div id="batchSupSearchCount" style="font-size:12px;color:#909399;margin-bottom:8px;min-height:16px;"></div>
+          <div id="batchSupSearchResults" style="max-height:220px;overflow-y:auto;"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid #E4E7ED;">
+        <button class="confirm-btn" onclick="closeBatchSupplementModal()">取消</button>
+        <button class="confirm-btn export-btn-confirm" onclick="batchSupplementConfirm()">确认补充</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 批量合并到主问题弹窗 -->
+  <div class="modal-overlay" id="batchMergeModal">
+    <div class="modal" style="width:560px;">
+      <div class="modal-header">
+        <h3>批量合并到主问题</h3>
+        <button class="modal-close" onclick="closeBatchMergeModal()">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:13px;color:#606266;margin-bottom:12px;">指定一条作为<b>主问题</b>，其余选中问题将标记为「已合并」并指向主问题；主问题补充知识后，其余问题自动闭环。</div>
+        <div id="batchMergeList" style="max-height:260px;overflow-y:auto;border:1px solid #E4E7ED;border-radius:4px;padding:6px 14px;"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid #E4E7ED;">
+        <button class="confirm-btn" onclick="closeBatchMergeModal()">取消</button>
+        <button class="confirm-btn export-btn-confirm" onclick="batchMergeConfirm()">确认合并</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 批量确认弹窗（忽略/恢复共用） -->
+  <div class="modal-overlay" id="batchConfirmModal">
+    <div class="modal" style="width:460px;">
+      <div class="modal-header">
+        <h3 id="batchConfirmTitle">确认操作</h3>
+        <button class="modal-close" onclick="closeBatchConfirmModal()">&#10005;</button>
+      </div>
+      <div class="modal-body" id="batchConfirmBody" style="font-size:13px;color:#606266;line-height:1.9;"></div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding:14px 24px;border-top:1px solid #E4E7ED;">
+        <button class="confirm-btn" onclick="closeBatchConfirmModal()">取消</button>
+        <button class="confirm-btn export-btn-confirm" id="batchConfirmOkBtn" onclick="execBatchConfirm()">确认</button>
+      </div>
+    </div>
+  </div>
     </div><!-- /content-area -->
   </div><!-- /main-area -->
 </div><!-- /layout -->
@@ -2820,9 +3018,9 @@ function openGroupDetail(idx) {
     tbody.innerHTML = g.items.map(item => {
       const badge = item.status === '待处理'
         ? '<span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span>'
-        : item.status === '已新增' ? '<span class="badge-status status-kb-add status-link" data-kb="' + (item.linkedFaqId || '') + '" onclick="openKbFromMiss(this)">已新增 ›</span>' : '<span class="badge-status active">已忽略</span>';
+        : item.status === '已补充' ? '<span class="badge-status status-kb-add status-link" data-kb="' + (item.linkedFaqId || '') + '" onclick="openKbFromMiss(this)">已补充 ›</span>' : '<span class="badge-status active">已忽略</span>';
       const btns = item.status === '待处理'
-        ? '<button class="action-btn" onclick="markSingleHandled(this,\'已新增\')">标记已新增</button> <button class="action-btn" onclick="markSingleHandled(this,\'已忽略\')" style="color:#999;">忽略</button>'
+        ? '<button class="action-btn" onclick="markSingleHandled(this,\'已补充\')">标记已补充</button> <button class="action-btn" onclick="markSingleHandled(this,\'已忽略\')" style="color:#999;">忽略</button>'
         : '<span style="color:#999;font-size:12px;">—</span>';
       return '<tr><td>' + item.q + '</td><td>' + item.user + '</td><td>' + item.time + '</td><td>' + badge + '</td><td>' + btns + '</td></tr>';
     }).join('');
@@ -2856,8 +3054,8 @@ function switchMissView(view) {
 function markAllGroupHandled(status) {
     document.querySelectorAll('#groupDetailBody tr').forEach(tr => {
       const tds = tr.querySelectorAll('td');
-      if (status === '已新增') {
-        tds[3].innerHTML = '<span class="badge-status active">已新增</span>';
+      if (status === '已补充') {
+        tds[3].innerHTML = '<span class="badge-status active">已补充</span>';
         tds[4].innerHTML = '<span style="color:#999;font-size:12px;">已更新知识库</span>';
       } else {
         tds[3].innerHTML = '<span class="badge-status active">已忽略</span>';
@@ -2870,10 +3068,10 @@ function markAllGroupHandled(status) {
 function markGroupHandled(btn, status) {
   const tr = btn.closest('tr');
   const tds = tr.querySelectorAll('td');
-  if (status === '已新增') {
-    tds[6].innerHTML = '<span class="badge-status active">已新增</span>';
+  if (status === '已补充') {
+    tds[6].innerHTML = '<span class="badge-status active">已补充</span>';
     tds[7].innerHTML = '<span class="link-btn" onclick="showToast(\'跳转知识库管理...\')">已更新知识库</span>';
-    showToast('该组问题已标记为已新增，请前往知识库补充内容', 'success');
+    showToast('该组问题已标记为已补充，请前往知识库补充内容', 'success');
   } else {
     tds[6].innerHTML = '<span class="badge-status active">已忽略</span>';
     tds[7].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
@@ -2884,8 +3082,8 @@ function markGroupHandled(btn, status) {
 function markSingleHandled(btn, status) {
     const tr = btn.closest('tr');
     const tds = tr.querySelectorAll('td');
-    if (status === '已新增') {
-      tds[3].innerHTML = '<span class="badge-status status-kb-add status-link" onclick="openKbFromMiss(this)">已新增 ›</span>';
+    if (status === '已补充') {
+      tds[3].innerHTML = '<span class="badge-status status-kb-add status-link" onclick="openKbFromMiss(this)">已补充 ›</span>';
       tds[4].innerHTML = '<span style="color:#999;font-size:12px;">—</span>';
     } else {
       tds[3].innerHTML = '<span class="badge-status active">已忽略</span>';
@@ -2897,11 +3095,11 @@ function markSingleHandled(btn, status) {
 function markMissHandled(btn, status) {
   const tr = btn.closest('tr');
   const tds = tr.querySelectorAll('td');
-  if (tds.length < 8) return;
-  tds[6].innerHTML = '<span class="badge-status active">已忽略</span>';
-  var detailBtn = tds[7].querySelector('.action-btn');
+  if (tds.length < 9) return;
+  tds[7].innerHTML = '<span class="badge-status active">已忽略</span>';
+  var detailBtn = tds[8].querySelector('.action-btn');
   var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
-  tds[7].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
   showToast('已标记为已忽略', 'success');
 }
 
@@ -2932,8 +3130,8 @@ const groupDetailData = [
       { q: '帮我查下公交', user: '赵六 (186****9012)', time: '2026-07-02 18:30', status: '已忽略' }
     ]},
     { category: '带宠物入园', customer: '科技馆', venue: '主馆', aiType: '知识库缺失（可补充）', linkedFaqId: 'kb_1028', items: [
-      { q: '可以带宠物进来吗', user: '赵六 (186****9012)', time: '2026-07-05 09:30', status: '已新增' },
-      { q: '可以带狗进去吗', user: '张三 (138****6789)', time: '2026-07-04 10:15', status: '已新增' }
+      { q: '可以带宠物进来吗', user: '赵六 (186****9012)', time: '2026-07-05 09:30', status: '已补充' },
+      { q: '可以带狗进去吗', user: '张三 (138****6789)', time: '2026-07-04 10:15', status: '已补充' }
     ]}
    ];
 
@@ -3007,7 +3205,8 @@ function closeMergeModal() { document.getElementById('mergeModal').classList.rem
 function findMissRowByQuestion(question) {
   var trs = document.querySelectorAll('#missListView tbody tr');
   for (var i = 0; i < trs.length; i++) {
-    var td = trs[i].querySelector('td');
+    var tds2 = trs[i].querySelectorAll('td');
+    var td = tds2.length > 1 ? tds2[1] : null;
     if (td && td.textContent.trim() === question) return trs[i];
   }
   return null;
@@ -3121,9 +3320,9 @@ document.addEventListener('click', function(e) {
 });
 function missMenuHtml(tr, disabled) {
   var tds = tr.querySelectorAll('td');
-  var q = tds[0] ? tds[0].textContent.trim() : '';
-  var c = tds[1] ? tds[1].textContent.trim() : '';
-  var v = tds[2] ? tds[2].textContent.trim() : '';
+  var q = tds[1] ? tds[1].textContent.trim() : '';
+  var c = tds[2] ? tds[2].textContent.trim() : '';
+  var v = tds[3] ? tds[3].textContent.trim() : '';
   var items;
   if (disabled) {
     items = '<div class="more-menu-item disabled">新增知识</div><div class="more-menu-item disabled">合并知识</div><div class="more-menu-item disabled">忽略</div>';
@@ -3138,14 +3337,14 @@ function missMenuHtml(tr, disabled) {
 function markMissSupplemented(tr, type, kbId) {
   if (!tr) return;
   var tds = tr.querySelectorAll('td');
-  if (tds.length < 8) return;
-  var label = type === 'merge' ? '已合并' : '已新增';
+  if (tds.length < 9) return;
+  var label = type === 'merge' ? '已合并' : '已补充';
   var cls = type === 'merge' ? 'status-kb-merge' : 'status-kb-add';
   var kbAttr = kbId ? 'data-kb="' + kbId + '"' : '';
-  tds[6].innerHTML = '<span class="badge-status ' + cls + ' status-link" ' + kbAttr + ' onclick="openKbFromMiss(this)">' + label + ' ›</span>';
-  var detailBtn = tds[7].querySelector('.action-btn');
+  tds[7].innerHTML = '<span class="badge-status ' + cls + ' status-link" ' + kbAttr + ' onclick="openKbFromMiss(this)">' + label + ' ›</span>';
+  var detailBtn = tds[8].querySelector('.action-btn');
   var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
-  tds[7].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
 }
 
 function viewLinkedKb(faqId) {
@@ -3164,6 +3363,256 @@ function jumpToSessionFromMiss(sessionId) {
   if (typeof openSessionDetail === 'function') {
     openSessionDetail(sessionId);
   }
+}
+
+// ====== 批量操作（P0 需求：未命中问题批量处理） ======
+var _missSelAllFiltered = false;
+var MISS_FILTERED_TOTAL = 88;
+var _batchSupMode = 'new';
+
+function missRowStatus(tr) {
+  var tds = tr.querySelectorAll('td');
+  var badge = tds[7] ? tds[7].querySelector('.badge-status') : null;
+  if (!badge) return '';
+  return badge.textContent.replace(/[›\s]/g, '');
+}
+function missRowKey(tr) {
+  var tds = tr.querySelectorAll('td');
+  return tds[1] ? tds[1].textContent.trim() : '';
+}
+function selectedMissRows() {
+  var rows = [];
+  document.querySelectorAll('#missListView .miss-row-check').forEach(function(cb) {
+    if (cb.checked) rows.push(cb.closest('tr'));
+  });
+  return rows;
+}
+function onMissRowCheck(cb) {
+  if (!cb.checked) _missSelAllFiltered = false;
+  updateMissSelBar();
+}
+function toggleAllMissChecks(master) {
+  document.querySelectorAll('#missListView .miss-row-check').forEach(function(cb) { cb.checked = master.checked; });
+  if (!master.checked) _missSelAllFiltered = false;
+  updateMissSelBar();
+}
+function selectAllMissFiltered() {
+  _missSelAllFiltered = true;
+  document.querySelectorAll('#missListView .miss-row-check').forEach(function(cb) { cb.checked = true; });
+  var all = document.getElementById('missCheckAll');
+  if (all) all.checked = true;
+  updateMissSelBar();
+  showToast('已选中当前筛选结果全部 ' + MISS_FILTERED_TOTAL + ' 条', 'success');
+}
+function clearMissSelection() {
+  _missSelAllFiltered = false;
+  document.querySelectorAll('#missListView .miss-row-check').forEach(function(cb) { cb.checked = false; });
+  var all = document.getElementById('missCheckAll');
+  if (all) all.checked = false;
+  updateMissSelBar();
+}
+function updateMissSelBar() {
+  var bar = document.getElementById('missSelBar');
+  var pageBoxes = document.querySelectorAll('#missListView .miss-row-check');
+  var n = selectedMissRows().length;
+  var tip = document.getElementById('missSelCrossWrap');
+  if (n === 0 && !_missSelAllFiltered) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  document.getElementById('missSelCount').textContent = _missSelAllFiltered ? MISS_FILTERED_TOTAL : n;
+  if (_missSelAllFiltered) {
+    tip.innerHTML = '（已选中当前筛选结果全部 ' + MISS_FILTERED_TOTAL + ' 条）';
+  } else if (n === pageBoxes.length) {
+    tip.innerHTML = '<a href="javascript:void(0)" onclick="selectAllMissFiltered()" style="color:#1677ff;font-weight:600;text-decoration:underline;">选中当前筛选结果全部 ' + MISS_FILTERED_TOTAL + ' 条</a>';
+  } else {
+    tip.innerHTML = '';
+  }
+}
+function batchSetRowState(tr, kind, extra) {
+  var tds = tr.querySelectorAll('td');
+  if (tds.length < 9) return;
+  var detailBtn = tds[8].querySelector('.action-btn');
+  var detailHtml = detailBtn ? detailBtn.outerHTML : '<button class="action-btn" onclick="jumpToSessionFromMiss(0)">详情</button>';
+  if (kind === 'supplement') {
+    var kbAttr = extra ? ' data-kb="' + extra + '"' : '';
+    tds[7].innerHTML = '<span class="badge-status status-kb-add status-link"' + kbAttr + ' onclick="openKbFromMiss(this)">已补充 ›</span>';
+    tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  } else if (kind === 'merge') {
+    tds[7].innerHTML = '<span class="badge-status status-kb-merge status-link" data-main="' + extra + '" onclick="showMissMergeInfo(this)">已合并 ›</span>';
+    tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  } else if (kind === 'ignore') {
+    tds[7].innerHTML = '<span class="badge-status active">已忽略</span>';
+    tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, true);
+  } else if (kind === 'restore') {
+    tds[7].innerHTML = '<span class="badge-status" style="background:#fff7e6;color:#d48806;border:1px solid #ffe58f;">待处理</span>';
+    tds[8].innerHTML = detailHtml + ' ' + missMenuHtml(tr, false);
+  }
+}
+function showMissMergeInfo(el) {
+  showToast('已合并至主问题「' + el.getAttribute('data-main') + '」，主问题处理后本条自动闭环', 'success');
+}
+// ------ 批量补充 ------
+function openBatchSupplement() {
+  var rows = selectedMissRows().filter(function(tr) { return missRowStatus(tr) === '待处理'; });
+  if (rows.length === 0) { showToast('请先勾选「待处理」状态的记录', 'warn'); return; }
+  var html = rows.map(function(tr) {
+    var q = missRowKey(tr);
+    var tds = tr.querySelectorAll('td');
+    var scope = tds[2].textContent.trim() + ' · ' + tds[3].textContent.trim();
+    return '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed #f0f0f0;cursor:pointer;">' +
+      '<input type="checkbox" class="batchSupQ" checked value="' + q + '" style="accent-color:#1677FF;cursor:pointer;">' +
+      '<span style="flex:1;font-size:13px;color:#303133;">' + q + '</span>' +
+      '<span style="font-size:12px;color:#909399;white-space:nowrap;">' + scope + '</span></label>';
+  }).join('');
+  document.getElementById('batchSupQuestions').innerHTML = html;
+  document.getElementById('batchSupTitle').value = missRowKey(rows[0]);
+  document.getElementById('batchSupContent').value = '';
+  document.getElementById('batchSupSearchInput').value = '';
+  document.getElementById('batchSupSearchResults').innerHTML = '';
+  document.getElementById('batchSupSearchCount').textContent = '';
+  batchSupTab('new');
+  document.getElementById('batchSupplementModal').classList.add('show');
+}
+function closeBatchSupplementModal() { document.getElementById('batchSupplementModal').classList.remove('show'); }
+function batchSupTab(t) {
+  _batchSupMode = t;
+  document.getElementById('batchSupTabNew').style.display = t === 'new' ? '' : 'none';
+  document.getElementById('batchSupTabLink').style.display = t === 'link' ? '' : 'none';
+  document.getElementById('batchSupTabBtnNew').className = t === 'new' ? 'filter-btn primary' : 'filter-btn';
+  document.getElementById('batchSupTabBtnLink').className = t === 'link' ? 'filter-btn primary' : 'filter-btn';
+}
+function searchBatchSupTarget() {
+  var keyword = document.getElementById('batchSupSearchInput').value.trim().toLowerCase();
+  var results = document.getElementById('batchSupSearchResults');
+  var countEl = document.getElementById('batchSupSearchCount');
+  if (!keyword) { results.innerHTML = ''; countEl.textContent = ''; return; }
+  var matches = kbData.filter(function(item) {
+    if (item.type !== 'faq') return false;
+    var similar = (item.similarQuestions || []).join(' ');
+    return item.standardQuestion.toLowerCase().indexOf(keyword) >= 0 || similar.toLowerCase().indexOf(keyword) >= 0;
+  });
+  countEl.textContent = matches.length > 0 ? '共找到 ' + matches.length + ' 条相关结果' : '未找到相近知识，可切换「新建知识」';
+  results.innerHTML = matches.map(function(item) {
+    var similar = (item.similarQuestions || []).join(' / ') || '暂无';
+    return '<label class="merge-result-card" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #E4E7ED;border-radius:4px;margin-bottom:8px;cursor:pointer;min-height:56px;background:#FFFFFF;">' +
+      '<input type="radio" name="batchSupTarget" value="' + item.id + '" onchange="selectBatchSupCard(this)" style="accent-color:#1677FF;width:16px;height:16px;margin:0;flex-shrink:0;">' +
+      '<div style="flex:1;min-width:0;">' +
+      '<div style="font-size:13px;font-weight:500;color:#303133;margin-bottom:4px;">' + item.standardQuestion + '</div>' +
+      '<div style="font-size:12px;color:#909399;">相似问法：' + similar + '</div></div>' +
+      '<div style="flex-shrink:0;font-size:12px;color:#909399;white-space:nowrap;">近30天命中 ' + (item.hitCount30d || 0) + '次</div></label>';
+  }).join('');
+}
+function selectBatchSupCard(radio) {
+  document.querySelectorAll('#batchSupSearchResults .merge-result-card').forEach(function(card) {
+    var r = card.querySelector('input[type="radio"]');
+    var on = r && r.checked;
+    card.style.borderColor = on ? '#1677FF' : '#E4E7ED';
+    card.style.background = on ? '#F0F5FF' : '#FFFFFF';
+  });
+}
+function batchSupplementConfirm() {
+  var qs = [];
+  document.querySelectorAll('#batchSupQuestions .batchSupQ').forEach(function(cb) { if (cb.checked) qs.push(cb.value); });
+  if (qs.length === 0) { showToast('至少保留 1 条问题', 'warn'); return; }
+  var targets = selectedMissRows().filter(function(tr) {
+    return missRowStatus(tr) === '待处理' && qs.indexOf(missRowKey(tr)) >= 0;
+  });
+  var kbId = null, kbName = '';
+  if (_batchSupMode === 'link') {
+    var sel = document.querySelector('input[name="batchSupTarget"]:checked');
+    if (!sel) { showToast('请搜索并选择目标知识条目', 'warn'); return; }
+    kbId = sel.value;
+    var item = kbData.find(function(x) { return x.id === kbId; });
+    kbName = item ? item.standardQuestion : '目标知识';
+  } else {
+    kbName = document.getElementById('batchSupTitle').value.trim();
+    if (!kbName) { showToast('请填写知识标题', 'warn'); return; }
+  }
+  targets.forEach(function(tr) { batchSetRowState(tr, 'supplement', kbId); });
+  closeBatchSupplementModal();
+  clearMissSelection();
+  showToast(_batchSupMode === 'link'
+    ? ('已关联至「' + kbName + '」，' + targets.length + ' 条问题已标记已补充')
+    : ('已创建知识「' + kbName + '」并关联 ' + targets.length + ' 条问题，Dify 解析中...'), 'success');
+}
+// ------ 批量合并 ------
+function openBatchMerge() {
+  var rows = selectedMissRows().filter(function(tr) { return missRowStatus(tr) === '待处理'; });
+  if (rows.length < 2) { showToast('批量合并至少需要勾选 2 条「待处理」记录', 'warn'); return; }
+  var html = rows.map(function(tr, i) {
+    var q = missRowKey(tr);
+    var tds = tr.querySelectorAll('td');
+    var scope = tds[2].textContent.trim() + ' · ' + tds[3].textContent.trim() + ' · ' + tds[5].textContent.trim();
+    return '<label style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #f0f0f0;cursor:pointer;">' +
+      '<input type="radio" name="batchMergeMain" value="' + q + '"' + (i === 0 ? ' checked' : '') + ' onchange="selectBatchMergeCard(this)" style="accent-color:#1677FF;cursor:pointer;">' +
+      '<span style="flex:1;font-size:13px;color:#303133;">' + q + '</span>' +
+      '<span style="font-size:12px;color:#909399;white-space:nowrap;">' + scope + '</span></label>';
+  }).join('');
+  document.getElementById('batchMergeList').innerHTML = html;
+  document.getElementById('batchMergeModal').classList.add('show');
+}
+function closeBatchMergeModal() { document.getElementById('batchMergeModal').classList.remove('show'); }
+function selectBatchMergeCard(radio) {
+  document.querySelectorAll('#batchMergeList label').forEach(function(lb) {
+    var r = lb.querySelector('input[type="radio"]');
+    var on = r && r.checked;
+    lb.style.borderColor = on ? '#1677FF' : 'transparent';
+    lb.style.background = on ? '#F0F5FF' : 'transparent';
+  });
+}
+function batchMergeConfirm() {
+  var sel = document.querySelector('input[name="batchMergeMain"]:checked');
+  if (!sel) { showToast('请选择主问题', 'warn'); return; }
+  var mainQ = sel.value;
+  var rows = selectedMissRows().filter(function(tr) {
+    return missRowStatus(tr) === '待处理' && missRowKey(tr) !== mainQ;
+  });
+  rows.forEach(function(tr) { batchSetRowState(tr, 'merge', mainQ); });
+  closeBatchMergeModal();
+  clearMissSelection();
+  showToast('已合并 ' + rows.length + ' 条至主问题「' + mainQ + '」，主问题补充知识后自动闭环', 'success');
+}
+// ------ 批量忽略 / 恢复待处理 ------
+var _batchConfirmAction = null;
+function openBatchConfirm(title, bodyHtml, okText, action) {
+  document.getElementById('batchConfirmTitle').textContent = title;
+  document.getElementById('batchConfirmBody').innerHTML = bodyHtml;
+  document.getElementById('batchConfirmOkBtn').textContent = okText;
+  _batchConfirmAction = action;
+  document.getElementById('batchConfirmModal').classList.add('show');
+}
+function closeBatchConfirmModal() { document.getElementById('batchConfirmModal').classList.remove('show'); }
+function execBatchConfirm() {
+  var fn = _batchConfirmAction;
+  closeBatchConfirmModal();
+  if (fn) fn();
+}
+function openBatchIgnore() {
+  var rows = selectedMissRows();
+  if (rows.length === 0) { showToast('请先勾选记录', 'warn'); return; }
+  var pending = rows.filter(function(tr) { return missRowStatus(tr) === '待处理'; });
+  var skip = rows.length - pending.length;
+  if (pending.length === 0) { showToast('选中记录均非待处理状态', 'warn'); return; }
+  var body = '即将忽略 <b>' + pending.length + '</b> 条未命中记录，忽略后可在「已忽略」筛选状态下查看或恢复为待处理。';
+  if (skip > 0) body += '<br><span style="color:#d48806;">另有 ' + skip + ' 条非待处理状态，将自动跳过</span>';
+  openBatchConfirm('批量忽略', body, '确认忽略', function() {
+    pending.forEach(function(tr) { batchSetRowState(tr, 'ignore', null); });
+    clearMissSelection();
+    showToast('已忽略 ' + pending.length + ' 条' + (skip > 0 ? '，跳过 ' + skip + ' 条' : ''), 'success');
+  });
+}
+function openBatchRestore() {
+  var rows = selectedMissRows();
+  if (rows.length === 0) { showToast('请先勾选记录', 'warn'); return; }
+  var ignored = rows.filter(function(tr) { return missRowStatus(tr) === '已忽略'; });
+  var skip = rows.length - ignored.length;
+  if (ignored.length === 0) { showToast('选区中没有「已忽略」记录（已补充/已合并为终态，不可恢复）', 'warn'); return; }
+  var body = '将把 <b>' + ignored.length + '</b> 条已忽略记录恢复为「待处理」。';
+  if (skip > 0) body += '<br><span style="color:#d48806;">已补充/已合并为终态不可恢复，' + skip + ' 条将自动跳过</span>';
+  openBatchConfirm('恢复待处理', body, '确认恢复', function() {
+    ignored.forEach(function(tr) { batchSetRowState(tr, 'restore', null); });
+    clearMissSelection();
+    showToast('已恢复 ' + ignored.length + ' 条为待处理', 'success');
+  });
 }
 
 const kbData = [
