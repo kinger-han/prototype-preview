@@ -1,2 +1,10 @@
 __pycache__/
 *.pyc
+
+# 本地发布工具（内部脚本，不进公开仓；本地继续用）
+tools/
+
+# 已从公开站下线的原型（本地保留源项目，勿再发布到公开仓）
+smart-guide-annotated/
+dangdaihui-mobile/
+dangdaihui-pc/
